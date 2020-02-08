@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>reactive on Not So Formal</title>
-    <link>/tags/reactive/</link>
+    <link>https://notsoformal.xyz/tags/reactive/</link>
     <description>Recent content in reactive on Not So Formal</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 17 Jan 2018 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/tags/reactive/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://notsoformal.xyz/tags/reactive/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>reactiveVal(ues)</title>
-      <link>/2018-01-17-reactiveval-ues/</link>
+      <link>https://notsoformal.xyz/2018-01-17-reactiveval-ues/</link>
       <pubDate>Wed, 17 Jan 2018 00:00:00 +0000</pubDate>
       
-      <guid>/2018-01-17-reactiveval-ues/</guid>
+      <guid>https://notsoformal.xyz/2018-01-17-reactiveval-ues/</guid>
       <description>Let’s say we wish to toggle between 2 objects and assign either one of them to 1 common reactive value.
 For an instance, we have a plot output and 2 buttons,
 * when button one is pressed, plot displays a histogram of a normal distribution,

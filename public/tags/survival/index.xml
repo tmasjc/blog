@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>survival on Not So Formal</title>
-    <link>/tags/survival/</link>
+    <link>https://notsoformal.xyz/tags/survival/</link>
     <description>Recent content in survival on Not So Formal</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 28 Feb 2019 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/tags/survival/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://notsoformal.xyz/tags/survival/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Simulate Customer Retention</title>
-      <link>/2019-02-28-simulate-customer-retention/</link>
+      <link>https://notsoformal.xyz/2019-02-28-simulate-customer-retention/</link>
       <pubDate>Thu, 28 Feb 2019 00:00:00 +0000</pubDate>
       
-      <guid>/2019-02-28-simulate-customer-retention/</guid>
+      <guid>https://notsoformal.xyz/2019-02-28-simulate-customer-retention/</guid>
       <description>The code below simulate a scenario where nc customers onboard during a ts timespan. However, none of them managed to retain for more than sp periods. The objective is to compare various customer retention analysis especially periodic and retrospective analysis techniques.
 library(tidyverse) library(charlatan) # Generate Some Samples ---------------------------------------------- # seeding set.seed(123) # number of customers nc = 500 # timespan (entire periods) ts = 1:12 # survival periods sp = 3 # generate some customers data cust_info &amp;lt;- data_frame( id = paste0(&amp;quot;KB&amp;quot;, ch_integer(n = nc, min = 100)), jobs = sample(ch_job(n = 4, locale = &amp;quot;zh_TW&amp;quot;), size = length(id), replace = TRUE) ) # generate a sequence of vector with length n make_seq &amp;lt;- function(n, x) { # initiate an empty vector vec = rep(0, n) # generate index with range no more than x ind = 1 : (2 + x) while(diff(range(ind)) &amp;gt; x) { ind = runif(x, 1, n + 1) } # fill vector with 1s vec[ind] &amp;lt;- 1 return(vec) } # repeats ts times surv_times &amp;lt;- nc %&amp;gt;% replicate(make_seq(max(ts), sp)) %&amp;gt;% t() %&amp;gt;% as_data_frame() names(surv_times) &amp;lt;- paste0(&amp;quot;M&amp;quot;, ts) # calc initial register period join &amp;lt;- apply(surv_times, 1, function(x) min(which(x == 1))) # samples dat &amp;lt;- bind_cols(cust_info, join = join, surv_times) head(dat)  ## # A tibble: 6 x 15 ## id jobs join M1 M2 M3 M4 M5 M6 M7 M8 M9 M10 ## &amp;lt;chr&amp;gt; &amp;lt;chr&amp;gt; &amp;lt;int&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; ## 1 KB514 清潔工 1 1 1 0 1 0 0 0 0 0 0 ## 2 KB562 清潔工 1 1 1 0 0 0 0 0 0 0 0 ## 3 KB278 不動產／商… 4 0 0 0 1 1 1 0 0 0 0 ## 4 KB625 清潔工 7 0 0 0 0 0 0 1 0 1 1 ## 5 KB294 產品事業處… 4 0 0 0 1 1 0 1 0 0 0 ## 6 KB917 財務或會計… 5 0 0 0 0 1 0 0 1 0 0 ## # … with 2 more variables: M11 &amp;lt;dbl&amp;gt;, M12 &amp;lt;dbl&amp;gt; # Active Customers --------------------------------------------- calc_active_rate &amp;lt;- function(m) { dat %&amp;gt;% gather(period, active, -c(id, jobs, join)) %&amp;gt;% filter(join &amp;lt;= m, period == paste0(&amp;quot;M&amp;quot;, m)) %&amp;gt;% summarise(rate = mean(active)) %&amp;gt;% `[[`(&amp;quot;rate&amp;quot;) } active_rate &amp;lt;- map_dbl(ts, calc_active_rate) # make plot data_frame(ts, active_rate) %&amp;gt;% ggplot(aes(ts, active_rate, group = 1)) + geom_point() + geom_line(col = &amp;quot;navyblue&amp;quot;) + scale_x_continuous(breaks = 1:12) + scale_y_continuous(labels = scales::percent) + coord_cartesian(ylim = seq(0, 1, 0.</description>
     </item>

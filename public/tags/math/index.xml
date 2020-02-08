@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>math on Not So Formal</title>
-    <link>/tags/math/</link>
+    <link>https://notsoformal.xyz/tags/math/</link>
     <description>Recent content in math on Not So Formal</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 12 Jun 2018 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/tags/math/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://notsoformal.xyz/tags/math/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Random Grouping by Int Division</title>
-      <link>/2018-06-12-random-grouping-by-int-division/</link>
+      <link>https://notsoformal.xyz/2018-06-12-random-grouping-by-int-division/</link>
       <pubDate>Tue, 12 Jun 2018 00:00:00 +0000</pubDate>
       
-      <guid>/2018-06-12-random-grouping-by-int-division/</guid>
+      <guid>https://notsoformal.xyz/2018-06-12-random-grouping-by-int-division/</guid>
       <description>One way to assign a random grouping is to perform modulo operation.
 library(dplyr) library(ggplot2) # Generate N numbers randnums &amp;lt;- function(n, min = 0, max = 10000){ sample(x = c(min:max), size = n, replace = FALSE) } nums &amp;lt;- randnums(1000) # Find int division mods &amp;lt;- nums %% 3 # Check groupings table(mods) ## mods ## 0 1 2 ## 302 345 353 # Repeat many times reps &amp;lt;- purrr::map(1:2000, ~table(randnums(1000) %% 3)) reps %&amp;gt;% unlist() %&amp;gt;% bind_cols(mod = rep(c(0, 1, 2), 2000), val = .</description>
     </item>

@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Docker on Not So Formal</title>
-    <link>/tags/docker/</link>
+    <link>https://notsoformal.xyz/tags/docker/</link>
     <description>Recent content in Docker on Not So Formal</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Fri, 08 Jun 2018 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/tags/docker/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://notsoformal.xyz/tags/docker/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Application Configuration into Docker Container</title>
-      <link>/2018-06-08-application-configuration-into-docker-container/</link>
+      <link>https://notsoformal.xyz/2018-06-08-application-configuration-into-docker-container/</link>
       <pubDate>Fri, 08 Jun 2018 00:00:00 +0000</pubDate>
       
-      <guid>/2018-06-08-application-configuration-into-docker-container/</guid>
+      <guid>https://notsoformal.xyz/2018-06-08-application-configuration-into-docker-container/</guid>
       <description> Send configuration to Dockerized Apps,
 Baking the configuration into the container itself via Dockerfile
  Setting the application configutation dynamically via ENV

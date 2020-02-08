@@ -2,50 +2,50 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Not So Formal</title>
-    <link>/</link>
+    <link>https://notsoformal.xyz/</link>
     <description>Recent content on Not So Formal</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 10 Nov 2019 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://notsoformal.xyz/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Trigger Dingtalk Robot from R</title>
-      <link>/2019-11-10-trigger-dingtalk-webhook-from-r/</link>
+      <link>https://notsoformal.xyz/2019-11-10-trigger-dingtalk-webhook-from-r/</link>
       <pubDate>Sun, 10 Nov 2019 00:00:00 +0000</pubDate>
       
-      <guid>/2019-11-10-trigger-dingtalk-webhook-from-r/</guid>
+      <guid>https://notsoformal.xyz/2019-11-10-trigger-dingtalk-webhook-from-r/</guid>
       <description>Dingtalk is the official comm tool in our work. They provide an interface which allow users to add robot to a group. A robot is merely a webhook that receives POST requests. More details can be found on docs.
 Here I use the signature method to provide extra security. For this method to work, we need 3 piece of information. Token (1) and secret (2) can be obtained from the webhook setting.</description>
     </item>
     
     <item>
       <title>Is James Harden been given special treatment?</title>
-      <link>/2019-10-06-is-james-harden-been-given-special-treatment-by-referee/</link>
+      <link>https://notsoformal.xyz/2019-10-06-is-james-harden-been-given-special-treatment-by-referee/</link>
       <pubDate>Sun, 06 Oct 2019 00:00:00 +0000</pubDate>
       
-      <guid>/2019-10-06-is-james-harden-been-given-special-treatment-by-referee/</guid>
+      <guid>https://notsoformal.xyz/2019-10-06-is-james-harden-been-given-special-treatment-by-referee/</guid>
       <description>This video “8 Unbelievable Charts That Will Change The Way You See The NBA” pops out on my Youtube homepage. The first chart he argues that James Harden has been given way more free throws (834) by NBA referees compare to the rest of the players. I find the chart ‘unbelievable’ indeed and so I decided to look up some data on basketball-reference to determine its validatity.</description>
     </item>
     
     <item>
       <title>Streaming Data From Database to Shiny</title>
-      <link>/2019-07-02-streaming-data-from-database-to-shiny/</link>
+      <link>https://notsoformal.xyz/2019-07-02-streaming-data-from-database-to-shiny/</link>
       <pubDate>Tue, 02 Jul 2019 00:00:00 +0000</pubDate>
       
-      <guid>/2019-07-02-streaming-data-from-database-to-shiny/</guid>
+      <guid>https://notsoformal.xyz/2019-07-02-streaming-data-from-database-to-shiny/</guid>
       <description>First, a script that simulate data streaming. It rewrites the table every p second. Here we set it to 1.
 library(config) library(DBI) library(dplyr) library(purrr) library(tryCatchLog) db &amp;lt;- config::get(config = &amp;quot;some-mysql&amp;quot;) # local Docker container conn &amp;lt;- dbConnect( drv = RMySQL::MySQL(), username = db$username, password = db$password, host = db$host, port = db$port, dbname = db$dbname ) stopifnot(DBI::dbRemoveTable(conn, &amp;quot;int_stream&amp;quot;)) generate &amp;lt;- function() { data.frame(ind = LETTERS, int = round(rnorm( length(LETTERS), mean = 10, sd = 2 ))) } insert_to_db &amp;lt;- function(p = 1) { stopifnot(dbWriteTable(conn, &amp;quot;int_stream&amp;quot;, generate(), overwrite = TRUE)) message(paste(&amp;quot;Success:&amp;quot;, Sys.</description>
     </item>
     
     <item>
       <title>Dynamic UI in Shiny</title>
-      <link>/2019-06-20-dynamic-ui/</link>
+      <link>https://notsoformal.xyz/2019-06-20-dynamic-ui/</link>
       <pubDate>Thu, 20 Jun 2019 00:00:00 +0000</pubDate>
       
-      <guid>/2019-06-20-dynamic-ui/</guid>
+      <guid>https://notsoformal.xyz/2019-06-20-dynamic-ui/</guid>
       <description>A quick demo on how to render dynamic user interface in Shiny applications. In this case, a new text output element is shown when user enters a new line in the text input. The color toggles alternatively as well.
 Techniques here involves using shiny::renderUI and R’s metaprogramming.
 library(shiny) library(purrr) library(stringr) ## Demo: Render UI Function ---- shinyApp( ui &amp;lt;- fluidPage( # user&amp;#39;s input column( width = 11, offset = 1, textAreaInput( &amp;quot;text&amp;quot;, label = &amp;quot;&amp;quot;, placeholder = &amp;quot;Please insert name here.</description>
@@ -53,10 +53,10 @@ library(shiny) library(purrr) library(stringr) ## Demo: Render UI Function ---- 
     
     <item>
       <title>RFM Model Timelapse</title>
-      <link>/2019-05-19-rfm-model-timelapse/</link>
+      <link>https://notsoformal.xyz/2019-05-19-rfm-model-timelapse/</link>
       <pubDate>Sun, 19 May 2019 00:00:00 +0000</pubDate>
       
-      <guid>/2019-05-19-rfm-model-timelapse/</guid>
+      <guid>https://notsoformal.xyz/2019-05-19-rfm-model-timelapse/</guid>
       <description>A simple exercise of plotting RFM (recency, frequency, monetary) model and using gganimate to add a cherry on top.
 Dataset: Dr Daqing Chen, Director: Public Analytics group. chend ‘@’ lsbu.ac.uk, School of Engineering, London South Bank University, London SE1 0AA, UK.
 httr::GET(&amp;quot;https://query.data.world/s/eibmlnrvn7hzil7adpfqceeity3im6&amp;quot;, write_disk(tf &amp;lt;- tempfile(fileext = &amp;quot;.xlsx&amp;quot;))) ## Response [https://download.data.world/file_download/uci/online-retail/Onlinex?auth=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJwcm9kLXVzZXItY2xpZW50OnRtYXMtamMiLCJpc3MiOiJhZ2VudDp0bWFzLWpjOjoyZDJkOGFjYy0yMDAwLTQ0NWQtOWVlZS02YTZlNDQ5MzI4MzMiLCJpYXQiOjE1NTc5NzQ0NTksInJvbGUiOlsidXNlciIsInVzZXJfYXBpX2FkbWluIiwidXNlcl9hcGlfcmVhZCIsInVzZXJfYXBpX3dyaXRlIl0sImdlbmVyYWwtcHVycG9zZSI6ZmFsc2UsInVybCI6IjJlZWY3ZTEwMzllNmU5NjRiNTdlZDdhNTJiNzYyNmVkNzM0NjM4M2YifQ.TH1yJ7mMLNo8jDJs_EAiuwEh4JJlQELaMJ_aJVVEKgyYYdiy-h_N56sgGbm1p8y1BIBaI3iFNM7yFwiGLE9Qpg] ## Date: 2020-02-08 13:58 ## Status: 200 ## Content-Type: text/html ## Size: 23.7 MB ## &amp;lt;ON DISK&amp;gt; /var/folders/xj/wctktk112yz7y6skyk6z40jr0000gp/T//RtmpWPTUw0/file7a177c67c6e2.xlsx raw &amp;lt;- read_excel(tf) %&amp;gt;% clean_names() # select important features dat &amp;lt;- raw %&amp;gt;% select(customer_id, invoice_no, invoice_date, unit_price, quantity) %&amp;gt;% mutate(total_paid = unit_price * quantity, invoice_date = lubridate::as_date(invoice_date)) %&amp;gt;% rename(date = invoice_date, invoice = invoice_no) # count in recency, frequency, and monetary d &amp;lt;- max(dat$date) dat &amp;lt;- dat %&amp;gt;% group_by(customer_id) %&amp;gt;% summarise(rec = time_length(interval(d, max(date)), &amp;quot;days&amp;quot;), freq = n_distinct(invoice), monet = sum(total_paid)) %&amp;gt;% mutate(rec = abs(rec), monet = monet / freq) %&amp;gt;% # only keep positive amount filter(monet &amp;gt;= 0) # EDA ------------------------------------------------------------ dat %&amp;gt;% gather(var, val, -customer_id) %&amp;gt;% group_by(var) %&amp;gt;% # remove outliers filter(val &amp;lt;= quantile(val, 0.</description>
@@ -64,10 +64,10 @@ httr::GET(&amp;quot;https://query.data.world/s/eibmlnrvn7hzil7adpfqceeity3im6&am
     
     <item>
       <title>Biased Coin Toss</title>
-      <link>/2019-04-21-biased-coin-toss/</link>
+      <link>https://notsoformal.xyz/2019-04-21-biased-coin-toss/</link>
       <pubDate>Sun, 21 Apr 2019 00:00:00 +0000</pubDate>
       
-      <guid>/2019-04-21-biased-coin-toss/</guid>
+      <guid>https://notsoformal.xyz/2019-04-21-biased-coin-toss/</guid>
       <description>From this paper “What’s Past Is Not Prologue” comes a quiz,
  You are presented with two coins: one is fair, and the other has a 60% chance of coming up heads. Unfortunately, you don’t know which is which. How many flips would you need to perform in parallel on the two coins to give yourself a 95% chance of correctly identifying the biased one?
  The following demonstrates 2 simulation methods to obtain the result.</description>
@@ -75,10 +75,10 @@ httr::GET(&amp;quot;https://query.data.world/s/eibmlnrvn7hzil7adpfqceeity3im6&am
     
     <item>
       <title>Exercise: Sales Forecast using MCM</title>
-      <link>/2019-04-09-case-study-sales-forecast-using-monte-carlo/</link>
+      <link>https://notsoformal.xyz/2019-04-09-case-study-sales-forecast-using-monte-carlo/</link>
       <pubDate>Tue, 09 Apr 2019 00:00:00 +0000</pubDate>
       
-      <guid>/2019-04-09-case-study-sales-forecast-using-monte-carlo/</guid>
+      <guid>https://notsoformal.xyz/2019-04-09-case-study-sales-forecast-using-monte-carlo/</guid>
       <description>Background Often, Monte Carlo simulation can come in handy to calculate risk or evaluate investments in projects. This is a simple demonstration.
  Exercise The following provides the breakdown of profit made by a business unit. All metrics are measured in daily basis.
 Profit = Income - Expenses Income = Sales (S) * Profit Margin per Sale (M) M assumes an uniform dist. from $350 to $400 S = Number of Leads (L) * Conversion Rate (R) L assumes an uniform dist.</description>
@@ -86,10 +86,10 @@ Profit = Income - Expenses Income = Sales (S) * Profit Margin per Sale (M) M ass
     
     <item>
       <title>Rowwise Operation</title>
-      <link>/2019-03-24-rowwise-operation/</link>
+      <link>https://notsoformal.xyz/2019-03-24-rowwise-operation/</link>
       <pubDate>Sun, 24 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>/2019-03-24-rowwise-operation/</guid>
+      <guid>https://notsoformal.xyz/2019-03-24-rowwise-operation/</guid>
       <description>Compare multiple methods to get row-wise operation done on a data frame.
 In this case, we wish to extract the corresponding highest value column.
 library(tidyverse) set.seed(1212) # a dummy data frame dummy_df &amp;lt;- matrix(runif(15, min = 1, max = 9), ncol = 3) %&amp;gt;% as_data_frame() ## Warning: `as_data_frame()` is deprecated, use `as_tibble()` (but mind the new semantics). ## This warning is displayed once per session. colnames(dummy_df) &amp;lt;- c(&amp;quot;x&amp;quot;, &amp;quot;y&amp;quot;, &amp;quot;z&amp;quot;) Method 1: dplyr::rowwise use_rowwise &amp;lt;- function(df) { df %&amp;gt;% rowwise() %&amp;gt;% mutate(max = names(df)[which.</description>
@@ -97,50 +97,50 @@ library(tidyverse) set.seed(1212) # a dummy data frame dummy_df &amp;lt;- matrix
     
     <item>
       <title>Curry&#39;s Streaking Hot Hand</title>
-      <link>/2019-03-16-the-hot-hands-fallacy/</link>
+      <link>https://notsoformal.xyz/2019-03-16-the-hot-hands-fallacy/</link>
       <pubDate>Sat, 16 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>/2019-03-16-the-hot-hands-fallacy/</guid>
+      <guid>https://notsoformal.xyz/2019-03-16-the-hot-hands-fallacy/</guid>
       <description>Steph Curry averaging .411 in 3-point field goal percentage during the 2016-17 season. On November 7 2016, he made 13 out of 17 3-point attemps. How likely was it to happen?
 library(ggplot2) library(dplyr) set.seed(123) # 3-point fg pct steph_curry = 0.411 # simulation trials trials = 10000 # simulate shot game in 17 attemps made &amp;lt;- replicate(trials, sum(rbinom(n = 17, size = 1, prob = steph_curry))) # plot it out made %&amp;gt;% as_data_frame() %&amp;gt;% ggplot(aes(made)) + geom_histogram(bins = 60) + geom_vline(xintercept = 13, col = &amp;quot;red&amp;quot;, lty = 4) + scale_x_continuous(breaks = seq(1, 20, 1)) + theme_light(base_family = &amp;quot;Menlo&amp;quot;) + labs(title = &amp;quot;Steph Curry&amp;#39;s Super Hot Hand&amp;quot;, x = &amp;quot;3-point made&amp;quot;, y = &amp;quot;Count&amp;quot;) ## Warning: `as_data_frame()` is deprecated, use `as_tibble()` (but mind the new semantics).</description>
     </item>
     
     <item>
       <title>Monty Hall Problem in R</title>
-      <link>/2019-03-16-monty-hall-problem-in-r/</link>
+      <link>https://notsoformal.xyz/2019-03-16-monty-hall-problem-in-r/</link>
       <pubDate>Fri, 15 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>/2019-03-16-monty-hall-problem-in-r/</guid>
+      <guid>https://notsoformal.xyz/2019-03-16-monty-hall-problem-in-r/</guid>
       <description>A few lines of code to one of the most classic problem in probability.
 library(magrittr) set.seed(1212) new_game &amp;lt;- function(x = 3) { # doors doors = as.integer(1:x) # initialize the prize behind of those doors prize = sample(doors, size = 1) # guest make a guess guess = sample(doors, size = 1) # open one of the doors knowing which has the prize open = doors[-c(prize, guess)][[1]] # if guest choose to switch switch_guess = doors[-c(guess, open)] # if guest does not switch no_switch_guess = guess return(list( prize = prize, original_guess = guess, open = open, switch = switch_guess, no_switch = no_switch_guess )) } new_game() ## $prize ## [1] 2 ## ## $original_guess ## [1] 1 ## ## $open ## [1] 3 ## ## $switch ## [1] 2 ## ## $no_switch ## [1] 1 # simulate many trials trials = 10000 # if switch everytime, what are the total winnings?</description>
     </item>
     
     <item>
       <title>Pokemon Card Game</title>
-      <link>/2019-03-10-pokemon-card-game/</link>
+      <link>https://notsoformal.xyz/2019-03-10-pokemon-card-game/</link>
       <pubDate>Sun, 10 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>/2019-03-10-pokemon-card-game/</guid>
+      <guid>https://notsoformal.xyz/2019-03-10-pokemon-card-game/</guid>
       <description>Imagine a Pokemon card game consists of (N = 586) unique cards. How many are the odds of collecting them all if we purchase many?
 library(magrittr) library(purrr) # A set of cards consists of N cards N = 586 # is it a complete set? complete_set &amp;lt;- function(n, m) { deck = sample(n, size = m, replace = TRUE) ifelse(length(unique(deck)) == n, TRUE, FALSE) } # what are the odds of getting full set if you purchase many cards?</description>
     </item>
     
     <item>
       <title>Simulate Customer Retention</title>
-      <link>/2019-02-28-simulate-customer-retention/</link>
+      <link>https://notsoformal.xyz/2019-02-28-simulate-customer-retention/</link>
       <pubDate>Thu, 28 Feb 2019 00:00:00 +0000</pubDate>
       
-      <guid>/2019-02-28-simulate-customer-retention/</guid>
+      <guid>https://notsoformal.xyz/2019-02-28-simulate-customer-retention/</guid>
       <description>The code below simulate a scenario where nc customers onboard during a ts timespan. However, none of them managed to retain for more than sp periods. The objective is to compare various customer retention analysis especially periodic and retrospective analysis techniques.
 library(tidyverse) library(charlatan) # Generate Some Samples ---------------------------------------------- # seeding set.seed(123) # number of customers nc = 500 # timespan (entire periods) ts = 1:12 # survival periods sp = 3 # generate some customers data cust_info &amp;lt;- data_frame( id = paste0(&amp;quot;KB&amp;quot;, ch_integer(n = nc, min = 100)), jobs = sample(ch_job(n = 4, locale = &amp;quot;zh_TW&amp;quot;), size = length(id), replace = TRUE) ) # generate a sequence of vector with length n make_seq &amp;lt;- function(n, x) { # initiate an empty vector vec = rep(0, n) # generate index with range no more than x ind = 1 : (2 + x) while(diff(range(ind)) &amp;gt; x) { ind = runif(x, 1, n + 1) } # fill vector with 1s vec[ind] &amp;lt;- 1 return(vec) } # repeats ts times surv_times &amp;lt;- nc %&amp;gt;% replicate(make_seq(max(ts), sp)) %&amp;gt;% t() %&amp;gt;% as_data_frame() names(surv_times) &amp;lt;- paste0(&amp;quot;M&amp;quot;, ts) # calc initial register period join &amp;lt;- apply(surv_times, 1, function(x) min(which(x == 1))) # samples dat &amp;lt;- bind_cols(cust_info, join = join, surv_times) head(dat)  ## # A tibble: 6 x 15 ## id jobs join M1 M2 M3 M4 M5 M6 M7 M8 M9 M10 ## &amp;lt;chr&amp;gt; &amp;lt;chr&amp;gt; &amp;lt;int&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; ## 1 KB514 清潔工 1 1 1 0 1 0 0 0 0 0 0 ## 2 KB562 清潔工 1 1 1 0 0 0 0 0 0 0 0 ## 3 KB278 不動產／商… 4 0 0 0 1 1 1 0 0 0 0 ## 4 KB625 清潔工 7 0 0 0 0 0 0 1 0 1 1 ## 5 KB294 產品事業處… 4 0 0 0 1 1 0 1 0 0 0 ## 6 KB917 財務或會計… 5 0 0 0 0 1 0 0 1 0 0 ## # … with 2 more variables: M11 &amp;lt;dbl&amp;gt;, M12 &amp;lt;dbl&amp;gt; # Active Customers --------------------------------------------- calc_active_rate &amp;lt;- function(m) { dat %&amp;gt;% gather(period, active, -c(id, jobs, join)) %&amp;gt;% filter(join &amp;lt;= m, period == paste0(&amp;quot;M&amp;quot;, m)) %&amp;gt;% summarise(rate = mean(active)) %&amp;gt;% `[[`(&amp;quot;rate&amp;quot;) } active_rate &amp;lt;- map_dbl(ts, calc_active_rate) # make plot data_frame(ts, active_rate) %&amp;gt;% ggplot(aes(ts, active_rate, group = 1)) + geom_point() + geom_line(col = &amp;quot;navyblue&amp;quot;) + scale_x_continuous(breaks = 1:12) + scale_y_continuous(labels = scales::percent) + coord_cartesian(ylim = seq(0, 1, 0.</description>
     </item>
     
     <item>
       <title>Tossing Coin Game</title>
-      <link>/2019-02-24-tossing-coin/</link>
+      <link>https://notsoformal.xyz/2019-02-24-tossing-coin/</link>
       <pubDate>Sun, 24 Feb 2019 00:00:00 +0000</pubDate>
       
-      <guid>/2019-02-24-tossing-coin/</guid>
+      <guid>https://notsoformal.xyz/2019-02-24-tossing-coin/</guid>
       <description>The use of simulation experiments to better probability patterns is called the Monte Carlo method. This is an example.
 Tossing Coin Game Tom and Jerry play a simple game of tossing a coin. If given heads, Tom pays Jerry a dollar. Otherwise, Jerry pays Tom a dollar.
 set.seed(1212) # how many tosses? number_of_tosses = 50 # simulate n tosses # 1 = head, -1 = tail (tosses &amp;lt;- sample(c(1, -1), size = number_of_tosses, replace = TRUE, prob = c(.</description>
@@ -148,28 +148,28 @@ set.seed(1212) # how many tosses? number_of_tosses = 50 # simulate n tosses # 1 
     
     <item>
       <title>Simple Bayesian</title>
-      <link>/2019-01-20-simple-bayesian/</link>
+      <link>https://notsoformal.xyz/2019-01-20-simple-bayesian/</link>
       <pubDate>Sun, 20 Jan 2019 00:00:00 +0000</pubDate>
       
-      <guid>/2019-01-20-simple-bayesian/</guid>
+      <guid>https://notsoformal.xyz/2019-01-20-simple-bayesian/</guid>
       <description>library(tidyverse) library(ggthemes) # set plot theme old &amp;lt;- theme_set(theme_tufte() + theme(text = element_text(family = &amp;quot;Menlo&amp;quot;))) # number of ads shown n_ads_shown &amp;lt;- 100 # parameters: number of visitors &amp;amp; proportional clicks n_visitors &amp;lt;- seq(0, 100, 1) prop_clicks &amp;lt;- seq(0, 1, 0.01) pars &amp;lt;- expand.grid(prop_clicks = prop_clicks, n_visitors = n_visitors) %&amp;gt;% sample_frac(1L) %&amp;gt;% as_tibble() # setup joint probability distribution pars &amp;lt;- pars %&amp;gt;% # assume an uniform distribution mutate(prior = dunif(prop_clicks, min = 0, max = .</description>
     </item>
     
     <item>
       <title>Pseudo R Squared</title>
-      <link>/2018-11-26-pseudo-r-squared/</link>
+      <link>https://notsoformal.xyz/2018-11-26-pseudo-r-squared/</link>
       <pubDate>Mon, 26 Nov 2018 00:00:00 +0000</pubDate>
       
-      <guid>/2018-11-26-pseudo-r-squared/</guid>
+      <guid>https://notsoformal.xyz/2018-11-26-pseudo-r-squared/</guid>
       <description>library(tidyverse) library(descr) # make reproducible set.seed(1234) # number of points nn &amp;lt;- 100 # An Simulated Model -------------------------------------------------------- # simulate binary response y &amp;lt;- rbinom(nn, 1, prob = .5) # single predictor x &amp;lt;- y + rnorm(nn, mean = 1, sd = .5) cor(x, y) ## [1] 0.7404515 # null model (without any predictor) null_mod &amp;lt;- glm(y ~ 1, family = &amp;quot;binomial&amp;quot;) # we know x is inheritly random some_mod &amp;lt;- glm(y ~ x, family = &amp;quot;binomial&amp;quot;) # glance summary(some_mod) ## ## Call: ## glm(formula = y ~ x, family = &amp;quot;binomial&amp;quot;) ## ## Deviance Residuals: ## Min 1Q Median 3Q Max ## -2.</description>
     </item>
     
     <item>
       <title>Map &#43; Reduce in Purrr</title>
-      <link>/2018-10-31-map-reduce-in-purrr/</link>
+      <link>https://notsoformal.xyz/2018-10-31-map-reduce-in-purrr/</link>
       <pubDate>Wed, 31 Oct 2018 00:00:00 +0000</pubDate>
       
-      <guid>/2018-10-31-map-reduce-in-purrr/</guid>
+      <guid>https://notsoformal.xyz/2018-10-31-map-reduce-in-purrr/</guid>
       <description>Say you have a list which tells you what is y at x. You intend to manipulate y based on certain condition of x.
 For example, given
 # here x = year, y = some value (some_list &amp;lt;- list( &amp;quot;year1&amp;quot; = 60, &amp;quot;year2&amp;quot; = 70, &amp;quot;year3&amp;quot; = 75, &amp;quot;year4&amp;quot; = 80, &amp;quot;year5&amp;quot; = 100 )) ## $year1 ## [1] 60 ## ## $year2 ## [1] 70 ## ## $year3 ## [1] 75 ## ## $year4 ## [1] 80 ## ## $year5 ## [1] 100 What is the cumulative sum of y at year 1, 3, 5?</description>
@@ -177,20 +177,20 @@ For example, given
     
     <item>
       <title>Programming in dplyr - Row Filtering</title>
-      <link>/2018-10-28-programming-in-dplyr-row-filtering/</link>
+      <link>https://notsoformal.xyz/2018-10-28-programming-in-dplyr-row-filtering/</link>
       <pubDate>Sun, 28 Oct 2018 00:00:00 +0000</pubDate>
       
-      <guid>/2018-10-28-programming-in-dplyr-row-filtering/</guid>
+      <guid>https://notsoformal.xyz/2018-10-28-programming-in-dplyr-row-filtering/</guid>
       <description>How do you program the row filtering dynamically when working with dplyr verb? Say we have a dataframe with 2 columns, x and y.
 library(tidyverse) library(rlang) # make some sample set.seed(1234) df &amp;lt;- 2 %&amp;gt;% rerun(rnorm(100, 10, 2) %&amp;gt;% round()) %&amp;gt;% bind_cols() colnames(df) &amp;lt;- c(&amp;quot;x&amp;quot;, &amp;quot;y&amp;quot;) # simple plot p &amp;lt;- df %&amp;gt;% ggplot(aes(x, y)) + geom_point(position = position_jitter(width = 1), alpha = 0.7) + theme_minimal() p Our objective here is to ‘zone’ out the points that fall in the 50th percentile of both x and y.</description>
     </item>
     
     <item>
       <title>Use Snap to install the Hugo edge version on Fedora and Ubuntu</title>
-      <link>/use-snap-to-install-the-hugo-edge-version-on-fedora-and-ubuntu/</link>
+      <link>https://notsoformal.xyz/use-snap-to-install-the-hugo-edge-version-on-fedora-and-ubuntu/</link>
       <pubDate>Fri, 26 Oct 2018 12:59:51 -0500</pubDate>
       
-      <guid>/use-snap-to-install-the-hugo-edge-version-on-fedora-and-ubuntu/</guid>
+      <guid>https://notsoformal.xyz/use-snap-to-install-the-hugo-edge-version-on-fedora-and-ubuntu/</guid>
       <description>If you are using the Fedora or Ubuntu Linux distributions &amp;ndash; I&amp;rsquo;m currently on Fedora 28 &amp;ndash; and would like to help test the latest development version of Hugo, or if you just want to be on the bleeding-edge of things, this post is for you.
 Fedora-only steps To get started, install Snap on Fedora:
 sudo dnf install snapd Add the Snap directory to your PATH by adding this line to your ~/.</description>
@@ -198,10 +198,10 @@ sudo dnf install snapd Add the Snap directory to your PATH by adding this line t
     
     <item>
       <title>Script to add a page-level variable to content front matter in hugo</title>
-      <link>/script-to-add-a-page-level-variable-to-content-front-matter-in-hugo/</link>
+      <link>https://notsoformal.xyz/script-to-add-a-page-level-variable-to-content-front-matter-in-hugo/</link>
       <pubDate>Wed, 10 Oct 2018 12:43:20 -0500</pubDate>
       
-      <guid>/script-to-add-a-page-level-variable-to-content-front-matter-in-hugo/</guid>
+      <guid>https://notsoformal.xyz/script-to-add-a-page-level-variable-to-content-front-matter-in-hugo/</guid>
       <description>This was originally a question posed on the hugo discussion forums.
 The user wanted to loop through all her content files and add a weight page-level variable to the front matter. The value of weight needed to be the first 2 characters of the content filename, since her content was named like 01_content.md, 02_content.md, etc.
 She then wanted to range through her pages by their weight, like so:
@@ -210,40 +210,40 @@ She then wanted to range through her pages by their weight, like so:
     
     <item>
       <title>Programming in dplyr - Column Manipulation</title>
-      <link>/2018-09-07-dynamic-variable-name-in-dplyr/</link>
+      <link>https://notsoformal.xyz/2018-09-07-dynamic-variable-name-in-dplyr/</link>
       <pubDate>Fri, 07 Sep 2018 00:00:00 +0000</pubDate>
       
-      <guid>/2018-09-07-dynamic-variable-name-in-dplyr/</guid>
+      <guid>https://notsoformal.xyz/2018-09-07-dynamic-variable-name-in-dplyr/</guid>
       <description>How do you program the column manipulation dynamically when working with dplyr verb? Say, we have a dataframe with multiple columns in pair,
 library(tidyverse) # simulate some data df &amp;lt;- rerun(3 * 2, rnorm(10, 5, 2)) %&amp;gt;% bind_cols() # imagine some column names colnames(df) &amp;lt;- map(c(&amp;quot;weight&amp;quot;, &amp;quot;height&amp;quot;, &amp;quot;length&amp;quot;), paste0, c(&amp;quot;.x&amp;quot;, &amp;quot;.y&amp;quot;)) %&amp;gt;% unlist() df ## # A tibble: 10 x 6 ## weight.x weight.y height.x height.y length.x length.y ## &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; ## 1 6.</description>
     </item>
     
     <item>
       <title>Vlookup Snippet in Command Line</title>
-      <link>/2018-08-06-vlookup-snippet-in-command-line/</link>
+      <link>https://notsoformal.xyz/2018-08-06-vlookup-snippet-in-command-line/</link>
       <pubDate>Mon, 06 Aug 2018 00:00:00 +0000</pubDate>
       
-      <guid>/2018-08-06-vlookup-snippet-in-command-line/</guid>
+      <guid>https://notsoformal.xyz/2018-08-06-vlookup-snippet-in-command-line/</guid>
       <description>A general Rscript to run in command line, to extract value from table.
 #!/usr/bin/env Rscript --vanilla library(argparser) library(readr) library(stringr) # read from stdin p &amp;lt;- arg_parser(description = &amp;quot;Parse value from a table read from a text file.&amp;quot;) # required arguments p &amp;lt;- add_argument(p, c(&amp;quot;txt&amp;quot;, &amp;quot;--key&amp;quot;, &amp;quot;--value&amp;quot;, &amp;quot;--lookup&amp;quot;), help = c(&amp;quot;text file&amp;quot;, &amp;quot;key identifier&amp;quot;, &amp;quot;key id value&amp;quot;, &amp;quot;item to lookup&amp;quot;)) p &amp;lt;- add_argument(p, &amp;quot;--regex&amp;quot;, help = &amp;quot;regex pattern to extract, if any&amp;quot;, default = &amp;quot;.</description>
     </item>
     
     <item>
       <title>Check Binary True / False Columns</title>
-      <link>/2018-08-05-check-binary-true-false-columns/</link>
+      <link>https://notsoformal.xyz/2018-08-05-check-binary-true-false-columns/</link>
       <pubDate>Sun, 05 Aug 2018 00:00:00 +0000</pubDate>
       
-      <guid>/2018-08-05-check-binary-true-false-columns/</guid>
+      <guid>https://notsoformal.xyz/2018-08-05-check-binary-true-false-columns/</guid>
       <description>2 methods which identify columns attributes, which are the true / false columns?
 library(tidyverse) data(&amp;quot;mtcars&amp;quot;) Method 1: apply # use apply m1 &amp;lt;- apply(mtcars, 2, function(x) { na.omit(x) %in% c(0, 1) %&amp;gt;% all() }) %&amp;gt;% which(. == 1) %&amp;gt;% names() m1 ## [1] &amp;quot;vs&amp;quot; &amp;quot;am&amp;quot;  Method 2: map + which # first identify binary columns m2 &amp;lt;- map(mtcars, ~ unique(.) %&amp;gt;% length()) %$% which(. == 2, arr.ind = TRUE) %&amp;gt;% # then identity if true / false only map(~ unique(mtcars[[.</description>
     </item>
     
     <item>
       <title>Split Data Frame into Smaller Chunks</title>
-      <link>/2018-08-02-split-data-frame-into-smaller-chunks/</link>
+      <link>https://notsoformal.xyz/2018-08-02-split-data-frame-into-smaller-chunks/</link>
       <pubDate>Thu, 02 Aug 2018 00:00:00 +0000</pubDate>
       
-      <guid>/2018-08-02-split-data-frame-into-smaller-chunks/</guid>
+      <guid>https://notsoformal.xyz/2018-08-02-split-data-frame-into-smaller-chunks/</guid>
       <description>When writing from Docker container to MySQL,
 Error: MySQL server has gone away... try split your dataset into smaller chunks,
 library(tidyverse) library(MASS) data(&amp;quot;Boston&amp;quot;) df &amp;lt;- Boston # cut into desired chunks, here chunk size = 100 indices &amp;lt;- (nrow(df) %&amp;gt;% seq() - 1) %/% 100 df_chunks &amp;lt;- split(df, indices) and write into database with iteration.
@@ -252,29 +252,29 @@ library(DBI) # remember to append, do not overwrite lapply(df_chunks, dbWriteTab
     
     <item>
       <title>Dixon Q-Test</title>
-      <link>/2018-06-25-dixon-q-test/</link>
+      <link>https://notsoformal.xyz/2018-06-25-dixon-q-test/</link>
       <pubDate>Mon, 25 Jun 2018 00:00:00 +0000</pubDate>
       
-      <guid>/2018-06-25-dixon-q-test/</guid>
+      <guid>https://notsoformal.xyz/2018-06-25-dixon-q-test/</guid>
       <description>library(dplyr) library(outliers) set.seed(5678) get_case &amp;lt;- function(which_case = c(&amp;quot;one&amp;quot;, &amp;quot;two&amp;quot;)){ # generate data from a normal distribution dat &amp;lt;- rnorm(n = 10, mean = 1000, sd = 100) %&amp;gt;% round() switch(which_case, # add outlier on the left &amp;quot;one&amp;quot; = c(dat, round(mean(dat) - sd(dat) * 3.5) ), # add outlier on the right &amp;quot;two&amp;quot; = c(dat, round(sd(dat) * 3.5 + mean(dat)) ) ) } Case One: Test Mininum Value by Default ——————————— vecs &amp;lt;- get_case(&amp;quot;one&amp;quot;) plot(rep(1,length(vecs)), vecs) boxplot(vecs, add = TRUE) dixon.</description>
     </item>
     
     <item>
       <title>Random Grouping by Int Division</title>
-      <link>/2018-06-12-random-grouping-by-int-division/</link>
+      <link>https://notsoformal.xyz/2018-06-12-random-grouping-by-int-division/</link>
       <pubDate>Tue, 12 Jun 2018 00:00:00 +0000</pubDate>
       
-      <guid>/2018-06-12-random-grouping-by-int-division/</guid>
+      <guid>https://notsoformal.xyz/2018-06-12-random-grouping-by-int-division/</guid>
       <description>One way to assign a random grouping is to perform modulo operation.
 library(dplyr) library(ggplot2) # Generate N numbers randnums &amp;lt;- function(n, min = 0, max = 10000){ sample(x = c(min:max), size = n, replace = FALSE) } nums &amp;lt;- randnums(1000) # Find int division mods &amp;lt;- nums %% 3 # Check groupings table(mods) ## mods ## 0 1 2 ## 302 345 353 # Repeat many times reps &amp;lt;- purrr::map(1:2000, ~table(randnums(1000) %% 3)) reps %&amp;gt;% unlist() %&amp;gt;% bind_cols(mod = rep(c(0, 1, 2), 2000), val = .</description>
     </item>
     
     <item>
       <title>Twelve-Factor App</title>
-      <link>/2018-06-12-twelve-factor-app/</link>
+      <link>https://notsoformal.xyz/2018-06-12-twelve-factor-app/</link>
       <pubDate>Tue, 12 Jun 2018 00:00:00 +0000</pubDate>
       
-      <guid>/2018-06-12-twelve-factor-app/</guid>
+      <guid>https://notsoformal.xyz/2018-06-12-twelve-factor-app/</guid>
       <description>The Twelve-Factor App is a methodology for building software-as-a-service apps that:
 It uses declarative formats for setup automation; It works with a clean contract with the operating system for greater portability between environments; It limits the differences between development and production, for continuous deployment; And it allows for scaling up and down without major changes.  From clearlytech:
 1. Codebase - One codebase tracked in revision control, many deploys 2.</description>
@@ -282,10 +282,10 @@ It uses declarative formats for setup automation; It works with a clean contract
     
     <item>
       <title>Application Configuration into Docker Container</title>
-      <link>/2018-06-08-application-configuration-into-docker-container/</link>
+      <link>https://notsoformal.xyz/2018-06-08-application-configuration-into-docker-container/</link>
       <pubDate>Fri, 08 Jun 2018 00:00:00 +0000</pubDate>
       
-      <guid>/2018-06-08-application-configuration-into-docker-container/</guid>
+      <guid>https://notsoformal.xyz/2018-06-08-application-configuration-into-docker-container/</guid>
       <description> Send configuration to Dockerized Apps,
 Baking the configuration into the container itself via Dockerfile
  Setting the application configutation dynamically via ENV
@@ -296,49 +296,49 @@ Baking the configuration into the container itself via Dockerfile
     
     <item>
       <title>Compute by Matrix Column</title>
-      <link>/2018-04-10-compute-by-matrix-column/</link>
+      <link>https://notsoformal.xyz/2018-04-10-compute-by-matrix-column/</link>
       <pubDate>Tue, 10 Apr 2018 00:00:00 +0000</pubDate>
       
-      <guid>/2018-04-10-compute-by-matrix-column/</guid>
+      <guid>https://notsoformal.xyz/2018-04-10-compute-by-matrix-column/</guid>
       <description>library(tidyverse) # dummy data mat &amp;lt;- matrix(rnorm(20 * 5, mean = 100, sd = sqrt(10)) %&amp;gt;% round(digits = 2), 20, 5) mat ## [,1] [,2] [,3] [,4] [,5] ## [1,] 98.54 97.35 97.87 100.25 100.55 ## [2,] 104.57 99.15 97.69 97.38 105.13 ## [3,] 100.09 103.99 100.44 102.01 98.99 ## [4,] 100.24 101.53 100.89 100.07 101.49 ## [5,] 94.90 99.45 99.07 102.14 99.20 ## [6,] 109.11 101.44 100.49 99.05 98.</description>
     </item>
     
     <item>
       <title>Cleaning Messy Data</title>
-      <link>/2018-03-08-mit-tech-review/</link>
+      <link>https://notsoformal.xyz/2018-03-08-mit-tech-review/</link>
       <pubDate>Thu, 08 Mar 2018 00:00:00 +0000</pubDate>
       
-      <guid>/2018-03-08-mit-tech-review/</guid>
+      <guid>https://notsoformal.xyz/2018-03-08-mit-tech-review/</guid>
       <description>Get some sample data.
 library(rvest) library(dplyr) # Scrap info from MIT Technology Review xml &amp;lt;- &amp;quot;https://www.technologyreview.com/lists/companies/2017/intro/&amp;quot; %&amp;gt;% read_html() info &amp;lt;- xml %&amp;gt;% html_nodes(css = &amp;quot;.company__stats__item , .company__title&amp;quot;) %&amp;gt;% html_text() # Do not need &amp;quot;Valuation&amp;quot; info &amp;lt;- info[-(info %&amp;gt;% grep(pattern = &amp;quot;^Valuation\\s&amp;quot;))] head(info, 10) ## [1] &amp;quot;Nvidia&amp;quot; ## [2] &amp;quot;\n\t\t\tHeadquarters\n\t\t\t\n\t\t\tSanta Clara, California\n\t\t&amp;quot; ## [3] &amp;quot;Industry Intelligent machines&amp;quot; ## [4] &amp;quot;Status Public&amp;quot; ## [5] &amp;quot;Years on the List\n\t\t\t\n\t\t\t\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\t2015\n\t\t\t\t\t,\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\t2016\n\t\t\t\t\t,\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\t2017\n\t\t\t\t\t\n\t\t\n\t\t\n\t\t&amp;quot; ## [6] &amp;quot;SpaceX&amp;quot; ## [7] &amp;quot;\n\t\t\tHeadquarters\n\t\t\t\n\t\t\tHawthorne, California\n\t\t&amp;quot; ## [8] &amp;quot;Industry Transportation&amp;quot; ## [9] &amp;quot;Status Private&amp;quot; ## [10] &amp;quot;Years on the List\n\t\t\t\n\t\t\t\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\t2011\n\t\t\t\t\t,\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\t2012\n\t\t\t\t\t,\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\t2013\n\t\t\t\t\t,\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\t2014\n\t\t\t\t\t,\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\t2015\n\t\t\t\t\t,\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\t2016\n\t\t\t\t\t,\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\t2017\n\t\t\t\t\t\n\t\t\n\t\t\n\t\t&amp;quot; Convert from vector to data frame.</description>
     </item>
     
     <item>
       <title>Data.Table</title>
-      <link>/2018-02-09-data-frame-tip/</link>
+      <link>https://notsoformal.xyz/2018-02-09-data-frame-tip/</link>
       <pubDate>Fri, 09 Feb 2018 00:00:00 +0000</pubDate>
       
-      <guid>/2018-02-09-data-frame-tip/</guid>
+      <guid>https://notsoformal.xyz/2018-02-09-data-frame-tip/</guid>
       <description>A quick walkthrough on using data.table in performing long-to-wide operation on data frame. Significant improvement on speed.
 library(dplyr) library(tidyr) library(data.table) # set options(DT.options = list(pageLength = 5, dom = &amp;#39;tip&amp;#39;)) set.seed(123) rand &amp;lt;- runif(1e7, min = 1, max = length(LETTERS)) %&amp;gt;% round() # Make some dummy data df &amp;lt;- data.frame( letters = LETTERS[rand] %&amp;gt;% sample(), num = (1:length(LETTERS))[rand] %&amp;gt;% sample() ) # Add count for spreading later df &amp;lt;- df %&amp;gt;% group_by(letters) %&amp;gt;% mutate(count = 1:length(letters)) %&amp;gt;% arrange(letters, count) head(df, 10) ## # A tibble: 10 x 3 ## # Groups: letters [1] ## letters num count ## &amp;lt;fct&amp;gt; &amp;lt;int&amp;gt; &amp;lt;int&amp;gt; ## 1 A 20 1 ## 2 A 17 2 ## 3 A 10 3 ## 4 A 1 4 ## 5 A 23 5 ## 6 A 10 6 ## 7 A 5 7 ## 8 A 4 8 ## 9 A 19 9 ## 10 A 6 10 Let’s try out different methods on converting above long data frame to wide format.</description>
     </item>
     
     <item>
       <title>parDist</title>
-      <link>/2018-02-09-par-dist/</link>
+      <link>https://notsoformal.xyz/2018-02-09-par-dist/</link>
       <pubDate>Fri, 09 Feb 2018 00:00:00 +0000</pubDate>
       
-      <guid>/2018-02-09-par-dist/</guid>
+      <guid>https://notsoformal.xyz/2018-02-09-par-dist/</guid>
       <description>Problem Statement:  We have a large dataset. We need to compute its distance matrix (i.e. for clustering purposes). The complexity for a N * P matrix is N(N-1)/2 * 3P
   Create Sample library(dplyr) ## ## Attaching package: &amp;#39;dplyr&amp;#39; ## The following objects are masked from &amp;#39;package:stats&amp;#39;: ## ## filter, lag ## The following objects are masked from &amp;#39;package:base&amp;#39;: ## ## intersect, setdiff, setequal, union pts &amp;lt;- rnorm(1e4, mean = c(5, 5, 10, 10, 15, 15), sd = 1) %&amp;gt;% matrix(ncol = 2, byrow = T) pts %&amp;gt;% plot(xlab = &amp;quot;x&amp;quot;, ylab = &amp;quot;y&amp;quot;)  Package ‘parallelDist’ parallelDist is a fast parallelized alternative to R’s native dist function.</description>
     </item>
     
     <item>
       <title>Labels Detection w/ Google Cloud Vision</title>
-      <link>/2018-02-05-simple-request-to-google-cloud-vision/</link>
+      <link>https://notsoformal.xyz/2018-02-05-simple-request-to-google-cloud-vision/</link>
       <pubDate>Mon, 05 Feb 2018 00:00:00 +0000</pubDate>
       
-      <guid>/2018-02-05-simple-request-to-google-cloud-vision/</guid>
+      <guid>https://notsoformal.xyz/2018-02-05-simple-request-to-google-cloud-vision/</guid>
       <description>A quick 10 on using Google Cloud Vision REST API to perform data analysis on images.
 Endpoint
  https://vision.googleapis.com/v1/images:annotate
@@ -347,20 +347,11 @@ Using an API key Using A Service Account   Request Body and Responses The body o
     </item>
     
     <item>
-      <title>SE to NSE</title>
-      <link>/2018-01-23-se-to-nse/</link>
-      <pubDate>Tue, 23 Jan 2018 00:00:00 +0000</pubDate>
-      
-      <guid>/2018-01-23-se-to-nse/</guid>
-      <description>library(dplyr) ## ## Attaching package: &amp;#39;dplyr&amp;#39; ## The following objects are masked from &amp;#39;package:stats&amp;#39;: ## ## filter, lag ## The following objects are masked from &amp;#39;package:base&amp;#39;: ## ## intersect, setdiff, setequal, union measure &amp;lt;- list(&amp;quot;mean&amp;quot;, &amp;quot;sd&amp;quot;, &amp;quot;max&amp;quot;, &amp;quot;min&amp;quot;) vars &amp;lt;- list(&amp;quot;disp&amp;quot;, &amp;quot;hp&amp;quot;, &amp;quot;wt&amp;quot;) # Set names fnames &amp;lt;- lapply(X = measure, FUN = function(x, y)paste0(x, &amp;quot;-&amp;quot;, y), y = vars) %&amp;gt;% unlist() # Set functions ffuns &amp;lt;- lapply(X = measure, FUN = function(x, y)paste0(x, &amp;quot;(&amp;quot;, y, &amp;quot;)&amp;quot;), y = vars) %&amp;gt;% unlist() mtcars %&amp;gt;% # group by cylinder group_by(cyl) %&amp;gt;% summarise_(.</description>
-    </item>
-    
-    <item>
       <title>Bar, Bended Bar, and Treemap</title>
-      <link>/2018-01-21-visualise-count-observations/</link>
+      <link>https://notsoformal.xyz/2018-01-21-visualise-count-observations/</link>
       <pubDate>Sun, 21 Jan 2018 00:00:00 +0000</pubDate>
       
-      <guid>/2018-01-21-visualise-count-observations/</guid>
+      <guid>https://notsoformal.xyz/2018-01-21-visualise-count-observations/</guid>
       <description>In this exercise, we will visualize Standard &amp;amp; Poor’s 500 Index industry composition.
 Gettting sp500_sectora We will scrap the sp500_sectora from Wikipedia page, with rvest.
 library(dplyr) library(rvest) url &amp;lt;- &amp;quot;https://en.wikipedia.org/wiki/List_of_S%26P_500_companies&amp;quot; sp500 &amp;lt;- url %&amp;gt;% read_html() %&amp;gt;% # How do I select css? html_node(css = &amp;quot;table.wikitable&amp;quot;) %&amp;gt;% html_table() %&amp;gt;% mutate(sector = factor(`GICS Sector`)) %&amp;gt;% as_tibble() sp500 ## # A tibble: 505 x 10 ## Symbol Security `SEC filings` `GICS Sector` `GICS Sub Indus… `Headquarters L… ## &amp;lt;chr&amp;gt; &amp;lt;chr&amp;gt; &amp;lt;chr&amp;gt; &amp;lt;chr&amp;gt; &amp;lt;chr&amp;gt; &amp;lt;chr&amp;gt; ## 1 MMM 3M Comp… reports Industrials Industrial Cong… St.</description>
@@ -368,10 +359,10 @@ library(dplyr) library(rvest) url &amp;lt;- &amp;quot;https://en.wikipedia.org/w
     
     <item>
       <title>reactiveVal(ues)</title>
-      <link>/2018-01-17-reactiveval-ues/</link>
+      <link>https://notsoformal.xyz/2018-01-17-reactiveval-ues/</link>
       <pubDate>Wed, 17 Jan 2018 00:00:00 +0000</pubDate>
       
-      <guid>/2018-01-17-reactiveval-ues/</guid>
+      <guid>https://notsoformal.xyz/2018-01-17-reactiveval-ues/</guid>
       <description>Let’s say we wish to toggle between 2 objects and assign either one of them to 1 common reactive value.
 For an instance, we have a plot output and 2 buttons,
 * when button one is pressed, plot displays a histogram of a normal distribution,
@@ -383,10 +374,10 @@ reactiveVal is very similar to reactiveValues, except that the former is for a s
     
     <item>
       <title>Hello World!</title>
-      <link>/2018-01-16-hello-world-my-first-post/</link>
+      <link>https://notsoformal.xyz/2018-01-16-hello-world-my-first-post/</link>
       <pubDate>Tue, 16 Jan 2018 00:00:00 +0000</pubDate>
       
-      <guid>/2018-01-16-hello-world-my-first-post/</guid>
+      <guid>https://notsoformal.xyz/2018-01-16-hello-world-my-first-post/</guid>
       <description>Decided to start a blog in 2018, as a hub for my collection of code and thoughts.
 I set out my goal for this year, to be more active in contributing to open source and open data community.
 Hopefully, this place will be crowded with materials soon.</description>
@@ -394,20 +385,20 @@ Hopefully, this place will be crowded with materials soon.</description>
     
     <item>
       <title>Creating a New Theme</title>
-      <link>/creating-a-new-theme/</link>
+      <link>https://notsoformal.xyz/creating-a-new-theme/</link>
       <pubDate>Sun, 28 Sep 2014 00:00:00 +0000</pubDate>
       
-      <guid>/creating-a-new-theme/</guid>
+      <guid>https://notsoformal.xyz/creating-a-new-theme/</guid>
       <description>Introduction This tutorial will show you how to create a simple theme in Hugo. I assume that you are familiar with HTML, the bash command line, and that you are comfortable using Markdown to format content. I&amp;rsquo;ll explain how Hugo uses templates and how you can organize your templates to create a theme. I won&amp;rsquo;t cover using CSS to style your theme.
 We&amp;rsquo;ll start with creating a new site with a very basic template.</description>
     </item>
     
     <item>
       <title>About</title>
-      <link>/about/</link>
+      <link>https://notsoformal.xyz/about/</link>
       <pubDate>Wed, 09 Apr 2014 00:00:00 +0000</pubDate>
       
-      <guid>/about/</guid>
+      <guid>https://notsoformal.xyz/about/</guid>
       <description>This Theme Thanks for visiting this theme demo. If you&amp;rsquo;re interested, checkout my other stuff over at https://zwbetz.com
 Hugo Hugo is the world’s fastest framework for building websites. It is written in Go.
 It makes use of a variety of open source projects including:
@@ -417,20 +408,20 @@ It makes use of a variety of open source projects including:
     
     <item>
       <title>(Hu)go Template Primer</title>
-      <link>/goisforlovers/</link>
+      <link>https://notsoformal.xyz/goisforlovers/</link>
       <pubDate>Wed, 02 Apr 2014 00:00:00 +0000</pubDate>
       
-      <guid>/goisforlovers/</guid>
+      <guid>https://notsoformal.xyz/goisforlovers/</guid>
       <description>Hugo uses the excellent Go html/template library for its template engine. It is an extremely lightweight engine that provides a very small amount of logic. In our experience that it is just the right amount of logic to be able to create a good static website. If you have used other template systems from different languages or frameworks you will find a lot of similarities in Go templates.
 This document is a brief primer on using Go templates.</description>
     </item>
     
     <item>
       <title>Getting Started with Hugo</title>
-      <link>/hugoisforlovers/</link>
+      <link>https://notsoformal.xyz/hugoisforlovers/</link>
       <pubDate>Wed, 02 Apr 2014 00:00:00 +0000</pubDate>
       
-      <guid>/hugoisforlovers/</guid>
+      <guid>https://notsoformal.xyz/hugoisforlovers/</guid>
       <description>Step 1. Install Hugo Go to Hugo releases and download the appropriate version for your OS and architecture.
 Save it somewhere specific as we will be using it in the next step.
 More complete instructions are available at Install Hugo
@@ -441,10 +432,10 @@ Follow the following steps:
     
     <item>
       <title>Migrate to Hugo from Jekyll</title>
-      <link>/migrate-from-jekyll/</link>
+      <link>https://notsoformal.xyz/migrate-from-jekyll/</link>
       <pubDate>Mon, 10 Mar 2014 00:00:00 +0000</pubDate>
       
-      <guid>/migrate-from-jekyll/</guid>
+      <guid>https://notsoformal.xyz/migrate-from-jekyll/</guid>
       <description>Move static content to static Jekyll has a rule that any directory not starting with _ will be copied as-is to the _site output. Hugo keeps all static content under static. You should therefore move it all there. With Jekyll, something that looked like
 ▾ &amp;lt;root&amp;gt;/ ▾ images/ logo.png  should become
 ▾ &amp;lt;root&amp;gt;/ ▾ static/ ▾ images/ logo.png  Additionally, you&amp;rsquo;ll want any files that should reside at the root (such as CNAME) to be moved to static.</description>
