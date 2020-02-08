@@ -3,6 +3,191 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>/tags/httr/</loc>
+    <lastmod>2019-11-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/</loc>
+    <lastmod>2019-11-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/</loc>
+    <lastmod>2019-11-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/</loc>
+    <lastmod>2019-11-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2019-11-10-trigger-dingtalk-webhook-from-r/</loc>
+    <lastmod>2019-11-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/webhooks/</loc>
+    <lastmod>2019-11-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2019-10-06-is-james-harden-been-given-special-treatment-by-referee/</loc>
+    <lastmod>2019-10-06T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/isittrue/</loc>
+    <lastmod>2019-10-06T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/database/</loc>
+    <lastmod>2019-07-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/shiny/</loc>
+    <lastmod>2019-07-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2019-07-02-streaming-data-from-database-to-shiny/</loc>
+    <lastmod>2019-07-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2019-06-20-dynamic-ui/</loc>
+    <lastmod>2019-06-20T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/rlang/</loc>
+    <lastmod>2019-06-20T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/gganimate/</loc>
+    <lastmod>2019-05-19T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/ggplot2/</loc>
+    <lastmod>2019-05-19T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2019-05-19-rfm-model-timelapse/</loc>
+    <lastmod>2019-05-19T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2019-04-21-biased-coin-toss/</loc>
+    <lastmod>2019-04-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/monte-carlo/</loc>
+    <lastmod>2019-04-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2019-04-09-case-study-sales-forecast-using-monte-carlo/</loc>
+    <lastmod>2019-04-09T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/data.table/</loc>
+    <lastmod>2019-03-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/plyr/</loc>
+    <lastmod>2019-03-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2019-03-24-rowwise-operation/</loc>
+    <lastmod>2019-03-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2019-03-16-the-hot-hands-fallacy/</loc>
+    <lastmod>2019-03-16T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2019-03-16-monty-hall-problem-in-r/</loc>
+    <lastmod>2019-03-15T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2019-03-10-pokemon-card-game/</loc>
+    <lastmod>2019-03-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2019-02-28-simulate-customer-retention/</loc>
+    <lastmod>2019-02-28T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/survival/</loc>
+    <lastmod>2019-02-28T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2019-02-24-tossing-coin/</loc>
+    <lastmod>2019-02-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/bayesian/</loc>
+    <lastmod>2019-01-20T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2019-01-20-simple-bayesian/</loc>
+    <lastmod>2019-01-20T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/descr/</loc>
+    <lastmod>2018-11-26T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2018-11-26-pseudo-r-squared/</loc>
+    <lastmod>2018-11-26T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2018-10-31-map-reduce-in-purrr/</loc>
+    <lastmod>2018-10-31T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/purrr/</loc>
+    <lastmod>2018-10-31T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/dplyr/</loc>
+    <lastmod>2018-10-28T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2018-10-28-programming-in-dplyr-row-filtering/</loc>
+    <lastmod>2018-10-28T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/tidyeval/</loc>
+    <lastmod>2018-10-28T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/tags/fedora/</loc>
     <lastmod>2018-10-26T00:00:00+00:00</lastmod>
   </url>
@@ -13,22 +198,7 @@
   </url>
   
   <url>
-    <loc>/</loc>
-    <lastmod>2018-10-26T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/post/</loc>
-    <lastmod>2018-10-26T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/tags/snap/</loc>
-    <lastmod>2018-10-26T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/</loc>
     <lastmod>2018-10-26T00:00:00+00:00</lastmod>
   </url>
   
@@ -55,6 +225,151 @@
   <url>
     <loc>/script-to-add-a-page-level-variable-to-content-front-matter-in-hugo/</loc>
     <lastmod>2018-10-11T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2018-09-07-dynamic-variable-name-in-dplyr/</loc>
+    <lastmod>2018-09-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/shell/</loc>
+    <lastmod>2018-08-06T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2018-08-06-vlookup-snippet-in-command-line/</loc>
+    <lastmod>2018-08-06T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2018-08-05-check-binary-true-false-columns/</loc>
+    <lastmod>2018-08-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/mysql/</loc>
+    <lastmod>2018-08-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2018-08-02-split-data-frame-into-smaller-chunks/</loc>
+    <lastmod>2018-08-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2018-06-25-dixon-q-test/</loc>
+    <lastmod>2018-06-25T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/outliers/</loc>
+    <lastmod>2018-06-25T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/math/</loc>
+    <lastmod>2018-06-12T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2018-06-12-random-grouping-by-int-division/</loc>
+    <lastmod>2018-06-12T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/saas/</loc>
+    <lastmod>2018-06-12T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2018-06-12-twelve-factor-app/</loc>
+    <lastmod>2018-06-12T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2018-06-08-application-configuration-into-docker-container/</loc>
+    <lastmod>2018-06-08T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/docker/</loc>
+    <lastmod>2018-06-08T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2018-04-10-compute-by-matrix-column/</loc>
+    <lastmod>2018-04-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/matrix/</loc>
+    <lastmod>2018-04-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2018-03-08-mit-tech-review/</loc>
+    <lastmod>2018-03-08T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2018-02-09-data-frame-tip/</loc>
+    <lastmod>2018-02-09T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/paralleldist/</loc>
+    <lastmod>2018-02-09T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2018-02-09-par-dist/</loc>
+    <lastmod>2018-02-09T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/gcp/</loc>
+    <lastmod>2018-02-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2018-02-05-simple-request-to-google-cloud-vision/</loc>
+    <lastmod>2018-02-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2018-01-23-se-to-nse/</loc>
+    <lastmod>2018-01-23T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2018-01-21-visualise-count-observations/</loc>
+    <lastmod>2018-01-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/drivethru/</loc>
+    <lastmod>2018-01-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/reactive/</loc>
+    <lastmod>2018-01-17T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2018-01-17-reactiveval-ues/</loc>
+    <lastmod>2018-01-17T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/general/</loc>
+    <lastmod>2018-01-16T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2018-01-16-hello-world-my-first-post/</loc>
+    <lastmod>2018-01-16T00:00:00+00:00</lastmod>
   </url>
   
   <url>
