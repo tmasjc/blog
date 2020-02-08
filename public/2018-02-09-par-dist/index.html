@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+  <meta name="generator" content="Hugo 0.64.0" />
+
+  
+  <meta name="description" content="Applied data science breadcrumbs">
+  
+
+  
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
+  
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+
+  
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+
+  
+  <link rel="manifest" href="/site.webmanifest">
+
+  
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+  <meta name="msapplication-TileColor" content="#da532c">
+
+  <meta name="theme-color" content="#ffffff">
+
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" />
+
+  
+  <title>parDist | Not So Formal</title>
+  
+
+  <style>
+ 
+@font-face {
+    font-family: 'PT Sans';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../fonts/pt-sans-v11-latin-regular.eot');  
+    src: local('PT Sans'), local('PTSans-Regular'),
+         url('../fonts/pt-sans-v11-latin-regular.eot?#iefix') format('embedded-opentype'),  
+         url('../fonts/pt-sans-v11-latin-regular.woff2') format('woff2'),  
+         url('../fonts/pt-sans-v11-latin-regular.woff') format('woff'),  
+         url('../fonts/pt-sans-v11-latin-regular.ttf') format('truetype'),  
+         url('../fonts/pt-sans-v11-latin-regular.svg#PTSans') format('svg');  
+  }
+
+small {
+    opacity: 0.5;
+}
+
+body {
+  min-width: 300px;
+  font-family: "PT Sans"
+}
+
+.custom-navbar {
+  margin-bottom: 1em;
+  height: 60px;
+}
+
+.custom-navbar a {
+  display: inline-block;
+  padding: 18px 0;
+  margin-right: 1em;
+  font-weight: bold;
+}
+
+.custom-navbar a:hover,
+.custom-navbar a:focus {
+  text-decoration: none;
+}
+
+@media print {
+  .custom-navbar {
+    display: none;
+  }
+}
+
+article {
+  padding-bottom: 1em;
+}
+
+img {
+  max-width: 100%;
+}
+
+
+body {
+  background-color: #2C363F;
+}
+
+
+
+body {
+  color: #FFF;
+}
+
+
+
+a {
+  color: #F2F5EA;
+}
+
+
+
+a:hover,
+a:focus {
+  color: #E75A7C;
+}
+
+
+
+.custom-navbar {
+  background-color: #212529;
+}
+
+
+
+.custom-navbar a {
+  color: #AED9E0;
+}
+
+
+
+.custom-navbar a:hover,
+.custom-navbar a:focus {
+  color: #E75A7C;
+}
+
+
+
+.container {
+  max-width: 800px;
+}
+
+
+
+pre {
+  display: block;
+  padding: 9.5px;
+  word-break: break-all;
+  word-wrap: break-word;
+  background-color: #dee2e6;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+pre code {
+  padding: 0;
+  font-size: .8em;
+  color: inherit;
+  white-space: pre-wrap;
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+}
+
+code {
+  padding: 2px 2px;
+  color: #000;
+  background-color: #f5f5f5;
+   
+  border-radius: 4px;
+  font-size: .7em;
+}
+
+
+
+blockquote,
+.blockquote {
+  padding: 10px 20px;
+  margin: 0 0 20px;
+  font-size: 1em;
+  border-left: 5px solid #6c757d;
+}
+
+</style>
+
+</head>
+
+<body>
+  <nav class="custom-navbar">
+  <div class="container">
+    
+    <a href="/">Home</a>
+    
+    <a href="https://tmasjc.github.io/">About</a>
+    
+  </div>
+</nav>
+  
+  <div class="container">
+    <article>
+      <h1>parDist</h1>
+<p>
+  <small class="text-secondary">
+  
+  
+  Feb 9, 2018
+  </small>
+  
+
+<small><a href="/tags/paralleldist">#parallelDist</a></small>
+
+
+</p>
+
+
+
+<div id="problem-statement" class="section level3">
+<h3>Problem Statement:</h3>
+<blockquote>
+<p>We have a large dataset. We need to compute its distance matrix (i.e. for clustering purposes). The complexity for a N * P matrix is <code>N(N-1)/2 * 3P</code></p>
+</blockquote>
+</div>
+<div id="create-sample" class="section level3">
+<h3>Create Sample</h3>
+<pre class="r"><code>library(dplyr)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;dplyr&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     filter, lag</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     intersect, setdiff, setequal, union</code></pre>
+<pre class="r"><code>pts &lt;- rnorm(1e4, mean = c(5, 5, 10, 10, 15, 15), sd = 1) %&gt;% matrix(ncol = 2, byrow = T)
+pts %&gt;% plot(xlab = &quot;x&quot;, ylab = &quot;y&quot;)</code></pre>
+<p><img src="/post/2018-02-09-par-dist_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+</div>
+<div id="package-paralleldist" class="section level3">
+<h3>Package ‘parallelDist’</h3>
+<p><code>parallelDist</code> is a fast parallelized alternative to R’s native <code>dist</code> function. The package is mainly implemented in C++ and leverages the <code>RcppParellel</code> package to parallelize the distance computations. In addition, it also uses <code>Armadillo</code> linear algebra library to optimize matrix operations during distance calculations.</p>
+<p>In short, to compute distance matrix for large data object, use <code>parallelDist</code> because it is much faster.</p>
+</div>
+<div id="demo" class="section level3">
+<h3>Demo</h3>
+<p>Say we wish to compute distance matrix to compute <code>silhouette</code> distance for sample points above to determine the optimal number of cluster (which we already knew is 3).</p>
+<pre class="r"><code># By default, parDist returns a dist object
+# Here we convert to matrix for minor efficiency
+dist.euclidean &lt;- parallelDist::parDist(pts, method = &quot;euclidean&quot;) %&gt;% as.matrix()
+
+# A custom function for looping
+compare_silhouette &lt;- function(k){
+    kmeans(pts, centers = k, nstart = 20, iter.max = 50)$cluster %&gt;% 
+        # use dmatrix instead of dist
+        cluster::silhouette(dmatrix = dist.euclidean) %&gt;% 
+        summary() %&gt;% 
+        # extract avergae silhouette width
+        `[[`(&#39;avg.width&#39;)
+}
+
+# Here we try out various number of clusters
+res &lt;- lapply(2:5, compare_silhouette)
+
+library(ggplot2)
+data.frame(x = 2:5, y = unlist(res)) %&gt;% ggplot(aes(x, y)) + geom_line() + geom_point() + theme_light()</code></pre>
+<p><img src="/post/2018-02-09-par-dist_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+</div>
+
+    </article>
+  </div>
+
+  
+  
+  
+
+  
+
+  
+</body>
+
+</html>

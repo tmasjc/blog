@@ -1,0 +1,76 @@
+---
+title: Pseudo R Squared
+author: tmasjc
+date: '2018-11-26'
+slug: pseudo-r-squared
+categories: 
+    - General
+tags: 
+    - descr
+---
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(descr)
+
+# make reproducible 
+set.seed(1234)
+# number of points
+nn <- 100
+
+# An Simulated Model --------------------------------------------------------
+
+# simulate binary response
+y <- rbinom(nn, 1, prob = .5)
+# single predictor
+x <- y + rnorm(nn, mean = 1, sd = .5)
+cor(x, y)
+
+# null model (without any predictor)
+null_mod <- glm(y ~  1, family = "binomial")
+# we know x is inheritly random
+some_mod <- glm(y ~ x, family = "binomial")
+
+# glance 
+summary(some_mod)
+
+# the same result
+1 - logLik(some_mod) / logLik(null_mod)
+1 - some_mod$deviance / some_mod$null.deviance
+
+# from package
+descr::LogRegR2(some_mod)
+
+# Pseudo Rsq ~ Predictor Power ------------------------------------------
+
+# vary predictor power by adding various degree of deviation
+# return a list of int vector
+ints <- map(seq(.1, .8, .01), ~ y + rnorm(nn, mean = 1, sd = .x))
+
+# fit and extract pseudo rsq
+get_pseudo_rsq <- function(vec) {
+  fit <- glm(y ~ vec, family = "binomial")
+  pseudo_rsq <- LogRegR2(fit)
+  # return
+  with(pseudo_rsq, list(
+    corr = cor(vec, y),
+    `McFadden` = RL2,
+    `Cox & Snell` = CoxR2,
+    `Nagelkerke` = NagelkerkeR2
+  ))
+} 
+rsqs <- map(ints, get_pseudo_rsq)
+
+# visualize corresponding pseudo rsq by correlation
+rsqs %>% 
+  bind_rows() %>% 
+  gather(met, rsq, -corr) %>% 
+  ggplot(aes(corr, rsq, col = met)) + 
+  geom_line() + 
+  geom_hline(yintercept = .5, col = "darkgray", lty = 3) + 
+  theme_minimal(base_family = "Menlo") + 
+  labs(x = "Correlation", y = "Pseudo R Squared", col = "Variant")
+```
+
+
+For more info, see https://stats.idre.ucla.edu/other/mult-pkg/faq/general/faq-what-are-pseudo-r-squareds/

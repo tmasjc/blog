@@ -1,0 +1,43 @@
+---
+title: Curry's Streaking Hot Hand
+author: Thomas Jc
+date: '2019-03-16'
+slug: streaking-hot-hand
+categories: []
+tags: 
+    - monte-carlo
+editor_options: 
+  chunk_output_type: console
+---
+
+Steph Curry averaging **.411** in 3-point field goal percentage during the 2016-17 season. On November 7 2016, he made 13 out of 17 3-point attemps. How likely was it to happen?
+
+```{r, message=FALSE}
+library(ggplot2)
+library(dplyr)
+set.seed(123)
+
+# 3-point fg pct
+steph_curry = 0.411
+
+# simulation trials
+trials = 10000
+
+# simulate shot game in 17 attemps
+made <- replicate(trials, sum(rbinom(n = 17, size = 1, prob = steph_curry)))
+
+# plot it out
+made %>% 
+    as_data_frame() %>% 
+    ggplot(aes(made)) +
+    geom_histogram(bins = 60) + 
+    geom_vline(xintercept = 13, col = "red", lty = 4) +
+    scale_x_continuous(breaks = seq(1, 20, 1)) + 
+    theme_light(base_family = "Menlo") + 
+    labs(title = "Steph Curry's Super Hot Hand", 
+         x = "3-point made", 
+         y = "Count")
+```
+
+Answer: `r scales::percent((length(which(made>=13)) / length(made)))`
+

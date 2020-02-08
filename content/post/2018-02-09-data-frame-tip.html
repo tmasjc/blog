@@ -1,0 +1,119 @@
+---
+title: Data.Table
+description: Performing long-to-wide transformation on large data frame
+author: Thomas Jc
+date: '2018-02-09'
+slug: long-to-wide
+categories:
+  - rstats
+tags:
+  - data.table
+---
+
+
+
+<p>A quick walkthrough on using <code>data.table</code> in performing long-to-wide operation on data frame. Significant improvement on speed.</p>
+<pre class="r"><code>library(dplyr)
+library(tidyr)
+library(data.table)
+
+# set
+options(DT.options = list(pageLength = 5, dom = &#39;tip&#39;))
+set.seed(123)
+rand &lt;- runif(1e7, min = 1, max = length(LETTERS)) %&gt;% round()
+
+# Make some dummy data
+df &lt;- data.frame(
+    letters = LETTERS[rand] %&gt;% sample(),
+    num = (1:length(LETTERS))[rand] %&gt;% sample()
+)
+# Add count for spreading later
+df &lt;- df %&gt;% group_by(letters) %&gt;% mutate(count = 1:length(letters)) %&gt;% arrange(letters, count)
+head(df, 10)</code></pre>
+<pre><code>## # A tibble: 10 x 3
+## # Groups:   letters [1]
+##    letters   num count
+##    &lt;fct&gt;   &lt;int&gt; &lt;int&gt;
+##  1 A          20     1
+##  2 A          17     2
+##  3 A          10     3
+##  4 A           1     4
+##  5 A          23     5
+##  6 A          10     6
+##  7 A           5     7
+##  8 A           4     8
+##  9 A          19     9
+## 10 A           6    10</code></pre>
+<p>Let’s try out different methods on converting above long data frame to wide format. Our objective is to group them by <code>letters</code> and each row lists how many times the particular letter is called, from 1 to N.</p>
+<pre class="r"><code># For example
+(df %&gt;% spread(count, num) %&gt;% head())[1:5, 1:10]</code></pre>
+<pre><code>## # A tibble: 5 x 10
+## # Groups:   letters [26]
+##   letters   `1`   `2`   `3`   `4`   `5`   `6`   `7`   `8`   `9`
+##   &lt;fct&gt;   &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;
+## 1 A          20    17    10     1    23    10     5     4    19
+## 2 B           4     5     6    12    11     3     6    24    20
+## 3 C           2    20    10     4    14    12     5     8    10
+## 4 D           3    21    15    24    25    14    17    13    25
+## 5 E          23    26     6    14    20     5    21    10    11</code></pre>
+<div id="method-1-the-usual-spread" class="section level3">
+<h3>Method 1: The Usual Spread</h3>
+<pre class="r"><code>t1 &lt;- system.time(m1 &lt;- df %&gt;% spread(count, num))
+(m1 %&gt;% head())[1:5, 1:10]</code></pre>
+<pre><code>## # A tibble: 5 x 10
+## # Groups:   letters [26]
+##   letters   `1`   `2`   `3`   `4`   `5`   `6`   `7`   `8`   `9`
+##   &lt;fct&gt;   &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;
+## 1 A          20    17    10     1    23    10     5     4    19
+## 2 B           4     5     6    12    11     3     6    24    20
+## 3 C           2    20    10     4    14    12     5     8    10
+## 4 D           3    21    15    24    25    14    17    13    25
+## 5 E          23    26     6    14    20     5    21    10    11</code></pre>
+</div>
+<div id="method-2-d-cast" class="section level3">
+<h3>Method 2: D-Cast</h3>
+<pre class="r"><code>t2 &lt;- system.time(m2 &lt;- df %&gt;% dcast(letters ~ count, value.var = &quot;num&quot;))</code></pre>
+<pre><code>## Warning in dcast(., letters ~ count, value.var = &quot;num&quot;): The dcast generic
+## in data.table has been passed a grouped_df and will attempt to redirect
+## to the reshape2::dcast; please note that reshape2 is deprecated, and this
+## redirection is now deprecated as well. Please do this redirection yourself like
+## reshape2::dcast(.). In the next version, this warning will become an error.</code></pre>
+<pre class="r"><code>(m2 %&gt;% head())[1:5, 1:10]</code></pre>
+<pre><code>##   letters  1  2  3  4  5  6  7  8  9
+## 1       A 20 17 10  1 23 10  5  4 19
+## 2       B  4  5  6 12 11  3  6 24 20
+## 3       C  2 20 10  4 14 12  5  8 10
+## 4       D  3 21 15 24 25 14 17 13 25
+## 5       E 23 26  6 14 20  5 21 10 11</code></pre>
+</div>
+<div id="method-3-d-cast-with-data-table" class="section level3">
+<h3>Method 3: D-Cast with Data Table</h3>
+<pre class="r"><code># Convert to data table
+dt &lt;- df %&gt;% as.data.table()
+t3 &lt;- system.time(m3 &lt;- dt %&gt;% dcast(letters ~ count, value.var = &quot;num&quot;))
+(m3 %&gt;% head())[1:5, 1:10]</code></pre>
+<pre><code>##    letters  1  2  3  4  5  6  7  8  9
+## 1:       A 20 17 10  1 23 10  5  4 19
+## 2:       B  4  5  6 12 11  3  6 24 20
+## 3:       C  2 20 10  4 14 12  5  8 10
+## 4:       D  3 21 15 24 25 14 17 13 25
+## 5:       E 23 26  6 14 20  5 21 10 11</code></pre>
+</div>
+<div id="result" class="section level3">
+<h3>Result</h3>
+<p>Shown below.</p>
+<pre class="r"><code>res &lt;- list(t1, t2, t3)
+names(res) &lt;- c(&quot;Spread&quot;, &quot;DCast&quot;, &quot;DCast w/ Data Table&quot;)
+res</code></pre>
+<pre><code>## $Spread
+##    user  system elapsed 
+##  10.273   1.036  11.678 
+## 
+## $DCast
+##    user  system elapsed 
+##   7.415   0.996   9.336 
+## 
+## $`DCast w/ Data Table`
+##    user  system elapsed 
+##   5.034   0.556   4.058</code></pre>
+</div>

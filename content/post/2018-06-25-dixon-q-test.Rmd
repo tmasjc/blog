@@ -1,0 +1,52 @@
+---
+title: Dixon Q-Test
+author: Thomas Jc
+date: '2018-06-25'
+slug: dixon-q-test
+categories:
+  - rstats
+tags:
+  - outliers
+---
+
+```{r, message=FALSE}
+library(dplyr)
+library(outliers)
+
+set.seed(5678)
+
+get_case <- function(which_case = c("one", "two")){
+    
+    # generate data from a normal distribution
+    dat <- rnorm(n = 10, mean = 1000, sd = 100) %>% round()
+    switch(which_case, 
+           # add outlier on the left
+           "one" = c(dat, round(mean(dat) - sd(dat) * 3.5) ),
+           # add outlier on the right
+           "two" = c(dat, round(sd(dat) * 3.5 + mean(dat)) )
+    )
+}
+```
+
+
+#### Case One: Test Mininum Value by Default ---------------------------------
+
+```{r}
+vecs <- get_case("one")
+plot(rep(1,length(vecs)), vecs)
+boxplot(vecs, add = TRUE)
+dixon.test(vecs)
+dixon.test(vecs, opposite = TRUE)
+```
+
+
+#### Case One: Test Maximum Value by Default ---------------------------------
+
+```{r}
+vecs <- get_case("two")
+plot(rep(1,length(vecs)), vecs)
+boxplot(vecs, add = TRUE)
+dixon.test(vecs)
+dixon.test(vecs, opposite = TRUE)
+```
+

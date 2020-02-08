@@ -1,0 +1,30 @@
+---
+title: Split Data Frame into Smaller Chunks
+author: Thomas Jc
+date: '2018-08-02'
+slug: split-data-frame-into-smaller-chunks
+categories:
+  - rstats
+tags:
+  - mysql
+---
+
+
+
+<p>When writing from <code>Docker</code> container to <code>MySQL</code>,</p>
+<pre><code>Error: MySQL server has gone away...</code></pre>
+<p>try split your dataset into smaller chunks,</p>
+<pre class="r"><code>library(tidyverse)
+library(MASS)
+
+data(&quot;Boston&quot;)
+df &lt;- Boston
+
+# cut into desired chunks, here chunk size = 100
+indices &lt;- (nrow(df) %&gt;% seq() - 1) %/% 100
+df_chunks &lt;- split(df, indices)</code></pre>
+<p>and write into database with iteration.</p>
+<pre class="r"><code>library(DBI)
+
+# remember to append, do not overwrite
+lapply(df_chunks, dbWriteTable, conn = mycon, name = mytable, append = TRUE, row.names = FALSE)</code></pre>

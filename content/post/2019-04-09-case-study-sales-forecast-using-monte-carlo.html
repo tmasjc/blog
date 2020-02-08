@@ -1,0 +1,71 @@
+---
+title: 'Exercise: Sales Forecast using MCM'
+author: tmasjc
+date: '2019-04-09'
+slug: sales-forecast-using-monte-carlo
+categories: []
+tags: 
+    - monte-carlo
+editor_options: 
+  chunk_output_type: console
+---
+
+
+
+<div id="background" class="section level2">
+<h2>Background</h2>
+<p>Often, Monte Carlo simulation can come in handy to calculate risk or evaluate investments in projects. This is a simple demonstration.</p>
+</div>
+<div id="exercise" class="section level2">
+<h2>Exercise</h2>
+<p>The following provides the breakdown of profit made by a business unit. All metrics are measured in daily basis.</p>
+<pre><code>Profit = Income - Expenses
+
+    Income = Sales (S) * Profit Margin per Sale (M)
+    
+        M assumes an uniform dist. from $350 to $400
+    
+        S = Number of Leads (L) * Conversion Rate (R)
+    
+             L assumes an uniform dist. with from 3000 to 4000
+             
+             R assumes a normal dist. with mean of 4% and sd of 0.5%
+        
+    Expenses = Fixed Overhead (H) + Total Cost of the Leads (C)
+    
+        C = Cost Per Lead (Cpl) * Number of Leads (L)
+        
+            Cpl assumes an uniform dist. from $8 to $10
+    
+        H assumes a constant of $20000
+        </code></pre>
+<p>In summary,</p>
+<pre><code>Profit = Leads * Conversion Rate * Profit Margin per Sale - (Cost per Lead * Leads + Fixed Overhead)</code></pre>
+</div>
+<div id="profit-forecast-model" class="section level2">
+<h2>Profit Forecast Model</h2>
+<p>An oversimplified daily profit forecast model,</p>
+<p><img src="/post/2019-04-09-case-study-sales-forecast-using-monte-carlo_files/figure-html/plot_outcome_hist-1.png" width="672" /></p>
+<p>If we set a profitability goal of <strong>$100,000 a month</strong>, what is the probability that we achieve that? How about the probability that we lose money?</p>
+<pre><code>## [1] &quot;Probability of hitting goal is 4%&quot;</code></pre>
+<pre><code>## [1] &quot;Probability of incurring losses is 22%&quot;</code></pre>
+<p>We can also plot the cumulative probability for clearer visualization.</p>
+<p><img src="/post/2019-04-09-case-study-sales-forecast-using-monte-carlo_files/figure-html/plot_cumulative-1.png" width="672" /></p>
+</div>
+<div id="update-model" class="section level2">
+<h2>Update Model</h2>
+<p>What if we further assume that cost per lead and conversion rate are correlated?</p>
+<pre><code>## [1] &quot;Probability of hitting goal is 21%&quot;</code></pre>
+<pre><code>## [1] &quot;Probability of incurring losses is 36%&quot;</code></pre>
+</div>
+<div id="sensitivity-analysis" class="section level2">
+<h2>Sensitivity Analysis</h2>
+<p>What if we are offered an option to increase our leads at the cost of fixed overheads increase?</p>
+<pre><code>## [1] &quot;Probability of hitting goal is 18%&quot;</code></pre>
+<pre><code>## [1] &quot;Probability of incurring losses is 51%&quot;</code></pre>
+</div>
+<div id="finding-optimal" class="section level2">
+<h2>Finding Optimal</h2>
+<p>What is the maximum cost per lead we can accept if we wish to cover our probability of losses at X%?</p>
+<pre><code>## [1] &quot;Maximum cost per lead allowed to reduce risk down to 0.05 is $9.4&quot;</code></pre>
+</div>

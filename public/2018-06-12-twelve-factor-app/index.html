@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+  <meta name="generator" content="Hugo 0.64.0" />
+
+  
+  <meta name="description" content="Applied data science breadcrumbs">
+  
+
+  
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
+  
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+
+  
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+
+  
+  <link rel="manifest" href="/site.webmanifest">
+
+  
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+  <meta name="msapplication-TileColor" content="#da532c">
+
+  <meta name="theme-color" content="#ffffff">
+
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" />
+
+  
+  <title>Twelve-Factor App | Not So Formal</title>
+  
+
+  <style>
+ 
+@font-face {
+    font-family: 'PT Sans';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../fonts/pt-sans-v11-latin-regular.eot');  
+    src: local('PT Sans'), local('PTSans-Regular'),
+         url('../fonts/pt-sans-v11-latin-regular.eot?#iefix') format('embedded-opentype'),  
+         url('../fonts/pt-sans-v11-latin-regular.woff2') format('woff2'),  
+         url('../fonts/pt-sans-v11-latin-regular.woff') format('woff'),  
+         url('../fonts/pt-sans-v11-latin-regular.ttf') format('truetype'),  
+         url('../fonts/pt-sans-v11-latin-regular.svg#PTSans') format('svg');  
+  }
+
+small {
+    opacity: 0.5;
+}
+
+body {
+  min-width: 300px;
+  font-family: "PT Sans"
+}
+
+.custom-navbar {
+  margin-bottom: 1em;
+  height: 60px;
+}
+
+.custom-navbar a {
+  display: inline-block;
+  padding: 18px 0;
+  margin-right: 1em;
+  font-weight: bold;
+}
+
+.custom-navbar a:hover,
+.custom-navbar a:focus {
+  text-decoration: none;
+}
+
+@media print {
+  .custom-navbar {
+    display: none;
+  }
+}
+
+article {
+  padding-bottom: 1em;
+}
+
+img {
+  max-width: 100%;
+}
+
+
+body {
+  background-color: #2C363F;
+}
+
+
+
+body {
+  color: #FFF;
+}
+
+
+
+a {
+  color: #F2F5EA;
+}
+
+
+
+a:hover,
+a:focus {
+  color: #E75A7C;
+}
+
+
+
+.custom-navbar {
+  background-color: #212529;
+}
+
+
+
+.custom-navbar a {
+  color: #AED9E0;
+}
+
+
+
+.custom-navbar a:hover,
+.custom-navbar a:focus {
+  color: #E75A7C;
+}
+
+
+
+.container {
+  max-width: 800px;
+}
+
+
+
+pre {
+  display: block;
+  padding: 9.5px;
+  word-break: break-all;
+  word-wrap: break-word;
+  background-color: #dee2e6;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+pre code {
+  padding: 0;
+  font-size: .8em;
+  color: inherit;
+  white-space: pre-wrap;
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+}
+
+code {
+  padding: 2px 2px;
+  color: #000;
+  background-color: #f5f5f5;
+   
+  border-radius: 4px;
+  font-size: .7em;
+}
+
+
+
+blockquote,
+.blockquote {
+  padding: 10px 20px;
+  margin: 0 0 20px;
+  font-size: 1em;
+  border-left: 5px solid #6c757d;
+}
+
+</style>
+
+</head>
+
+<body>
+  <nav class="custom-navbar">
+  <div class="container">
+    
+    <a href="/">Home</a>
+    
+    <a href="https://tmasjc.github.io/">About</a>
+    
+  </div>
+</nav>
+  
+  <div class="container">
+    <article>
+      <h1>Twelve-Factor App</h1>
+<p>
+  <small class="text-secondary">
+  
+  
+  Jun 12, 2018
+  </small>
+  
+
+<small><a href="/tags/saas">#saas</a></small>
+
+
+</p>
+
+
+
+<p>The <a href="https://12factor.net/">Twelve-Factor App</a> is a methodology for building software-as-a-service apps that:</p>
+<ol style="list-style-type: decimal">
+<li>It uses declarative formats for setup automation;</li>
+<li>It works with a clean contract with the operating system for greater portability between environments;</li>
+<li>It limits the differences between development and production, for continuous deployment;</li>
+<li>And it allows for scaling up and down without major changes.</li>
+</ol>
+<p>From <a href="http://www.clearlytech.com/2014/01/04/12-factor-apps-plain-english/">clearlytech</a>:</p>
+<pre><code>1. Codebase
+    - One codebase tracked in revision control, many deploys
+2. Dependencies
+    - Explicitly declare and isolate dependencies
+3. Config
+    - Store config in the environment
+4. Backing services
+    - Treat backing servies as attached resources
+5. Build, ship (release), run
+    - Strictly separate build and run stages
+6. Processes
+    - Execute the app as one or more stateless process 
+    - Store intermediate data in a database or persistent key-value store
+7. Port binding
+    - Export services via port binding
+    - Interfaces to the world using a simple URL
+8. Concurrency
+    - Scale out via the process model
+9. Disposability
+    - Maximize robustness with fast startup and graceful shutdown
+10. Dev/prod parity
+    - Keep development, staging, and production as similar as possible
+11. Logs
+    - Treat logs as event streams
+12. Admin processes
+    - Run admin/management tasks as one-off processes
+    (Don&#39;t run updates directly against a database, don&#39;t run tasks from local terminal)</code></pre>
+<p>Questions:</p>
+<div id="why-not-multiple-processes-in-one-container" class="section level4">
+<h4>1. Why not multiple processes in one container?</h4>
+<pre><code>- Scaling containers horizontally is much easier;
+- Easier to be reused for other purposes;
+- Easier to troubleshoot;
+- Patching/upgrades can be done in a more isolated and controlled manner;
+- The `Docker` way: One Concern Per Container</code></pre>
+</div>
+
+    </article>
+  </div>
+
+  
+  
+  
+
+  
+
+  
+</body>
+
+</html>

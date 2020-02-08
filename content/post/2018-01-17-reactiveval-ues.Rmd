@@ -1,0 +1,67 @@
+---
+title: reactiveVal(ues)
+description: Reactive Value Object in Shiny
+author: Thomas Jc
+date: '2018-01-17'
+slug: reactiveval
+categories:
+  - rstats
+tags:
+  - shiny
+  - reactive
+---
+
+Let's say we wish to toggle between 2 objects and assign either one of them to 1 common reactive value.
+
+For an instance, we have a plot output and 2 buttons,  
+* when button one is pressed, plot displays a histogram of a **normal** distribution,  
+* when button two is pressed, plot displays a histogram of a **uniform** distribution.  
+
+How can we do that?  
+Use ``reactiveVal`` or ``reactiveValues``.
+
+*``reactiveVal`` is very similar to ``reactiveValues``, except that the former is for a single reactive value (like a variable).* 
+
+Documentation, [click here](https://shiny.rstudio.com/reference/shiny/1.0.5/reactiveVal.html).
+
+```{r, eval = FALSE}
+library(shiny)
+
+ui <- fluidPage(
+    column(12,
+           # toggle between normal or uniform distribution
+           actionButton("rnorm", "Normal"),
+           actionButton("runif", "Uniform")
+    ),
+    column(12,
+           plotOutput("plot")
+    )
+)
+
+server <- function(input, output, session) {
+    
+    # initiate a 'reactive variable'
+    df <- reactiveVal(rnorm(100))  
+    
+    output$plot <- renderPlot({
+        hist(df())
+    })
+    
+    observeEvent(input$rnorm, {
+        # update value
+        df(rnorm(100))
+        
+        ## OR
+        # new <- rnorm(100)
+        # df(new)
+    })
+    
+    observeEvent(input$runif, {
+        df(runif(100))
+    })
+    
+}
+
+shinyApp(ui, server, options = list(height = 500))
+```
+

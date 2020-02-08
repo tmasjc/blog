@@ -1,0 +1,60 @@
+---
+title: Check Binary True / False Columns
+author: thomas jc
+date: '2018-08-05'
+slug: check-binary-true-false-columns
+categories:
+  - rstats
+tags:
+  - purrr
+---
+
+2 methods which identify columns attributes, which are the `true / false` columns? 
+
+```{r, message=FALSE}
+library(tidyverse)
+
+data("mtcars")
+```
+
+
+#### Method 1: `apply`
+
+```{r}
+# use apply
+m1 <- apply(mtcars, 2, function(x) {
+    na.omit(x) %in% c(0, 1) %>% all() 
+}) %>% 
+    which(. == 1) %>% 
+    names()
+m1
+```
+
+#### Method 2: `map` + `which` 
+
+```{r}
+# first identify binary columns
+m2 <- map(mtcars, ~ unique(.) %>% length()) %$% 
+    which(. == 2, arr.ind = TRUE) %>% 
+    # then identity if true / false only
+    map(~ unique(mtcars[[.]]) %in% c(0, 1) %>% all()) %$%
+    which(. == 1, arr.ind = FALSE) %>% 
+    # return column name only
+    names()
+m2
+```
+
+
+Measuring performance
+
+```{r}
+library(microbenchmark)
+
+microbenchmark(
+    m1, m2, times = 1e4L
+)
+```
+
+
+
+

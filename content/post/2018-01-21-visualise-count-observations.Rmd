@@ -1,0 +1,133 @@
+---
+title: Bar, Bended Bar, and Treemap
+description: Visualizing Count Observations
+author: Thomas Jc
+date: '2018-01-21'
+slug: visualize-count-observations
+categories:
+  - rstats
+tags:
+  - ggplot2
+  - drivethru
+---
+
+In this exercise, we will visualize Standard & Poor's 500 Index industry composition.
+
+### Gettting sp500_sectora
+
+We will scrap the sp500_sectora from [Wikipedia page](https://en.wikipedia.org/wiki/S%26P_500_Index), with `rvest`.
+
+```{r, message=FALSE}
+library(dplyr)
+library(rvest)
+
+url <- "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
+
+sp500 <- url %>% 
+    read_html() %>% 
+    # How do I select css? 
+    html_node(css = "table.wikitable") %>% 
+    html_table() %>% 
+    mutate(sector = factor(`GICS Sector`)) %>% 
+    as_tibble()
+sp500
+```
+
+<small>Note: Write a post about `rvest` node selector.</small>
+
+### Pie Chart
+
+Let's begin with an ~~awful~~ pie chart.
+
+```{r}
+library(ggplot2)
+library(RColorBrewer)
+
+# Set ggplot theme
+old <- theme_set(theme_light() + theme(legend.position = "bottom"))
+
+# Set colour palette for repeated use
+pal <- scale_fill_brewer(
+    palette = "Set3",
+    guide = guide_legend(
+    title = "Sector",
+    title.position = "top",
+    label.position = "top",
+    keyheight = 0.5,
+    ncol = 4
+    )
+    )
+
+# Pie Chart
+sp500 %>% 
+    ggplot(aes(factor(1), fill = sector)) + 
+    geom_bar(width = 1) + 
+    # Pie chart is simply a change in the polar coordinate
+    coord_polar(theta = "y") +
+    labs(x = "", y = "Count") +
+    pal
+```
+
+
+The disadvantage of using a pie chart is that we cannot clearly visualize the differences, e.g. how much difference is there between the biggest and second biggest industry?
+
+### Bar Chart
+
+We should be quite familiar with this. 
+
+```{r}
+# Summarize sector by count
+sp500_sector <- sp500 %>% group_by(sector) %>% summarise(n = n())
+
+# Normal Bar Chart 
+sp500_sector %>% 
+    ggplot(aes(reorder(sector, -n), n, fill = sector)) + 
+    geom_bar(stat = "identity") +
+    # We hide axis x text 
+    theme(axis.text.x = element_blank()) +
+    # and manually replace with geom_text
+    geom_text(aes(y =  n/2, label = sector), 
+              show.legend = FALSE, 
+              angle = 90, 
+              size = 3, 
+              nudge_y = +20) +
+    labs(x = "", y = "Count") +
+    pal
+```
+
+
+### Polar Bar Chart
+
+What if we bend the bars? (Inspired by [Apple Watchface](https://9to5mac.files.wordpress.com/2016/06/img_5044.png?w=312))
+
+```{r}
+# The Circular Bar Chart Way
+sp500_sector %>% 
+    ggplot(aes(reorder(sector, n), n, fill = sector)) + 
+    geom_bar(stat = "identity") + 
+    # Expand the breaks & limit to look nicer
+    scale_y_continuous(breaks = scales::pretty_breaks(10), 
+                       expand = c(0, 0.8)) +
+    coord_polar(theta = "y", direction = 1) +
+    labs(x = "", y = "Count") +
+    pal
+```
+
+The main benefit is that we get a more organized display of sorted ranking. Not bad.
+
+### Treemap
+
+In my opinion, Treemap is good when you wish to zoom into a particular group of objects. In our case, attention is drawn to the biggest industries. Treemap is also space-efficient. Legend and axis labels are often expendable. 
+
+```{r}
+library(treemapify)
+
+sp500_sector %>% 
+    mutate(pct = scales::percent(n / sum(n))) %>% 
+    ggplot(aes(area = n, fill = sector, label = paste(sector, "\n", pct))) + 
+    geom_treemap(show.legend = FALSE) + 
+    geom_treemap_text(place = "centre", size = 9) + 
+    pal
+```
+
+That's it. A quick 10. Till next time.

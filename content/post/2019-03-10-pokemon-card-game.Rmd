@@ -1,0 +1,69 @@
+---
+title: Pokemon Card Game
+author: tmasjc
+date: '2019-03-10'
+slug: pokemon-card-game
+categories: []
+tags: 
+    - monte-carlo
+---
+
+Imagine a Pokemon card game consists of (`N` = 586) unique cards. How many are the odds of collecting them all if we purchase many?
+
+```{r, warning=FALSE, message=FALSE}
+library(magrittr)
+library(purrr)
+
+# A set of cards consists of N cards
+N = 586
+
+# is it a complete set?
+complete_set <- function(n, m) {
+  deck = sample(n, size = m, replace = TRUE)
+  ifelse(length(unique(deck)) == n, TRUE, FALSE)
+}
+
+# what are the odds of getting full set if you purchase many cards?
+sims <- replicate(1000, complete_set(N, 3000))
+table(sims) %>% prop.table()
+```
+
+If each random card costs 5 cents, and you can purchase any unique card for 25 cents, what is the optimal strategy to collecting the full set?
+
+```{r}
+# each card costs x cents
+# each unique card costs y cents
+random_cost = .05
+unique_cost = .25
+
+card_purchase <- function(n, full_set, rand, uniq) {
+  # purchase n cards from full set
+  deck = sample(full_set, size = n, replace = TRUE)
+  # topup if not full set
+  n * rand  + (full_set - length(unique(deck))) * uniq
+}
+card_purchase(3000, N, random_cost, unique_cost)
+
+# range of simulation, from x to y cards
+purchases = 100:2000
+sim_costs <- map_dbl(purchases, ~ card_purchase(.x, N, random_cost, unique_cost))
+plot(purchases, sim_costs, xlab = "# Cards Purchase", ylab = "Costs")
+
+# to reduce uncertainty
+sim_costs <- map_dbl(purchases, ~ {
+  replicate(300, expr = card_purchase(.x, N, random_cost, unique_cost)) %>% 
+    # average of trials
+    mean()
+})
+names(sim_costs) <- purchases
+plot(purchases, sim_costs, xlab = "# Cards Purchase", ylab = "Costs")
+
+# optimal purchase
+opt <- which.min(sim_costs)
+list(
+  num_cards = as.numeric(names(opt)),
+  cost = sim_costs[[opt]]
+)
+```
+
+

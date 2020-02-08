@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+  <meta name="generator" content="Hugo 0.64.0" />
+
+  
+  <meta name="description" content="Applied data science breadcrumbs">
+  
+
+  
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
+  
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+
+  
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+
+  
+  <link rel="manifest" href="/site.webmanifest">
+
+  
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+  <meta name="msapplication-TileColor" content="#da532c">
+
+  <meta name="theme-color" content="#ffffff">
+
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" />
+
+  
+  <title>SE to NSE | Not So Formal</title>
+  
+
+  <style>
+ 
+@font-face {
+    font-family: 'PT Sans';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../fonts/pt-sans-v11-latin-regular.eot');  
+    src: local('PT Sans'), local('PTSans-Regular'),
+         url('../fonts/pt-sans-v11-latin-regular.eot?#iefix') format('embedded-opentype'),  
+         url('../fonts/pt-sans-v11-latin-regular.woff2') format('woff2'),  
+         url('../fonts/pt-sans-v11-latin-regular.woff') format('woff'),  
+         url('../fonts/pt-sans-v11-latin-regular.ttf') format('truetype'),  
+         url('../fonts/pt-sans-v11-latin-regular.svg#PTSans') format('svg');  
+  }
+
+small {
+    opacity: 0.5;
+}
+
+body {
+  min-width: 300px;
+  font-family: "PT Sans"
+}
+
+.custom-navbar {
+  margin-bottom: 1em;
+  height: 60px;
+}
+
+.custom-navbar a {
+  display: inline-block;
+  padding: 18px 0;
+  margin-right: 1em;
+  font-weight: bold;
+}
+
+.custom-navbar a:hover,
+.custom-navbar a:focus {
+  text-decoration: none;
+}
+
+@media print {
+  .custom-navbar {
+    display: none;
+  }
+}
+
+article {
+  padding-bottom: 1em;
+}
+
+img {
+  max-width: 100%;
+}
+
+
+body {
+  background-color: #2C363F;
+}
+
+
+
+body {
+  color: #FFF;
+}
+
+
+
+a {
+  color: #F2F5EA;
+}
+
+
+
+a:hover,
+a:focus {
+  color: #E75A7C;
+}
+
+
+
+.custom-navbar {
+  background-color: #212529;
+}
+
+
+
+.custom-navbar a {
+  color: #AED9E0;
+}
+
+
+
+.custom-navbar a:hover,
+.custom-navbar a:focus {
+  color: #E75A7C;
+}
+
+
+
+.container {
+  max-width: 800px;
+}
+
+
+
+pre {
+  display: block;
+  padding: 9.5px;
+  word-break: break-all;
+  word-wrap: break-word;
+  background-color: #dee2e6;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+pre code {
+  padding: 0;
+  font-size: .8em;
+  color: inherit;
+  white-space: pre-wrap;
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+}
+
+code {
+  padding: 2px 2px;
+  color: #000;
+  background-color: #f5f5f5;
+   
+  border-radius: 4px;
+  font-size: .7em;
+}
+
+
+
+blockquote,
+.blockquote {
+  padding: 10px 20px;
+  margin: 0 0 20px;
+  font-size: 1em;
+  border-left: 5px solid #6c757d;
+}
+
+</style>
+
+</head>
+
+<body>
+  <nav class="custom-navbar">
+  <div class="container">
+    
+    <a href="/">Home</a>
+    
+    <a href="https://tmasjc.github.io/">About</a>
+    
+  </div>
+</nav>
+  
+  <div class="container">
+    <article>
+      <h1>SE to NSE</h1>
+<p>
+  <small class="text-secondary">
+  
+  
+  Jan 23, 2018
+  </small>
+  
+
+<small><a href="/tags/dplyr">#dplyr</a></small>
+
+
+</p>
+
+
+
+<pre class="r"><code>library(dplyr)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;dplyr&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     filter, lag</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     intersect, setdiff, setequal, union</code></pre>
+<pre class="r"><code>measure &lt;- list(&quot;mean&quot;, &quot;sd&quot;, &quot;max&quot;, &quot;min&quot;)
+
+vars &lt;- list(&quot;disp&quot;, &quot;hp&quot;, &quot;wt&quot;)
+
+# Set names
+fnames &lt;- lapply(X = measure, FUN = function(x, y)paste0(x, &quot;-&quot;, y), y = vars) %&gt;% unlist()
+
+# Set functions
+ffuns &lt;- lapply(X = measure, FUN = function(x, y)paste0(x, &quot;(&quot;, y, &quot;)&quot;), y = vars) %&gt;% unlist()
+
+mtcars %&gt;% 
+    # group by cylinder
+    group_by(cyl) %&gt;% 
+    summarise_(.dots = setNames(ffuns, fnames))</code></pre>
+<pre><code>## Warning: summarise_() is deprecated. 
+## Please use summarise() instead
+## 
+## The &#39;programming&#39; vignette or the tidyeval book can help you
+## to program with summarise() : https://tidyeval.tidyverse.org
+## This warning is displayed once per session.</code></pre>
+<pre><code>## # A tibble: 3 x 13
+##     cyl `mean-disp` `mean-hp` `mean-wt` `sd-disp` `sd-hp` `sd-wt` `max-disp`
+##   &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;      &lt;dbl&gt;
+## 1     4        105.      82.6      2.29      26.9    20.9   0.570       147.
+## 2     6        183.     122.       3.12      41.6    24.3   0.356       258 
+## 3     8        353.     209.       4.00      67.8    51.0   0.759       472 
+## # … with 5 more variables: `max-hp` &lt;dbl&gt;, `max-wt` &lt;dbl&gt;, `min-disp` &lt;dbl&gt;,
+## #   `min-hp` &lt;dbl&gt;, `min-wt` &lt;dbl&gt;</code></pre>
+
+    </article>
+  </div>
+
+  
+  
+  
+
+  
+
+  
+</body>
+
+</html>

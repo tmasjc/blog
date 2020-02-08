@@ -1,0 +1,90 @@
+---
+title: Is James Harden been given special treatment?
+author: tmasjc
+date: '2019-10-06'
+slug: is-james-harden-been-given-special-treatment-by-referee
+categories: []
+tags: 
+    - isittrue
+---
+
+This video ["8 Unbelievable Charts That Will Change The Way You See The NBA"](https://www.youtube.com/watch?v=VCIKek1f-Hs) pops out on my Youtube homepage. The first chart he argues that James Harden has been given way more free throws (834) by NBA referees compare to the rest of the players. I find the chart *'unbelievable'* indeed and so I decided to look up some data on [basketball-reference](https://www.basketball-reference.com) to determine its validatity. 
+
+Conclusion, not true. 
+
+```{r, warning=FALSE, message=FALSE, cache=TRUE}
+library(tidyverse)
+library(ggthemes)
+library(rvest)
+library(janitor)
+library(plotly)
+# ggplot theme
+old <- theme_set(theme_minimal() + theme(text = element_text(family = 'Menlo')))
+
+# we scrap the data for the past 10 years
+yrs  <- c(2008:2018)
+urls <- str_glue("https://www.basketball-reference.com/leagues/NBA_{yrs}_per_poss.html")
+tbls <- map(urls, {
+    . %>% 
+        read_html() %>% 
+        html_node("#per_poss_stats") %>% 
+        html_table()
+}) %>% set_names(yrs)
+
+# clean up a little
+dat <- map(tbls, ~ which(nchar(names(.)) >= 1)) %>% 
+    map2(.x = tbls, .y = ., .f = ~ .x[.y]) %>% 
+    bind_rows(.id = "YEAR") %>% 
+    as_tibble() %>% 
+    clean_names() 
+
+df <- dat %>% 
+    filter(player != "Player", tm != "TOT") %>% 
+    # these are the useful columns to us 
+    # for data glossary, refer to basketball-reference.com
+    select(year, player, tm, pos, g, fta) %>% 
+    mutate(pos = str_extract(pos, "\\w*"),
+           g   = as.integer(g),
+           fta = as.double(fta))
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(ggthemes)
+library(rvest)
+library(janitor)
+library(plotly)
+# ggplot theme
+old <- theme_set(theme_minimal() + theme(text = element_text(family = 'Menlo')))
+```
+
+
+```{r, fig.width=9}
+set.seed(1212)
+p <- df %>% 
+    # filter those who completed at least 60 percent or 50 games of a season
+    filter(g >= 50) %>% 
+    group_by(year) %>% 
+    top_n(10, fta) %>% 
+    arrange(desc(fta), .by_group = TRUE) %>% 
+    # filter(year == "2017")
+    ggplot(aes(year, fta, 
+               text = str_glue("Name: {player}
+                               Team: {tm}
+                               Games: {g}
+                               Position: {pos}
+                               fta: {fta}"))) + 
+    geom_point(aes(col = pos), alpha = .7, size = 3,
+               position = position_jitter(width = .1, height = .3)) + 
+    labs(x     = "",
+         y     = "",
+         title = "Free Throw Attempts per 100 Team Possessions",
+         col   = "Position") 
+
+ggplotly(p, tooltip = "text") %>% 
+    layout(legend = list(orientation = "h", x = 0, y = -.1))
+```
+
+
+
+

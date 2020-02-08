@@ -1,0 +1,111 @@
+---
+title: Labels Detection w/ Google Cloud Vision
+description: Using Simple Post Request
+author: Thomas Jc
+date: '2018-02-05'
+slug: simple-request-to-google-cloud-vision
+categories:
+  - rstats
+tags:
+  - httr
+  - gcp
+---
+
+
+
+<p>A quick 10 on using <code>Google Cloud Vision REST API</code> to perform data analysis on images.</p>
+<p>Endpoint</p>
+<blockquote>
+<p><a href="https://vision.googleapis.com/v1/images:annotate" class="uri">https://vision.googleapis.com/v1/images:annotate</a></p>
+</blockquote>
+<div id="authentication" class="section level3">
+<h3>Authentication</h3>
+<p>First you must authenticate your requests. There are 2 ways to do it.</p>
+<ol style="list-style-type: decimal">
+<li><a href="https://support.google.com/cloud/answer/6158862?hl=en">Using an API key</a></li>
+<li><a href="https://cloud.google.com/iam/docs/creating-managing-service-accounts#creating_a_service_account">Using A Service Account</a></li>
+</ol>
+</div>
+<div id="request-body-and-responses" class="section level3">
+<h3>Request Body and Responses</h3>
+<p>The body of your POST request contains a JSON object, containing a single requests list, which itself contains one or more objects of type <code>AnnotateImageRequest</code>.</p>
+<pre class="json"><code>{
+  &quot;requests&quot;:[
+    {
+      &quot;image&quot;:{
+        &quot;content&quot;:&quot;/9j/7QBEUGhvdG9...image contents...eYxxxzj/Coa6Bax//Z&quot;
+      },
+      &quot;features&quot;:[
+        {
+          &quot;type&quot;:&quot;LABEL_DETECTION&quot;,
+          &quot;maxResults&quot;:1
+        }
+      ]
+    }
+  ]
+}</code></pre>
+<p>Full documentation <a href="https://cloud.google.com/vision/docs/reference/rest/v1/images/annotate">here</a>.</p>
+</div>
+<div id="providing-the-image" class="section level3">
+<h3>Providing The Image</h3>
+<p>Several ways to do this as well,</p>
+<ol style="list-style-type: decimal">
+<li>Base64-encoded image string</li>
+<li>Google Cloud Storage URI</li>
+<li>Public Accessible Image</li>
+</ol>
+</div>
+<div id="json-response-format" class="section level3">
+<h3>JSON Response Format</h3>
+<p>The annotate request receives a JSON response of type AnnotateImageResponse. Although the requests are similar for each feature type, the responses for each feature type can be quite different. Consult the Vision API Reference for complete information.</p>
+</div>
+<div id="a-quick-demo" class="section level3">
+<h3>A Quick Demo</h3>
+<pre class="r"><code># Specify image url
+imgURI &lt;- &quot;http://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/
+Rembrandt_van_Rijn_-_Self-Portrait_-_Google_Art_Project.jpg/
+463px-Rembrandt_van_Rijn_-_Self-Portrait_-_Google_Art_Project.jpg&quot;
+
+# Specify endpoint mentioned above
+endpoint &lt;- &quot;https://vision.googleapis.com/v1/images:annotate&quot;
+
+# Set API token in R environment
+# options(gcv_api_token = &quot;&quot;)
+
+if(!is.null(getOption(&quot;gcv_api_token&quot;))){
+  baseURI &lt;- paste0(endpoint, &quot;?key=&quot;, getOption(&quot;gcv_api_token&quot;))
+}else{
+  stop(&quot;API token not set&quot;)
+}
+
+# Post request body
+body &lt;- sprintf(&#39;{
+        &quot;requests&quot;:[
+            {
+                &quot;image&quot;:{
+                    &quot;source&quot;:{
+                        &quot;imageUri&quot;:
+                            &quot;%s&quot;
+                    }
+                },
+                &quot;features&quot;:[
+                    {
+                        &quot;type&quot;:&quot;LABEL_DETECTION&quot;,
+                        &quot;maxResults&quot;:%i
+                    }
+                    ]
+            }
+            ]
+        }&#39;, imgURI, 10
+                )
+
+# Send request
+res &lt;- httr::POST(baseURI, body = body, encode = &quot;json&quot;, config = httr::verbose())
+
+# Extract content (specific mime type)yhat
+lbs &lt;- httr::content(res, type = &quot;application/json&quot;)
+
+# Convert result to data frame
+lbs$responses[[1]]$labelAnnotations %&gt;% bind_rows()</code></pre>
+<p>P.S. Check out <a href="https://www.google.com/culturalinstitute/beta/entity/m0bskv2">Google Art and Culture project</a>.</p>
+</div>

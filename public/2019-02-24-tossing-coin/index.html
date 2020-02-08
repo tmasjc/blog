@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+  <meta name="generator" content="Hugo 0.64.0" />
+
+  
+  <meta name="description" content="Applied data science breadcrumbs">
+  
+
+  
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
+  
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+
+  
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+
+  
+  <link rel="manifest" href="/site.webmanifest">
+
+  
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+  <meta name="msapplication-TileColor" content="#da532c">
+
+  <meta name="theme-color" content="#ffffff">
+
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" />
+
+  
+  <title>Tossing Coin Game | Not So Formal</title>
+  
+
+  <style>
+ 
+@font-face {
+    font-family: 'PT Sans';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../fonts/pt-sans-v11-latin-regular.eot');  
+    src: local('PT Sans'), local('PTSans-Regular'),
+         url('../fonts/pt-sans-v11-latin-regular.eot?#iefix') format('embedded-opentype'),  
+         url('../fonts/pt-sans-v11-latin-regular.woff2') format('woff2'),  
+         url('../fonts/pt-sans-v11-latin-regular.woff') format('woff'),  
+         url('../fonts/pt-sans-v11-latin-regular.ttf') format('truetype'),  
+         url('../fonts/pt-sans-v11-latin-regular.svg#PTSans') format('svg');  
+  }
+
+small {
+    opacity: 0.5;
+}
+
+body {
+  min-width: 300px;
+  font-family: "PT Sans"
+}
+
+.custom-navbar {
+  margin-bottom: 1em;
+  height: 60px;
+}
+
+.custom-navbar a {
+  display: inline-block;
+  padding: 18px 0;
+  margin-right: 1em;
+  font-weight: bold;
+}
+
+.custom-navbar a:hover,
+.custom-navbar a:focus {
+  text-decoration: none;
+}
+
+@media print {
+  .custom-navbar {
+    display: none;
+  }
+}
+
+article {
+  padding-bottom: 1em;
+}
+
+img {
+  max-width: 100%;
+}
+
+
+body {
+  background-color: #2C363F;
+}
+
+
+
+body {
+  color: #FFF;
+}
+
+
+
+a {
+  color: #F2F5EA;
+}
+
+
+
+a:hover,
+a:focus {
+  color: #E75A7C;
+}
+
+
+
+.custom-navbar {
+  background-color: #212529;
+}
+
+
+
+.custom-navbar a {
+  color: #AED9E0;
+}
+
+
+
+.custom-navbar a:hover,
+.custom-navbar a:focus {
+  color: #E75A7C;
+}
+
+
+
+.container {
+  max-width: 800px;
+}
+
+
+
+pre {
+  display: block;
+  padding: 9.5px;
+  word-break: break-all;
+  word-wrap: break-word;
+  background-color: #dee2e6;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+pre code {
+  padding: 0;
+  font-size: .8em;
+  color: inherit;
+  white-space: pre-wrap;
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+}
+
+code {
+  padding: 2px 2px;
+  color: #000;
+  background-color: #f5f5f5;
+   
+  border-radius: 4px;
+  font-size: .7em;
+}
+
+
+
+blockquote,
+.blockquote {
+  padding: 10px 20px;
+  margin: 0 0 20px;
+  font-size: 1em;
+  border-left: 5px solid #6c757d;
+}
+
+</style>
+
+</head>
+
+<body>
+  <nav class="custom-navbar">
+  <div class="container">
+    
+    <a href="/">Home</a>
+    
+    <a href="https://tmasjc.github.io/">About</a>
+    
+  </div>
+</nav>
+  
+  <div class="container">
+    <article>
+      <h1>Tossing Coin Game</h1>
+<p>
+  <small class="text-secondary">
+  
+  
+  Feb 24, 2019
+  </small>
+  
+
+<small><a href="/tags/monte-carlo">#monte-carlo</a></small>
+
+
+</p>
+
+
+
+<p>The use of simulation experiments to better probability patterns is called the Monte Carlo method. This is an example.</p>
+<div id="tossing-coin-game" class="section level4">
+<h4>Tossing Coin Game</h4>
+<p>Tom and Jerry play a simple game of tossing a coin. If given heads, Tom pays Jerry a dollar. Otherwise, Jerry pays Tom a dollar.</p>
+<pre class="r"><code>set.seed(1212)
+
+# how many tosses?
+number_of_tosses = 50
+
+# simulate n tosses
+# 1 = head, -1 = tail
+(tosses &lt;- sample(c(1, -1), size = number_of_tosses, replace = TRUE, prob = c(.5, .5)))</code></pre>
+<pre><code>##  [1] -1 -1  1 -1  1 -1 -1 -1  1 -1  1  1 -1  1  1 -1 -1 -1  1 -1  1 -1 -1 -1  1
+## [26] -1  1  1  1  1 -1 -1 -1  1 -1  1  1  1  1 -1 -1  1  1 -1 -1  1 -1  1  1 -1</code></pre>
+<p>Let’s observe some games’ progression, from the perspective of Tom.</p>
+<pre class="r"><code>library(purrr)
+
+# convert game to a function
+new_game &lt;- function(n = 1) {
+  tosses = sample(c(1, -1),
+                   size = n,
+                   replace = TRUE,
+                   prob = c(.5, .5))
+}
+
+# progress of 4 different games
+par(mfrow = c(2, 2))
+walk(1:4, ~ {
+  plot(cumsum(new_game(number_of_tosses)), type = &quot;l&quot;, ylab = &quot;Winnings&quot;)  
+  abline(h = 0, col = &quot;red&quot;, lty = 3)
+})</code></pre>
+<p><img src="/post/2019-02-24-tossing-coin_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>Let’s calculate the winnings distribution.</p>
+<pre class="r"><code>library(dplyr)
+library(ggplot2)
+library(ggthemes)
+
+old &lt;- theme_set(theme_tufte() + theme(text = element_text(family = &quot;Menlo&quot;)))
+
+# modify function above
+new_game &lt;- function(n = 1) {
+  tosses = sample(c(1, -1),
+                   size = n,
+                   replace = TRUE,
+                   prob = c(.5, .5))
+  # return winnings
+  sum(tosses)
+}
+# repeat many times
+reps &lt;- 10e3 %&gt;% rerun(new_game(number_of_tosses)) %&gt;% unlist()
+
+# bind into data frame
+reps %&gt;%
+    as_data_frame() %&gt;%
+    ggplot(aes(value)) +
+    geom_histogram(binwidth = 1) +
+    scale_x_discrete(limits = seq(-24, 24, 4))</code></pre>
+<pre><code>## Warning: `as_data_frame()` is deprecated, use `as_tibble()` (but mind the new semantics).
+## This warning is displayed once per session.</code></pre>
+<p><img src="/post/2019-02-24-tossing-coin_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p><em>Question: Why there isn’t any odd number?</em></p>
+<p>We can also calculate the chances where Tom break even, either from simulation result above, or using binomial distribution. They are pretty close.</p>
+<pre class="r"><code># how many breakeven
+length(which(reps == 0)) / length(reps)</code></pre>
+<pre><code>## [1] 0.1163</code></pre>
+<pre class="r"><code># approx. form using binomial distribution
+dbinom(25, size = 50, prob = 0.5) </code></pre>
+<pre><code>## [1] 0.1122752</code></pre>
+<p>What is the likely number of tosses Peter will be winning in a game of 50 tosses? What is the likely maximum fortune Peter will be winning in a game of 50 tosses?</p>
+<pre class="r"><code>library(tidyr)
+
+# modify function above
+new_game &lt;- function(n = 1) {
+  tosses = sample(c(1, -1),
+                   size = n,
+                   replace = TRUE,
+                   prob = c(.5, .5))
+  # track progress
+  cum.win = cumsum(tosses)
+  # return
+  list(final = sum(tosses), 
+    leads = sum(cum.win &gt; 0), 
+    max = max(cum.win))
+}
+new_game(number_of_tosses)</code></pre>
+<pre><code>## $final
+## [1] 12
+## 
+## $leads
+## [1] 50
+## 
+## $max
+## [1] 13</code></pre>
+<pre class="r"><code># repeat
+set.seed(1234)
+reps &lt;- 10e3 %&gt;% rerun(new_game(number_of_tosses))
+
+reps %&gt;%
+    bind_rows() %&gt;%
+    # collapse columns into one
+    gather(var, val) %&gt;%
+    ggplot(aes(val)) +
+    geom_histogram(binwidth = 1) +
+    facet_wrap(~ var, ncol = 1,
+               labeller = labeller(
+                   var = c(final = &quot;Final Winnings&quot;,
+                           leads = &quot;# Leadings&quot;,
+                           max = &quot;Max Fortunate&quot;)
+               )) +
+    labs(x = &quot;&quot;, y  = &quot;&quot;)</code></pre>
+<p><img src="/post/2019-02-24-tossing-coin_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+</div>
+
+    </article>
+  </div>
+
+  
+  
+  
+
+  
+
+  
+</body>
+
+</html>

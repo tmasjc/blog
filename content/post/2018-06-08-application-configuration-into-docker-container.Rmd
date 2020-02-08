@@ -1,0 +1,20 @@
+---
+title: Application Configuration into Docker Container
+author: Thomas Jc
+date: '2018-06-08'
+slug: application-configuration-into-docker-container
+categories:
+  - Tech
+tags:
+  - Docker
+---
+
+Send configuration to Dockerized Apps,
+
+1. Baking the configuration into the container itself via ``Dockerfile``
+
+2. Setting the application configutation dynamically via ``ENV``
+
+2. Setting the application **dynamically** via KV store on the network (``Consul`` or ``etcd``)
+
+3. Map the config files in directly via Docker ``volumes``. For production, try configuration management tool like ``Ansible``, ``Chef``, ``Puppet``.

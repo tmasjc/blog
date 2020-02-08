@@ -1,0 +1,71 @@
+---
+title: Dixon Q-Test
+author: Thomas Jc
+date: '2018-06-25'
+slug: dixon-q-test
+categories:
+  - rstats
+tags:
+  - outliers
+---
+
+
+
+<pre class="r"><code>library(dplyr)
+library(outliers)
+
+set.seed(5678)
+
+get_case &lt;- function(which_case = c(&quot;one&quot;, &quot;two&quot;)){
+    
+    # generate data from a normal distribution
+    dat &lt;- rnorm(n = 10, mean = 1000, sd = 100) %&gt;% round()
+    switch(which_case, 
+           # add outlier on the left
+           &quot;one&quot; = c(dat, round(mean(dat) - sd(dat) * 3.5) ),
+           # add outlier on the right
+           &quot;two&quot; = c(dat, round(sd(dat) * 3.5 + mean(dat)) )
+    )
+}</code></pre>
+<div id="case-one-test-mininum-value-by-default" class="section level4">
+<h4>Case One: Test Mininum Value by Default ———————————</h4>
+<pre class="r"><code>vecs &lt;- get_case(&quot;one&quot;)
+plot(rep(1,length(vecs)), vecs)
+boxplot(vecs, add = TRUE)</code></pre>
+<p><img src="/post/2018-06-25-dixon-q-test_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<pre class="r"><code>dixon.test(vecs)</code></pre>
+<pre><code>## 
+##  Dixon test for outliers
+## 
+## data:  vecs
+## Q = 0.50182, p-value = 0.2329
+## alternative hypothesis: lowest value 617 is an outlier</code></pre>
+<pre class="r"><code>dixon.test(vecs, opposite = TRUE)</code></pre>
+<pre><code>## 
+##  Dixon test for outliers
+## 
+## data:  vecs
+## Q = 0.46933, p-value = 0.3157
+## alternative hypothesis: highest value 1183 is an outlier</code></pre>
+</div>
+<div id="case-one-test-maximum-value-by-default" class="section level4">
+<h4>Case One: Test Maximum Value by Default ———————————</h4>
+<pre class="r"><code>vecs &lt;- get_case(&quot;two&quot;)
+plot(rep(1,length(vecs)), vecs)
+boxplot(vecs, add = TRUE)</code></pre>
+<p><img src="/post/2018-06-25-dixon-q-test_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<pre class="r"><code>dixon.test(vecs)</code></pre>
+<pre><code>## 
+##  Dixon test for outliers
+## 
+## data:  vecs
+## Q = 0.55949, p-value = 0.1233
+## alternative hypothesis: highest value 1260 is an outlier</code></pre>
+<pre class="r"><code>dixon.test(vecs, opposite = TRUE)</code></pre>
+<pre><code>## 
+##  Dixon test for outliers
+## 
+## data:  vecs
+## Q = 0.30208, p-value = 0.9855
+## alternative hypothesis: lowest value 794 is an outlier</code></pre>
+</div>

@@ -1,0 +1,149 @@
+---
+title: Programming in dplyr - Column Manipulation
+author: Thomas Jc
+date: '2018-09-07'
+slug: programming-in-dplyr
+categories:
+  - rstats
+tags:
+  - dplyr
+  - tidyeval
+editor_options: 
+  chunk_output_type: console
+---
+
+
+
+<div id="how-do-you-program-the-column-manipulation-dynamically-when-working-with-dplyr-verb" class="section level4">
+<h4>How do you program the column manipulation dynamically when working with <code>dplyr</code> verb?</h4>
+<p>Say, we have a dataframe with multiple columns in pair,</p>
+<pre class="r"><code>library(tidyverse)
+
+# simulate some data
+df &lt;- rerun(3 * 2, rnorm(10, 5, 2)) %&gt;% bind_cols()
+# imagine some column names
+colnames(df) &lt;- map(c(&quot;weight&quot;, &quot;height&quot;, &quot;length&quot;), paste0, c(&quot;.x&quot;, &quot;.y&quot;)) %&gt;% unlist()
+df</code></pre>
+<pre><code>## # A tibble: 10 x 6
+##    weight.x weight.y height.x height.y length.x length.y
+##       &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+##  1  6.79        3.00     2.97    2.80      3.37     3.51
+##  2  8.01        6.61     7.04    5.90      3.00     4.08
+##  3  0.00663     3.87     2.36    4.73      2.32     5.13
+##  4  5.97        4.94     3.21    4.04      2.46     5.54
+##  5  0.731       5.32     5.36    0.582     3.08     3.55
+##  6  5.37        8.28     7.23    4.00      6.13     3.93
+##  7  5.02        2.56     3.25    3.76      6.14     6.46
+##  8  5.70        1.22     3.59    3.78      5.13     4.43
+##  9  5.58        2.95     8.78    5.91      4.22     3.37
+## 10  3.43        7.28     3.36    4.78      4.16     4.90</code></pre>
+<p>and we try to calculate the difference between metrices <em>.x</em> and <em>.y</em></p>
+</div>
+<div id="expression" class="section level2">
+<h2>Expression</h2>
+<p>Let formulate a form of “expression”,</p>
+<pre class="r"><code>calc_diff &lt;- function(var) {
+    # the desire expression is (var.x - var.y)
+    sprintf(&quot;%s.x - %s.y&quot;, var, var)
+}
+# example
+calc_diff(&quot;weight&quot;)</code></pre>
+<pre><code>## [1] &quot;weight.x - weight.y&quot;</code></pre>
+</div>
+<div id="rlang" class="section level2">
+<h2>Rlang</h2>
+<p>So we get our desire expression, but how do we pass them to <code>dplyr</code> to understand? We can use <code>rlang</code> to transform text into R expressions.</p>
+<pre class="r"><code>calc_diff &lt;- function(df, var) {
+    # parse as R code
+    expr &lt;- sprintf(&quot;%s.x - %s.y&quot;, var, var) %&gt;% 
+        rlang::parse_expr()
+    df %&gt;% mutate(!!expr)
+}
+
+df %&gt;% 
+    # add new column
+    calc_diff(&quot;weight&quot;) %&gt;% 
+    # focus on result 
+    select(contains(&quot;weight&quot;))</code></pre>
+<pre><code>## # A tibble: 10 x 3
+##    weight.x weight.y `weight.x - weight.y`
+##       &lt;dbl&gt;    &lt;dbl&gt;                 &lt;dbl&gt;
+##  1  6.79        3.00                  3.79
+##  2  8.01        6.61                  1.40
+##  3  0.00663     3.87                 -3.86
+##  4  5.97        4.94                  1.03
+##  5  0.731       5.32                 -4.59
+##  6  5.37        8.28                 -2.91
+##  7  5.02        2.56                  2.46
+##  8  5.70        1.22                  4.47
+##  9  5.58        2.95                  2.63
+## 10  3.43        7.28                 -3.85</code></pre>
+</div>
+<div id="column-name" class="section level2">
+<h2>Column Name</h2>
+<p>Well, we need a way to add name to the new column.</p>
+<pre class="r"><code>calc_diff &lt;- function(df, var) {
+    # to transform a quosure to a string 
+    new_col_name &lt;- quo_name(paste0(var, &quot;.diff&quot;))
+    expr &lt;- sprintf(&quot;%s.x - %s.y&quot;, var, var) %&gt;% 
+        rlang::parse_expr()
+    # so that we can use it in dplyr context
+    df %&gt;% mutate(!!new_col_name := !!expr)
+}
+
+df %&gt;% 
+    # it works!
+    calc_diff(&quot;weight&quot;) %&gt;% 
+    select(contains(&quot;weight&quot;))</code></pre>
+<pre><code>## # A tibble: 10 x 3
+##    weight.x weight.y weight.diff
+##       &lt;dbl&gt;    &lt;dbl&gt;       &lt;dbl&gt;
+##  1  6.79        3.00        3.79
+##  2  8.01        6.61        1.40
+##  3  0.00663     3.87       -3.86
+##  4  5.97        4.94        1.03
+##  5  0.731       5.32       -4.59
+##  6  5.37        8.28       -2.91
+##  7  5.02        2.56        2.46
+##  8  5.70        1.22        4.47
+##  9  5.58        2.95        2.63
+## 10  3.43        7.28       -3.85</code></pre>
+</div>
+<div id="many-columns" class="section level2">
+<h2>Many Columns</h2>
+<p>So now we know how to do with 1 variable, how do we apply it to many?</p>
+<ol style="list-style-type: decimal">
+<li>Use <code>map</code> as per normal to loop and generate multiple expressions</li>
+<li>Use <code>set_names</code> to give expressions list a name</li>
+<li>Use <code>!!!</code> (3x <em>!</em> not 2) to splice multiple arguments in <code>mutate</code>. It will assign new variable names using names given by list (in step 2).</li>
+</ol>
+<pre class="r"><code>calc_diff &lt;- function(df, ...) {
+    # first, an expressions list
+    n_exprs &lt;- 
+        # loop over multiple inputs
+        map(list(...), ~ sprintf(&quot;%s.x - %s.y&quot;, .x, .x) %&gt;% 
+                       rlang::parse_expr()) %&gt;% 
+        set_names(map(list(...), ~ paste0(.x, &quot;.diff&quot;)))
+    
+    # splices above expressions
+    df %&gt;% mutate(!!!n_exprs)
+}
+
+# tada~~
+df %&gt;% 
+    calc_diff(&quot;weight&quot;, &quot;height&quot;, &quot;length&quot;)</code></pre>
+<pre><code>## # A tibble: 10 x 9
+##    weight.x weight.y height.x height.y length.x length.y weight.diff height.diff
+##       &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;
+##  1  6.79        3.00     2.97    2.80      3.37     3.51        3.79       0.172
+##  2  8.01        6.61     7.04    5.90      3.00     4.08        1.40       1.15 
+##  3  0.00663     3.87     2.36    4.73      2.32     5.13       -3.86      -2.37 
+##  4  5.97        4.94     3.21    4.04      2.46     5.54        1.03      -0.830
+##  5  0.731       5.32     5.36    0.582     3.08     3.55       -4.59       4.77 
+##  6  5.37        8.28     7.23    4.00      6.13     3.93       -2.91       3.24 
+##  7  5.02        2.56     3.25    3.76      6.14     6.46        2.46      -0.505
+##  8  5.70        1.22     3.59    3.78      5.13     4.43        4.47      -0.183
+##  9  5.58        2.95     8.78    5.91      4.22     3.37        2.63       2.87 
+## 10  3.43        7.28     3.36    4.78      4.16     4.90       -3.85      -1.42 
+## # … with 1 more variable: length.diff &lt;dbl&gt;</code></pre>
+</div>

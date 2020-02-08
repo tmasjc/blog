@@ -1,0 +1,102 @@
+---
+title: Pseudo R Squared
+author: tmasjc
+date: '2018-11-26'
+slug: pseudo-r-squared
+categories: 
+    - General
+tags: 
+    - descr
+---
+
+
+
+<pre class="r"><code>library(tidyverse)
+library(descr)
+
+# make reproducible 
+set.seed(1234)
+# number of points
+nn &lt;- 100
+
+# An Simulated Model --------------------------------------------------------
+
+# simulate binary response
+y &lt;- rbinom(nn, 1, prob = .5)
+# single predictor
+x &lt;- y + rnorm(nn, mean = 1, sd = .5)
+cor(x, y)</code></pre>
+<pre><code>## [1] 0.7404515</code></pre>
+<pre class="r"><code># null model (without any predictor)
+null_mod &lt;- glm(y ~  1, family = &quot;binomial&quot;)
+# we know x is inheritly random
+some_mod &lt;- glm(y ~ x, family = &quot;binomial&quot;)
+
+# glance 
+summary(some_mod)</code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = y ~ x, family = &quot;binomial&quot;)
+## 
+## Deviance Residuals: 
+##      Min        1Q    Median        3Q       Max  
+## -2.09191  -0.31476  -0.06342   0.43491   1.85033  
+## 
+## Coefficients:
+##             Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)  -7.9100     1.5971  -4.953 7.32e-07 ***
+## x             4.9034     0.9643   5.085 3.68e-07 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 137.63  on 99  degrees of freedom
+## Residual deviance:  59.99  on 98  degrees of freedom
+## AIC: 63.99
+## 
+## Number of Fisher Scoring iterations: 6</code></pre>
+<pre class="r"><code># the same result
+1 - logLik(some_mod) / logLik(null_mod)</code></pre>
+<pre><code>## &#39;log Lik.&#39; 0.5641121 (df=2)</code></pre>
+<pre class="r"><code>1 - some_mod$deviance / some_mod$null.deviance</code></pre>
+<pre><code>## [1] 0.5641121</code></pre>
+<pre class="r"><code># from package
+descr::LogRegR2(some_mod)</code></pre>
+<pre><code>## Chi2                 77.63748 
+## Df                   1 
+## Sig.                 0 
+## Cox and Snell Index  0.5399292 
+## Nagelkerke Index     0.7223295 
+## McFadden&#39;s R2        0.5641121</code></pre>
+<pre class="r"><code># Pseudo Rsq ~ Predictor Power ------------------------------------------
+
+# vary predictor power by adding various degree of deviation
+# return a list of int vector
+ints &lt;- map(seq(.1, .8, .01), ~ y + rnorm(nn, mean = 1, sd = .x))
+
+# fit and extract pseudo rsq
+get_pseudo_rsq &lt;- function(vec) {
+  fit &lt;- glm(y ~ vec, family = &quot;binomial&quot;)
+  pseudo_rsq &lt;- LogRegR2(fit)
+  # return
+  with(pseudo_rsq, list(
+    corr = cor(vec, y),
+    `McFadden` = RL2,
+    `Cox &amp; Snell` = CoxR2,
+    `Nagelkerke` = NagelkerkeR2
+  ))
+} 
+rsqs &lt;- map(ints, get_pseudo_rsq)
+
+# visualize corresponding pseudo rsq by correlation
+rsqs %&gt;% 
+  bind_rows() %&gt;% 
+  gather(met, rsq, -corr) %&gt;% 
+  ggplot(aes(corr, rsq, col = met)) + 
+  geom_line() + 
+  geom_hline(yintercept = .5, col = &quot;darkgray&quot;, lty = 3) + 
+  theme_minimal(base_family = &quot;Menlo&quot;) + 
+  labs(x = &quot;Correlation&quot;, y = &quot;Pseudo R Squared&quot;, col = &quot;Variant&quot;)</code></pre>
+<p><img src="/post/2018-11-26-pseudo-r-squared_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<p>For more info, see <a href="https://stats.idre.ucla.edu/other/mult-pkg/faq/general/faq-what-are-pseudo-r-squareds/" class="uri">https://stats.idre.ucla.edu/other/mult-pkg/faq/general/faq-what-are-pseudo-r-squareds/</a></p>

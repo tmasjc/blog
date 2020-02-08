@@ -1,0 +1,112 @@
+---
+title: Programming in dplyr - Column Manipulation
+author: Thomas Jc
+date: '2018-09-07'
+slug: programming-in-dplyr
+categories:
+  - rstats
+tags:
+  - dplyr
+  - tidyeval
+editor_options: 
+  chunk_output_type: console
+---
+
+#### How do you program the column manipulation dynamically when working with `dplyr` verb? 
+
+Say, we have a dataframe with multiple columns in pair,
+
+```{r, message=FALSE}
+library(tidyverse)
+
+# simulate some data
+df <- rerun(3 * 2, rnorm(10, 5, 2)) %>% bind_cols()
+# imagine some column names
+colnames(df) <- map(c("weight", "height", "length"), paste0, c(".x", ".y")) %>% unlist()
+df
+```
+
+and we try to calculate the difference between metrices *.x* and *.y*
+
+## Expression
+
+Let formulate a form of "expression", 
+
+```{r}
+calc_diff <- function(var) {
+    # the desire expression is (var.x - var.y)
+    sprintf("%s.x - %s.y", var, var)
+}
+# example
+calc_diff("weight")
+```
+
+## Rlang
+
+So we get our desire expression, but how do we pass them to `dplyr` to understand? We can use `rlang` to transform text into R expressions.
+
+```{r}
+calc_diff <- function(df, var) {
+    # parse as R code
+    expr <- sprintf("%s.x - %s.y", var, var) %>% 
+        rlang::parse_expr()
+    df %>% mutate(!!expr)
+}
+
+df %>% 
+    # add new column
+    calc_diff("weight") %>% 
+    # focus on result 
+    select(contains("weight"))
+```
+
+## Column Name
+
+Well, we need a way to add name to the new column. 
+
+```{r}
+calc_diff <- function(df, var) {
+    # to transform a quosure to a string 
+    new_col_name <- quo_name(paste0(var, ".diff"))
+    expr <- sprintf("%s.x - %s.y", var, var) %>% 
+        rlang::parse_expr()
+    # so that we can use it in dplyr context
+    df %>% mutate(!!new_col_name := !!expr)
+}
+
+df %>% 
+    # it works!
+    calc_diff("weight") %>% 
+    select(contains("weight"))
+```
+
+## Many Columns
+
+So now we know how to do with 1 variable, how do we apply it to many? 
+
+1. Use `map` as per normal to loop and generate multiple expressions
+2. Use `set_names` to give expressions list a name
+3. Use `!!!` (3x *!* not 2) to splice multiple arguments in `mutate`. It will assign new variable names using names given by list (in step 2).
+
+```{r}
+calc_diff <- function(df, ...) {
+    # first, an expressions list
+    n_exprs <- 
+        # loop over multiple inputs
+        map(list(...), ~ sprintf("%s.x - %s.y", .x, .x) %>% 
+                       rlang::parse_expr()) %>% 
+        set_names(map(list(...), ~ paste0(.x, ".diff")))
+    
+    # splices above expressions
+    df %>% mutate(!!!n_exprs)
+}
+
+# tada~~
+df %>% 
+    calc_diff("weight", "height", "length")
+```
+
+
+
+
+

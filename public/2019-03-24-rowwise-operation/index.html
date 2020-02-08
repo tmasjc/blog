@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+  <meta name="generator" content="Hugo 0.64.0" />
+
+  
+  <meta name="description" content="Applied data science breadcrumbs">
+  
+
+  
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
+  
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+
+  
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+
+  
+  <link rel="manifest" href="/site.webmanifest">
+
+  
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+  <meta name="msapplication-TileColor" content="#da532c">
+
+  <meta name="theme-color" content="#ffffff">
+
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" />
+
+  
+  <title>Rowwise Operation | Not So Formal</title>
+  
+
+  <style>
+ 
+@font-face {
+    font-family: 'PT Sans';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../fonts/pt-sans-v11-latin-regular.eot');  
+    src: local('PT Sans'), local('PTSans-Regular'),
+         url('../fonts/pt-sans-v11-latin-regular.eot?#iefix') format('embedded-opentype'),  
+         url('../fonts/pt-sans-v11-latin-regular.woff2') format('woff2'),  
+         url('../fonts/pt-sans-v11-latin-regular.woff') format('woff'),  
+         url('../fonts/pt-sans-v11-latin-regular.ttf') format('truetype'),  
+         url('../fonts/pt-sans-v11-latin-regular.svg#PTSans') format('svg');  
+  }
+
+small {
+    opacity: 0.5;
+}
+
+body {
+  min-width: 300px;
+  font-family: "PT Sans"
+}
+
+.custom-navbar {
+  margin-bottom: 1em;
+  height: 60px;
+}
+
+.custom-navbar a {
+  display: inline-block;
+  padding: 18px 0;
+  margin-right: 1em;
+  font-weight: bold;
+}
+
+.custom-navbar a:hover,
+.custom-navbar a:focus {
+  text-decoration: none;
+}
+
+@media print {
+  .custom-navbar {
+    display: none;
+  }
+}
+
+article {
+  padding-bottom: 1em;
+}
+
+img {
+  max-width: 100%;
+}
+
+
+body {
+  background-color: #2C363F;
+}
+
+
+
+body {
+  color: #FFF;
+}
+
+
+
+a {
+  color: #F2F5EA;
+}
+
+
+
+a:hover,
+a:focus {
+  color: #E75A7C;
+}
+
+
+
+.custom-navbar {
+  background-color: #212529;
+}
+
+
+
+.custom-navbar a {
+  color: #AED9E0;
+}
+
+
+
+.custom-navbar a:hover,
+.custom-navbar a:focus {
+  color: #E75A7C;
+}
+
+
+
+.container {
+  max-width: 800px;
+}
+
+
+
+pre {
+  display: block;
+  padding: 9.5px;
+  word-break: break-all;
+  word-wrap: break-word;
+  background-color: #dee2e6;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+pre code {
+  padding: 0;
+  font-size: .8em;
+  color: inherit;
+  white-space: pre-wrap;
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+}
+
+code {
+  padding: 2px 2px;
+  color: #000;
+  background-color: #f5f5f5;
+   
+  border-radius: 4px;
+  font-size: .7em;
+}
+
+
+
+blockquote,
+.blockquote {
+  padding: 10px 20px;
+  margin: 0 0 20px;
+  font-size: 1em;
+  border-left: 5px solid #6c757d;
+}
+
+</style>
+
+</head>
+
+<body>
+  <nav class="custom-navbar">
+  <div class="container">
+    
+    <a href="/">Home</a>
+    
+    <a href="https://tmasjc.github.io/">About</a>
+    
+  </div>
+</nav>
+  
+  <div class="container">
+    <article>
+      <h1>Rowwise Operation</h1>
+<p>
+  <small class="text-secondary">
+  
+  
+  Mar 24, 2019
+  </small>
+  
+
+<small><a href="/tags/plyr">#plyr</a></small>
+
+
+<small><a href="/tags/data.table">#data.table</a></small>
+
+
+</p>
+
+
+
+<p>Compare multiple methods to get row-wise operation done on a data frame.</p>
+<p>In this case, we wish to extract the corresponding highest value column.</p>
+<pre class="r"><code>library(tidyverse)
+set.seed(1212)
+
+# a dummy data frame 
+dummy_df &lt;- matrix(runif(15, min = 1, max = 9), ncol = 3) %&gt;% as_data_frame()</code></pre>
+<pre><code>## Warning: `as_data_frame()` is deprecated, use `as_tibble()` (but mind the new semantics).
+## This warning is displayed once per session.</code></pre>
+<pre class="r"><code>colnames(dummy_df) &lt;- c(&quot;x&quot;, &quot;y&quot;, &quot;z&quot;)</code></pre>
+<div id="method-1-dplyrrowwise" class="section level4">
+<h4>Method 1: <code>dplyr::rowwise</code></h4>
+<pre class="r"><code>use_rowwise &lt;- function(df) {
+    df %&gt;% 
+        rowwise() %&gt;% 
+        mutate(max = names(df)[which.max(c(x, y, z))])
+}
+use_rowwise(dummy_df)</code></pre>
+<pre><code>## Source: local data frame [5 x 4]
+## Groups: &lt;by row&gt;
+## 
+## # A tibble: 5 x 4
+##       x     y     z max  
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;
+## 1  3.12  1.27  5.12 z    
+## 2  1.87  1.70  7.48 z    
+## 3  8.74  1.47  1.22 x    
+## 4  3.81  6.63  5.96 y    
+## 5  6.08  2.94  6.28 z</code></pre>
+</div>
+<div id="method-2-plyrapply" class="section level4">
+<h4>Method 2: <code>plyr::apply</code></h4>
+<pre class="r"><code>use_apply &lt;- function(df) {
+    df %&gt;% 
+        mutate(max = names(df)[apply(df, 1, which.max)])
+}
+use_apply(dummy_df)</code></pre>
+<pre><code>## # A tibble: 5 x 4
+##       x     y     z max  
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;
+## 1  3.12  1.27  5.12 z    
+## 2  1.87  1.70  7.48 z    
+## 3  8.74  1.47  1.22 x    
+## 4  3.81  6.63  5.96 y    
+## 5  6.08  2.94  6.28 z</code></pre>
+</div>
+<div id="method-3-max.col-from-data.table" class="section level4">
+<h4>Method 3: <code>max.col</code> from <code>data.table</code></h4>
+<pre class="r"><code>library(data.table)
+use_datatable &lt;- function(df) {
+    dt &lt;- as.data.table(df)
+    dt[, max :=  names(.SD)[max.col(.SD)], .SDcols = 1:3]
+}
+use_datatable(dummy_df) %&gt;% print()</code></pre>
+<pre><code>##           x        y        z max
+## 1: 3.117172 1.265315 5.118694   z
+## 2: 1.868388 1.695199 7.484665   z
+## 3: 8.735410 1.474048 1.217860   x
+## 4: 3.808189 6.631653 5.958628   y
+## 5: 6.075657 2.938117 6.275357   z</code></pre>
+</div>
+<div id="efficiency" class="section level4">
+<h4>Efficiency</h4>
+<p>Lets do benchmarking on a larger data frame.</p>
+<pre class="r"><code>library(microbenchmark)
+
+# for benchmarking
+large_df &lt;- matrix(runif(30e5), ncol = 3) %&gt;% as_data_frame()
+colnames(large_df) &lt;- names(dummy_df)
+dim(large_df)</code></pre>
+<pre><code>## [1] 1000000       3</code></pre>
+<pre class="r"><code>microbenchmark(
+    use_rowwise(large_df),
+    use_apply(large_df),
+    use_datatable(large_df),
+    times = 30
+)</code></pre>
+<pre><code>## Unit: milliseconds
+##                     expr         min          lq       mean      median
+##    use_rowwise(large_df) 10642.03850 10828.97933 12185.4581 11591.86977
+##      use_apply(large_df)  4482.81001  4802.02439  5825.6439  5412.52181
+##  use_datatable(large_df)    43.81339    45.97957    82.9575    56.46214
+##          uq        max neval
+##  13270.8466 14965.8307    30
+##   6582.7706  9428.1450    30
+##     63.9674   332.6165    30</code></pre>
+<p>Oh yea, <code>data.table</code> is blazingly fast.</p>
+</div>
+
+    </article>
+  </div>
+
+  
+  
+  
+
+  
+
+  
+</body>
+
+</html>

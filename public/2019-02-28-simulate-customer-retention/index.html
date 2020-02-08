@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+  <meta name="generator" content="Hugo 0.64.0" />
+
+  
+  <meta name="description" content="Applied data science breadcrumbs">
+  
+
+  
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
+  
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+
+  
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+
+  
+  <link rel="manifest" href="/site.webmanifest">
+
+  
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+  <meta name="msapplication-TileColor" content="#da532c">
+
+  <meta name="theme-color" content="#ffffff">
+
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" />
+
+  
+  <title>Simulate Customer Retention | Not So Formal</title>
+  
+
+  <style>
+ 
+@font-face {
+    font-family: 'PT Sans';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../fonts/pt-sans-v11-latin-regular.eot');  
+    src: local('PT Sans'), local('PTSans-Regular'),
+         url('../fonts/pt-sans-v11-latin-regular.eot?#iefix') format('embedded-opentype'),  
+         url('../fonts/pt-sans-v11-latin-regular.woff2') format('woff2'),  
+         url('../fonts/pt-sans-v11-latin-regular.woff') format('woff'),  
+         url('../fonts/pt-sans-v11-latin-regular.ttf') format('truetype'),  
+         url('../fonts/pt-sans-v11-latin-regular.svg#PTSans') format('svg');  
+  }
+
+small {
+    opacity: 0.5;
+}
+
+body {
+  min-width: 300px;
+  font-family: "PT Sans"
+}
+
+.custom-navbar {
+  margin-bottom: 1em;
+  height: 60px;
+}
+
+.custom-navbar a {
+  display: inline-block;
+  padding: 18px 0;
+  margin-right: 1em;
+  font-weight: bold;
+}
+
+.custom-navbar a:hover,
+.custom-navbar a:focus {
+  text-decoration: none;
+}
+
+@media print {
+  .custom-navbar {
+    display: none;
+  }
+}
+
+article {
+  padding-bottom: 1em;
+}
+
+img {
+  max-width: 100%;
+}
+
+
+body {
+  background-color: #2C363F;
+}
+
+
+
+body {
+  color: #FFF;
+}
+
+
+
+a {
+  color: #F2F5EA;
+}
+
+
+
+a:hover,
+a:focus {
+  color: #E75A7C;
+}
+
+
+
+.custom-navbar {
+  background-color: #212529;
+}
+
+
+
+.custom-navbar a {
+  color: #AED9E0;
+}
+
+
+
+.custom-navbar a:hover,
+.custom-navbar a:focus {
+  color: #E75A7C;
+}
+
+
+
+.container {
+  max-width: 800px;
+}
+
+
+
+pre {
+  display: block;
+  padding: 9.5px;
+  word-break: break-all;
+  word-wrap: break-word;
+  background-color: #dee2e6;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+pre code {
+  padding: 0;
+  font-size: .8em;
+  color: inherit;
+  white-space: pre-wrap;
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+}
+
+code {
+  padding: 2px 2px;
+  color: #000;
+  background-color: #f5f5f5;
+   
+  border-radius: 4px;
+  font-size: .7em;
+}
+
+
+
+blockquote,
+.blockquote {
+  padding: 10px 20px;
+  margin: 0 0 20px;
+  font-size: 1em;
+  border-left: 5px solid #6c757d;
+}
+
+</style>
+
+</head>
+
+<body>
+  <nav class="custom-navbar">
+  <div class="container">
+    
+    <a href="/">Home</a>
+    
+    <a href="https://tmasjc.github.io/">About</a>
+    
+  </div>
+</nav>
+  
+  <div class="container">
+    <article>
+      <h1>Simulate Customer Retention</h1>
+<p>
+  <small class="text-secondary">
+  
+  
+  Feb 28, 2019
+  </small>
+  
+
+<small><a href="/tags/survival">#survival</a></small>
+
+
+</p>
+
+
+
+<p>The code below simulate a scenario where <code>nc</code> customers onboard during a <code>ts</code> timespan. However, none of them managed to retain for more than <code>sp</code> periods. The objective is to compare various customer retention analysis especially periodic and retrospective analysis techniques.</p>
+<pre class="r"><code>library(tidyverse)
+library(charlatan)
+
+# Generate Some Samples  ----------------------------------------------
+
+# seeding
+set.seed(123)
+
+# number of customers
+nc = 500
+# timespan (entire periods)
+ts = 1:12
+# survival periods
+sp = 3
+
+# generate some customers data
+cust_info &lt;- data_frame(
+  id = paste0(&quot;KB&quot;, ch_integer(n = nc, min = 100)),
+  jobs = sample(ch_job(n = 4, locale = &quot;zh_TW&quot;), 
+                size = length(id), replace = TRUE)
+)
+
+# generate a sequence of vector with length n 
+make_seq &lt;- function(n, x) {
+  
+  # initiate an empty vector
+  vec = rep(0, n)
+  
+  # generate index with range no more than x
+  ind = 1 : (2 + x)
+  while(diff(range(ind)) &gt; x) {
+    ind = runif(x, 1, n + 1)
+  }
+  
+  # fill vector with 1s 
+  vec[ind] &lt;- 1
+  
+  return(vec)
+}
+  
+# repeats ts times
+surv_times &lt;- nc %&gt;% 
+  replicate(make_seq(max(ts), sp)) %&gt;% 
+  t() %&gt;% as_data_frame()
+names(surv_times) &lt;- paste0(&quot;M&quot;, ts)
+
+# calc initial register period
+join &lt;- apply(surv_times, 1, function(x) min(which(x == 1)))
+
+# samples 
+dat &lt;- bind_cols(cust_info, join = join, surv_times)
+head(dat)  </code></pre>
+<pre><code>## # A tibble: 6 x 15
+##   id    jobs    join    M1    M2    M3    M4    M5    M6    M7    M8    M9   M10
+##   &lt;chr&gt; &lt;chr&gt;  &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 KB514 清潔工     1     1     1     0     1     0     0     0     0     0     0
+## 2 KB562 清潔工     1     1     1     0     0     0     0     0     0     0     0
+## 3 KB278 不動產／商…     4     0     0     0     1     1     1     0     0     0     0
+## 4 KB625 清潔工     7     0     0     0     0     0     0     1     0     1     1
+## 5 KB294 產品事業處…     4     0     0     0     1     1     0     1     0     0     0
+## 6 KB917 財務或會計…     5     0     0     0     0     1     0     0     1     0     0
+## # … with 2 more variables: M11 &lt;dbl&gt;, M12 &lt;dbl&gt;</code></pre>
+<pre class="r"><code># Active Customers ---------------------------------------------
+
+calc_active_rate &lt;- function(m) {
+  dat %&gt;% 
+    gather(period, active, -c(id, jobs, join)) %&gt;% 
+    filter(join &lt;= m, period == paste0(&quot;M&quot;, m)) %&gt;% 
+    summarise(rate = mean(active)) %&gt;% 
+    `[[`(&quot;rate&quot;)
+}
+active_rate &lt;- map_dbl(ts, calc_active_rate)
+
+# make plot
+data_frame(ts, active_rate) %&gt;% 
+  ggplot(aes(ts, active_rate, group = 1)) +
+  geom_point() +
+  geom_line(col = &quot;navyblue&quot;) + 
+  scale_x_continuous(breaks = 1:12) +
+  scale_y_continuous(labels = scales::percent) + 
+  coord_cartesian(ylim = seq(0, 1, 0.05)) + 
+  theme_minimal() +
+  labs(x = &quot;Month&quot;, y = &quot;Active Customers %&quot;)</code></pre>
+<p><img src="/post/2019-02-28-simulate-customer-retention_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<pre class="r"><code># Periodic Survival -------------------------------------------------------
+
+# (active at period t + 1) / (active at period t)
+rolling_active &lt;- function(t) {
+  
+  # subset those who active at period t
+  s = dat[dat[which(names(dat) == paste0(&quot;M&quot;, t))] == 1, ]
+  
+  # remain in the subsequent period
+  r = s[which(names(s) == paste0(&quot;M&quot;, t + 1))] == 1
+  
+  # return
+  sum(r) / nrow(s)
+}
+
+# (active at period t + 1) / (register at period t) 
+rolling_retain &lt;- function(t) {
+  
+  # subset those who join at period t
+  s = subset(dat, join == t)
+  
+  # remain in the subsequent period
+  r = s[which(names(s) == paste0(&quot;M&quot;, t + 1))] == 1
+  
+  # return
+  sum(r) / nrow(s)
+}
+
+# put result into a data frame
+res &lt;- data_frame(
+  ind = 1:(max(ts) - 1),
+  grp_by_register_period = map_dbl(ind, rolling_retain),
+  grp_by_active_period = map_dbl(ind, rolling_active)
+) 
+
+# make plot
+res %&gt;% 
+  gather(var, val, -ind) %&gt;% 
+  ggplot(aes(ind, val, col = var)) + 
+  geom_line() + 
+  scale_color_discrete(labels = c(&quot;Group By Active Period&quot;, 
+                                  &quot;Group By Register Period&quot;)) +
+  scale_x_continuous(breaks = ts) +
+  scale_y_continuous(labels = scales::percent) +
+  theme_minimal() +
+  theme(legend.position = &quot;bottom&quot;) +
+  labs(x = &quot;Month&quot;, y = &quot;Retention Rate %&quot;, col = &quot;&quot;)</code></pre>
+<p><img src="/post/2019-02-28-simulate-customer-retention_files/figure-html/unnamed-chunk-1-2.png" width="672" /></p>
+<pre class="r"><code># Cohort Analysis ---------------------------------------------------------
+
+# export to Excel to do pivot table
+file &lt;- dat %&gt;% 
+  select(-jobs) %&gt;% 
+  gather(month, active, -c(id, join)) %&gt;% 
+  mutate(month = factor(str_remove(month, &quot;^M&quot;)))
+# write_csv(file, &quot;some/path&quot;)</code></pre>
+
+    </article>
+  </div>
+
+  
+  
+  
+
+  
+
+  
+</body>
+
+</html>

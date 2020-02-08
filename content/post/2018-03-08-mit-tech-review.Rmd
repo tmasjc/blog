@@ -1,0 +1,65 @@
+---
+title: Cleaning Messy Data
+author: Thomas Jc
+description: Scrap MIT Tech Review Most Innovative Companies
+date: '2018-03-08'
+slug: mit-tech-review
+categories:
+  - rstats
+tags:
+  - dplyr
+---
+
+Get some sample data.
+
+```{r, message=FALSE}
+library(rvest)
+library(dplyr)
+
+# Scrap info from MIT Technology Review
+xml <- "https://www.technologyreview.com/lists/companies/2017/intro/" %>% read_html()
+info <- xml %>% html_nodes(css = ".company__stats__item , .company__title") %>% html_text()
+# Do not need "Valuation"
+info <- info[-(info %>% grep(pattern = "^Valuation\\s"))]
+
+head(info, 10)
+```
+
+Convert from vector to data frame.
+
+```{r}
+# Convert to data frame
+df <- info %>% matrix(ncol = 5, byrow = TRUE) %>% as.data.frame() %>% as_tibble()
+# Assign names
+names(df) <- c("company", "hq", "industry", "status", "yol")
+
+df
+```
+
+Clean up texts with ``stringr``.
+
+```{r}
+library(stringr)
+
+df <- df %>%  
+    mutate(hq = str_extract(hq, "[A-Z]+.*,.*[a-z]+")) %>% 
+    mutate(yol = str_extract_all(yol, "[0-9]\\,?")) %>% 
+    mutate(industry = str_replace(industry, "^\\w+\\s?", ""), 
+           status = str_replace(status, "^\\w+\\s?", ""))
+
+df
+```
+
+Clean up uneven column (``year_on_list``).
+
+```{r}
+
+df <- df %>% rowwise() %>% 
+    # unlist column 
+    mutate(yol = unlist(yol) %>% paste(collapse = ""))
+head(df$yol)
+
+df <- df %>%
+    tidyr::separate(yol, into = paste0("year_on_list_", 1:8), sep = ",", convert = TRUE, fill = "right")
+```
+

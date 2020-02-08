@@ -1,0 +1,88 @@
+---
+title: Dynamic UI in Shiny
+author: tmasjc
+date: '2019-06-20'
+slug: dynamic-ui
+categories: []
+tags: 
+    - shiny
+    - rlang
+---
+
+
+
+<p>A quick demo on how to render dynamic user interface in Shiny applications. In this case, a new text output element is shown when user enters a new line in the text input. The color toggles alternatively as well.</p>
+<p>Techniques here involves using <code>shiny::renderUI</code> and R’s metaprogramming.</p>
+<pre class="r"><code>library(shiny)
+library(purrr)
+library(stringr)
+
+## Demo: Render UI Function ----
+shinyApp(
+    
+    ui &lt;- fluidPage(
+    
+        # user&#39;s input 
+        column(
+            width = 11,
+            offset = 1,
+            textAreaInput(
+                &quot;text&quot;, label = &quot;&quot;,
+                placeholder = &quot;Please insert name here. Use new line to break.&quot;,
+                width = &quot;1200px&quot;, height = &quot;250px&quot;
+            )
+        ),
+        # dynamic print output here
+        column(width = 7, offset = 1, uiOutput(&quot;renderNames&quot;)),
+        column(width = 7, offset = 1, uiOutput(&quot;renderIDs&quot;))
+    ),
+
+    server &lt;- function(input, output, session) {
+        
+        # helper function
+        split_text &lt;- function(x) {
+            
+            # split text and remove empty 
+            str_split(x, &quot;\n&quot;)[[1]] %&gt;% 
+                str_remove(&quot;\n&quot;) %&gt;% 
+                keep(~ nchar(.x) &gt; 1) %&gt;% 
+                unlist()
+        }
+    
+        output$renderNames &lt;- renderUI({
+            
+            # count number of lines
+            n &lt;- length(split_text(input$text))
+            
+            # render input according to n
+            rn &lt;- map_chr(1:n, ~ str_glue(&quot;verbatimTextOutput(outputId = &#39;id{.x}&#39;, placeholder = TRUE)&quot;))
+            map(rn, ~ eval(parse(text = .x)))
+            
+        })
+        
+        output$renderIDs &lt;- renderUI({
+            
+            n &lt;- length(split_text(input$text))
+            
+            # toggle color here
+            m &lt;- ifelse(1:n %% 2 == 0, &quot;dodgerblue&quot;, &quot;purple&quot;)
+            
+            # render color to respective id 
+            rb &lt;- map2(1:n, m, ~ paste0(&quot;tags$head(tags$style(HTML (&#39; #id&quot;, .x, &quot;{ color: &quot;, .y, &quot;}&#39;)))&quot;))
+            map(rb, ~ eval(parse(text = .x)))
+            
+        })
+        
+        observeEvent(input$text, {
+            
+            # return splitted texts
+            txt &lt;- split_text(input$text)
+            
+            # render output according to n
+            res &lt;- map2(1:length(txt), txt, ~ paste0(&quot;output$id&quot;, .x,  &quot;&lt;- renderText({ &#39;hello &quot;, .y, &quot;&#39; })&quot;))
+            map(res, ~ eval(parse(text = .x)))
+        })
+      
+    }
+    
+)</code></pre>

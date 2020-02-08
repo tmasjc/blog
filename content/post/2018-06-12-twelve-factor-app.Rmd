@@ -1,0 +1,62 @@
+---
+title: Twelve-Factor App
+author: Thomas Jc
+date: '2018-06-12'
+slug: twelve-factor-app
+categories:
+  - General
+tags:
+  - saas
+---
+
+The [Twelve-Factor App](https://12factor.net/) is a methodology for building software-as-a-service apps that:
+
+1. It uses declarative formats for setup automation;
+2. It works with a clean contract with the operating system for greater portability between environments;
+3. It limits the differences between development and production, for continuous deployment;
+4. And it allows for scaling up and down without major changes.
+
+From [clearlytech](http://www.clearlytech.com/2014/01/04/12-factor-apps-plain-english/):
+
+    1. Codebase
+        - One codebase tracked in revision control, many deploys
+    2. Dependencies
+        - Explicitly declare and isolate dependencies
+    3. Config
+        - Store config in the environment
+    4. Backing services
+        - Treat backing servies as attached resources
+    5. Build, ship (release), run
+        - Strictly separate build and run stages
+    6. Processes
+        - Execute the app as one or more stateless process 
+        - Store intermediate data in a database or persistent key-value store
+    7. Port binding
+        - Export services via port binding
+        - Interfaces to the world using a simple URL
+    8. Concurrency
+        - Scale out via the process model
+    9. Disposability
+        - Maximize robustness with fast startup and graceful shutdown
+    10. Dev/prod parity
+        - Keep development, staging, and production as similar as possible
+    11. Logs
+        - Treat logs as event streams
+    12. Admin processes
+        - Run admin/management tasks as one-off processes
+        (Don't run updates directly against a database, don't run tasks from local terminal)
+
+
+Questions:
+
+#### 1. Why not multiple processes in one container? 
+
+    - Scaling containers horizontally is much easier;
+    - Easier to be reused for other purposes;
+    - Easier to troubleshoot;
+    - Patching/upgrades can be done in a more isolated and controlled manner;
+    - The `Docker` way: One Concern Per Container
+    
+    
+    
+    

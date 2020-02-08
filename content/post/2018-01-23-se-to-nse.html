@@ -1,0 +1,52 @@
+---
+title: SE to NSE
+description: Compute Multiple Variables At Once
+author: Thomas Jc
+date: '2018-01-23'
+slug: se-to-nse
+categories:
+  - rstats
+tags:
+  - dplyr
+draft: TRUE
+---
+
+
+
+<pre class="r"><code>library(dplyr)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;dplyr&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     filter, lag</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     intersect, setdiff, setequal, union</code></pre>
+<pre class="r"><code>measure &lt;- list(&quot;mean&quot;, &quot;sd&quot;, &quot;max&quot;, &quot;min&quot;)
+
+vars &lt;- list(&quot;disp&quot;, &quot;hp&quot;, &quot;wt&quot;)
+
+# Set names
+fnames &lt;- lapply(X = measure, FUN = function(x, y)paste0(x, &quot;-&quot;, y), y = vars) %&gt;% unlist()
+
+# Set functions
+ffuns &lt;- lapply(X = measure, FUN = function(x, y)paste0(x, &quot;(&quot;, y, &quot;)&quot;), y = vars) %&gt;% unlist()
+
+mtcars %&gt;% 
+    # group by cylinder
+    group_by(cyl) %&gt;% 
+    summarise_(.dots = setNames(ffuns, fnames))</code></pre>
+<pre><code>## Warning: summarise_() is deprecated. 
+## Please use summarise() instead
+## 
+## The &#39;programming&#39; vignette or the tidyeval book can help you
+## to program with summarise() : https://tidyeval.tidyverse.org
+## This warning is displayed once per session.</code></pre>
+<pre><code>## # A tibble: 3 x 13
+##     cyl `mean-disp` `mean-hp` `mean-wt` `sd-disp` `sd-hp` `sd-wt` `max-disp`
+##   &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;      &lt;dbl&gt;
+## 1     4        105.      82.6      2.29      26.9    20.9   0.570       147.
+## 2     6        183.     122.       3.12      41.6    24.3   0.356       258 
+## 3     8        353.     209.       4.00      67.8    51.0   0.759       472 
+## # … with 5 more variables: `max-hp` &lt;dbl&gt;, `max-wt` &lt;dbl&gt;, `min-disp` &lt;dbl&gt;,
+## #   `min-hp` &lt;dbl&gt;, `min-wt` &lt;dbl&gt;</code></pre>

@@ -1,0 +1,74 @@
+---
+title: Vlookup Snippet in Command Line
+author: Thomas Jc
+date: '2018-08-06'
+slug: vlookup-snippet-in-command-line
+categories:
+  - rstats
+tags:
+  - shell
+---
+
+A general `Rscript` to run in command line, to extract value from table.
+
+```{r, eval=FALSE}
+#!/usr/bin/env Rscript --vanilla
+library(argparser)
+library(readr)
+library(stringr)
+
+# read from stdin
+p <- arg_parser(description = "Parse value from a table read from a text file.")
+
+# required arguments
+p <- add_argument(p, c("txt", "--key", "--value", "--lookup"), 
+                  help = c("text file", "key identifier", "key id value", "item to lookup"))
+p <- add_argument(p, "--regex", help = "regex pattern to extract, if any", default = ".*")
+args <- parse_args(p)
+
+# mimic vlookup function in Excel
+vlookup <- function(this, df, key, lookup) {
+    m <- match(this, df[[key]])
+    df[[lookup]][m]
+}
+
+# read from text file 
+df <- read_table(args$txt)
+
+# extract value
+val <- with(args, vlookup(value, df, key, lookup))
+
+# extract pattern (optional)
+str_extract(val, args$regex)
+```
+
+For example: `docker-machine ls` gives
+
+```bash
+NAME    ACTIVE   DRIVER       STATE     URL                         SWARM   DOCKER        ERRORS
+myvm1   -        virtualbox   Running   tcp://192.168.99.100:2376           v18.05.0-ce
+myvm2   -        virtualbox   Running   tcp://192.168.99.101:2376           v18.05.0-ce
+```
+
+To extract IP address of a particular virtual machine, we can do
+
+```bash
+docker-machine ls > machines.txt
+
+vlookup.R -k NAME -v myvm1 -l URL -r "\\d{3}(\\.\\d{2,3})+" machines.txt
+```
+
+```bash
+Parsed with column specification:
+cols(
+  NAME = col_character(),
+  ACTIVE = col_character(),
+  DRIVER = col_character(),
+  STATE = col_character(),
+  URL = col_character(),
+  SWARM = col_character(),
+  DOCKER = col_character(),
+  ERRORS = col_character()
+)
+[1] "192.168.99.100"
+```

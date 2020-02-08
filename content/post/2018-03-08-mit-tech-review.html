@@ -1,0 +1,90 @@
+---
+title: Cleaning Messy Data
+author: Thomas Jc
+description: Scrap MIT Tech Review Most Innovative Companies
+date: '2018-03-08'
+slug: mit-tech-review
+categories:
+  - rstats
+tags:
+  - dplyr
+---
+
+
+
+<p>Get some sample data.</p>
+<pre class="r"><code>library(rvest)
+library(dplyr)
+
+# Scrap info from MIT Technology Review
+xml &lt;- &quot;https://www.technologyreview.com/lists/companies/2017/intro/&quot; %&gt;% read_html()
+info &lt;- xml %&gt;% html_nodes(css = &quot;.company__stats__item , .company__title&quot;) %&gt;% html_text()
+# Do not need &quot;Valuation&quot;
+info &lt;- info[-(info %&gt;% grep(pattern = &quot;^Valuation\\s&quot;))]
+
+head(info, 10)</code></pre>
+<pre><code>##  [1] &quot;Nvidia&quot;                                                                                                                                                                                                                                                                                                                                                                                                                               
+##  [2] &quot;\n\t\t\tHeadquarters\n\t\t\t\n\t\t\tSanta Clara, California\n\t\t&quot;                                                                                                                                                                                                                                                                                                                                                                    
+##  [3] &quot;Industry Intelligent machines&quot;                                                                                                                                                                                                                                                                                                                                                                                                        
+##  [4] &quot;Status Public&quot;                                                                                                                                                                                                                                                                                                                                                                                                                        
+##  [5] &quot;Years on the List\n\t\t\t\n\t\t\t\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\t2015\n\t\t\t\t\t,\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\t2016\n\t\t\t\t\t,\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\t2017\n\t\t\t\t\t\n\t\t\n\t\t\n\t\t&quot;                                                                                                                                                                                                                    
+##  [6] &quot;SpaceX&quot;                                                                                                                                                                                                                                                                                                                                                                                                                               
+##  [7] &quot;\n\t\t\tHeadquarters\n\t\t\t\n\t\t\tHawthorne, California\n\t\t&quot;                                                                                                                                                                                                                                                                                                                                                                      
+##  [8] &quot;Industry Transportation&quot;                                                                                                                                                                                                                                                                                                                                                                                                              
+##  [9] &quot;Status Private&quot;                                                                                                                                                                                                                                                                                                                                                                                                                       
+## [10] &quot;Years on the List\n\t\t\t\n\t\t\t\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\t2011\n\t\t\t\t\t,\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\t2012\n\t\t\t\t\t,\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\t2013\n\t\t\t\t\t,\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\t2014\n\t\t\t\t\t,\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\t2015\n\t\t\t\t\t,\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\t2016\n\t\t\t\t\t,\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\t2017\n\t\t\t\t\t\n\t\t\n\t\t\n\t\t&quot;</code></pre>
+<p>Convert from vector to data frame.</p>
+<pre class="r"><code># Convert to data frame
+df &lt;- info %&gt;% matrix(ncol = 5, byrow = TRUE) %&gt;% as.data.frame() %&gt;% as_tibble()
+# Assign names
+names(df) &lt;- c(&quot;company&quot;, &quot;hq&quot;, &quot;industry&quot;, &quot;status&quot;, &quot;yol&quot;)
+
+df</code></pre>
+<pre><code>## # A tibble: 50 x 5
+##    company    hq                    industry      status  yol                   
+##    &lt;fct&gt;      &lt;fct&gt;                 &lt;fct&gt;         &lt;fct&gt;   &lt;fct&gt;                 
+##  1 Nvidia     &quot;\n\t\t\tHeadquarter… Industry Int… Status… &quot;Years on the List\n\…
+##  2 SpaceX     &quot;\n\t\t\tHeadquarter… Industry Tra… Status… &quot;Years on the List\n\…
+##  3 Amazon     &quot;\n\t\t\tHeadquarter… Industry Con… Status… &quot;Years on the List\n\…
+##  4 23andMe    &quot;\n\t\t\tHeadquarter… Industry Bio… Status… &quot;Years on the List\n\…
+##  5 Alphabet   &quot;\n\t\t\tHeadquarter… Industry Con… Status… &quot;Years on the List\n\…
+##  6 iFlytek    &quot;\n\t\t\tHeadquarter… Industry Int… Status… &quot;Years on the List\n\…
+##  7 Kite Phar… &quot;\n\t\t\tHeadquarter… Industry Bio… Status… &quot;Years on the List\n\…
+##  8 Tencent    &quot;\n\t\t\tHeadquarter… Industry Con… Status… &quot;Years on the List\n\…
+##  9 Regeneron  &quot;\n\t\t\tHeadquarter… Industry Bio… Status… &quot;Years on the List\n\…
+## 10 Spark The… &quot;\n\t\t\tHeadquarter… Industry Bio… Status… &quot;Years on the List\n\…
+## # … with 40 more rows</code></pre>
+<p>Clean up texts with <code>stringr</code>.</p>
+<pre class="r"><code>library(stringr)
+
+df &lt;- df %&gt;%  
+    mutate(hq = str_extract(hq, &quot;[A-Z]+.*,.*[a-z]+&quot;)) %&gt;% 
+    mutate(yol = str_extract_all(yol, &quot;[0-9]\\,?&quot;)) %&gt;% 
+    mutate(industry = str_replace(industry, &quot;^\\w+\\s?&quot;, &quot;&quot;), 
+           status = str_replace(status, &quot;^\\w+\\s?&quot;, &quot;&quot;))
+
+df</code></pre>
+<pre><code>## # A tibble: 50 x 5
+##    company           hq                      industry           status yol      
+##    &lt;fct&gt;             &lt;chr&gt;                   &lt;chr&gt;              &lt;chr&gt;  &lt;list&gt;   
+##  1 Nvidia            Santa Clara, California Intelligent machi… Public &lt;chr [12…
+##  2 SpaceX            Hawthorne, California   Transportation     Priva… &lt;chr [28…
+##  3 Amazon            Seattle, Washington     Connectivity       Public &lt;chr [20…
+##  4 23andMe           Mountain View, Califor… Biomedicine        Priva… &lt;chr [8]&gt;
+##  5 Alphabet          Mountain View, Califor… Connectivity       Public &lt;chr [32…
+##  6 iFlytek           Hefei, China            Intelligent machi… Public &lt;chr [4]&gt;
+##  7 Kite Pharma       Santa Monica, Californ… Biomedicine        Public &lt;chr [4]&gt;
+##  8 Tencent           Shenzhen, China         Connectivity       Public &lt;chr [20…
+##  9 Regeneron         Tarrytown, New York     Biomedicine        Public &lt;chr [4]&gt;
+## 10 Spark Therapeuti… Philadelphia, Pennsylv… Biomedicine        Public &lt;chr [8]&gt;
+## # … with 40 more rows</code></pre>
+<p>Clean up uneven column (<code>year_on_list</code>).</p>
+<pre class="r"><code>df &lt;- df %&gt;% rowwise() %&gt;% 
+    # unlist column 
+    mutate(yol = unlist(yol) %&gt;% paste(collapse = &quot;&quot;))
+head(df$yol)</code></pre>
+<pre><code>## [1] &quot;201520162017&quot;                     &quot;2011201220132014201520162017&quot;    
+## [3] &quot;20132014201520162017&quot;             &quot;20162017&quot;                        
+## [5] &quot;20102011201220132014201520162017&quot; &quot;2017&quot;</code></pre>
+<pre class="r"><code>df &lt;- df %&gt;%
+    tidyr::separate(yol, into = paste0(&quot;year_on_list_&quot;, 1:8), sep = &quot;,&quot;, convert = TRUE, fill = &quot;right&quot;)</code></pre>

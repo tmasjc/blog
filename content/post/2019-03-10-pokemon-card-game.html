@@ -1,0 +1,70 @@
+---
+title: Pokemon Card Game
+author: tmasjc
+date: '2019-03-10'
+slug: pokemon-card-game
+categories: []
+tags: 
+    - monte-carlo
+---
+
+
+
+<p>Imagine a Pokemon card game consists of (<code>N</code> = 586) unique cards. How many are the odds of collecting them all if we purchase many?</p>
+<pre class="r"><code>library(magrittr)
+library(purrr)
+
+# A set of cards consists of N cards
+N = 586
+
+# is it a complete set?
+complete_set &lt;- function(n, m) {
+  deck = sample(n, size = m, replace = TRUE)
+  ifelse(length(unique(deck)) == n, TRUE, FALSE)
+}
+
+# what are the odds of getting full set if you purchase many cards?
+sims &lt;- replicate(1000, complete_set(N, 3000))
+table(sims) %&gt;% prop.table()</code></pre>
+<pre><code>## sims
+## FALSE  TRUE 
+## 0.972 0.028</code></pre>
+<p>If each random card costs 5 cents, and you can purchase any unique card for 25 cents, what is the optimal strategy to collecting the full set?</p>
+<pre class="r"><code># each card costs x cents
+# each unique card costs y cents
+random_cost = .05
+unique_cost = .25
+
+card_purchase &lt;- function(n, full_set, rand, uniq) {
+  # purchase n cards from full set
+  deck = sample(full_set, size = n, replace = TRUE)
+  # topup if not full set
+  n * rand  + (full_set - length(unique(deck))) * uniq
+}
+card_purchase(3000, N, random_cost, unique_cost)</code></pre>
+<pre><code>## [1] 151</code></pre>
+<pre class="r"><code># range of simulation, from x to y cards
+purchases = 100:2000
+sim_costs &lt;- map_dbl(purchases, ~ card_purchase(.x, N, random_cost, unique_cost))
+plot(purchases, sim_costs, xlab = &quot;# Cards Purchase&quot;, ylab = &quot;Costs&quot;)</code></pre>
+<p><img src="/post/2019-03-10-pokemon-card-game_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<pre class="r"><code># to reduce uncertainty
+sim_costs &lt;- map_dbl(purchases, ~ {
+  replicate(300, expr = card_purchase(.x, N, random_cost, unique_cost)) %&gt;% 
+    # average of trials
+    mean()
+})
+names(sim_costs) &lt;- purchases
+plot(purchases, sim_costs, xlab = &quot;# Cards Purchase&quot;, ylab = &quot;Costs&quot;)</code></pre>
+<p><img src="/post/2019-03-10-pokemon-card-game_files/figure-html/unnamed-chunk-2-2.png" width="672" /></p>
+<pre class="r"><code># optimal purchase
+opt &lt;- which.min(sim_costs)
+list(
+  num_cards = as.numeric(names(opt)),
+  cost = sim_costs[[opt]]
+)</code></pre>
+<pre><code>## $num_cards
+## [1] 932
+## 
+## $cost
+## [1] 76.17</code></pre>

@@ -1,0 +1,106 @@
+---
+title: Biased Coin Toss
+author: Thomas Jc
+date: '2019-04-21'
+slug: biased-coin-toss
+categories: []
+tags: 
+    - monte-carlo
+---
+
+
+
+<p>From this paper “<a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3034686">What’s Past Is Not Prologue</a>” comes a quiz,</p>
+<blockquote>
+<p>You are presented with two coins: one is fair, and the other has a 60% chance of coming up heads. Unfortunately, you don’t know which is which. How many flips would you need to perform in parallel on the two
+coins to give yourself a 95% chance of correctly identifying the biased one?</p>
+</blockquote>
+<p>The following demonstrates 2 simulation methods to obtain the result.</p>
+<pre class="r"><code>library(tidyverse)
+library(ggthemes)
+library(discreteRV)
+set.seed(1212)
+
+# ggplot theme
+old &lt;- theme_set(theme_tufte() + theme(text = element_text(family = &#39;Menlo&#39;)))</code></pre>
+<pre class="r"><code># limit range from 50 to 200 flips
+trials &lt;- 50:200
+
+# Method One --------------------------------------------------------------
+
+
+# actually simulate the action of tossing 2 coins
+method_one &lt;- function(x) {
+    regular = rbinom(x, 1, .5)
+    biased = rbinom(x, 1, .6)
+    # return
+    sum(biased) - sum(regular)
+}
+
+# repeat action and bind into a data frame
+res.one &lt;- map_dbl(trials, ~ {
+    sum(replicate(3000, method_one(.x)) &gt; 0) / 3000
+}) %&gt;% bind_cols(ind = trials, prob = .)
+
+# first occurance
+(min.flip.one &lt;- filter(res.one, prob &gt;= 0.95)[1, ])</code></pre>
+<pre><code>## # A tibble: 1 x 2
+##     ind  prob
+##   &lt;int&gt; &lt;dbl&gt;
+## 1   136 0.952</code></pre>
+<pre class="r"><code># vis result
+res.one %&gt;% 
+    ggplot(aes(ind, prob)) +
+    geom_line() + 
+    geom_vline(xintercept = min.flip.one$ind, lty = 4, col = &quot;red&quot;) +
+    geom_hline(yintercept = min.flip.one$prob, lty = 4, col = &quot;red&quot;) +
+    annotate(&quot;text&quot;, x = min.flip.one$ind, y = .5, label = as.character(min.flip.one$ind)) + 
+    scale_y_continuous(breaks = seq(.5, 1, .1), labels = scales::percent)</code></pre>
+<p><img src="/post/2019-04-21-biased-coin-toss_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<pre class="r"><code># Method Two --------------------------------------------------------------
+
+
+# we will reuse this function repeatedly to test different diff trials
+method_two &lt;- function(x) {
+    # how many tosses?
+    regular &lt;- RV(1:x, dbinom(1:x, size = x, prob = .5))
+    biased &lt;- RV(1:x, dbinom(1:x, size = x, prob = .6))
+    
+    # joint pmf
+    j2 &lt;- joint(regular, biased)
+    
+    # probability here can be understood as proportion of combination of possible outcomes
+    tibble(prob = probs(j2), comb = outcomes(j2)) %&gt;%
+        separate(comb, c(&quot;fair&quot;, &quot;biased&quot;), &quot;,&quot;, convert = TRUE) %&gt;% 
+        # if biased lands more than unbiased coin, choose correctly
+        # if both lands the same, choose randomly
+        mutate(correct = case_when(
+            biased &gt; fair ~ 1,
+            biased == fair ~ 0.5,
+            biased &lt; fair ~ 0
+        )) %&gt;% 
+        # the likelihood that guessing correctly happens
+        mutate(likelihood = prob * correct) %&gt;% 
+        filter(correct &gt; 0) %&gt;%
+        summarise(conf = sum(likelihood)) %&gt;% 
+        pull(conf)
+}
+
+# loop thru trials
+res.two &lt;- map_dbl(trials, ~ method_two(.x)) %&gt;% bind_cols(ind = trials, prob = .)
+
+# minimum flip to obtain 95% confidence
+(min.flip.two &lt;- filter(res.two, prob &gt;= 0.95)[1, ])</code></pre>
+<pre><code>## # A tibble: 1 x 2
+##     ind  prob
+##   &lt;int&gt; &lt;dbl&gt;
+## 1   134 0.950</code></pre>
+<pre class="r"><code># vis result
+res.two %&gt;% 
+    ggplot(aes(ind, prob)) + 
+    geom_line() + 
+    geom_vline(xintercept = min.flip.two$ind, lty = 4, col = &quot;red&quot;) +
+    geom_hline(yintercept = min.flip.two$prob, lty = 4, col = &quot;red&quot;) +
+    annotate(&quot;text&quot;, x = min.flip.two$ind, y = .5, label = as.character(min.flip.two$ind)) + 
+    scale_y_continuous(breaks = seq(.5, 1, .1), labels = scales::percent)</code></pre>
+<p><img src="/post/2019-04-21-biased-coin-toss_files/figure-html/unnamed-chunk-2-2.png" width="672" /></p>

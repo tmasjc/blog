@@ -1,0 +1,35 @@
+---
+title: SE to NSE
+description: Compute Multiple Variables At Once
+author: Thomas Jc
+date: '2018-01-23'
+slug: se-to-nse
+categories:
+  - rstats
+tags:
+  - dplyr
+draft: TRUE
+---
+
+```{r}
+library(dplyr)
+
+measure <- list("mean", "sd", "max", "min")
+
+vars <- list("disp", "hp", "wt")
+
+# Set names
+fnames <- lapply(X = measure, FUN = function(x, y)paste0(x, "-", y), y = vars) %>% unlist()
+
+# Set functions
+ffuns <- lapply(X = measure, FUN = function(x, y)paste0(x, "(", y, ")"), y = vars) %>% unlist()
+
+mtcars %>% 
+    # group by cylinder
+    group_by(cyl) %>% 
+    summarise_(.dots = setNames(ffuns, fnames))
+```
+
+
+
+

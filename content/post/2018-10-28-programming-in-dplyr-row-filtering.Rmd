@@ -1,0 +1,157 @@
+---
+title: Programming in dplyr - Row Filtering
+author: Thomas Jc
+date: '2018-10-28'
+slug: programming-in-dplyr-row-filtering
+categories:
+  - rstats
+tags:
+  - dplyr
+  - tidyeval
+editor_options: 
+  chunk_output_type: console
+---
+
+#### How do you program the row filtering dynamically when working with `dplyr` verb?
+
+Say we have a dataframe with 2 columns, x and y.
+
+```{r, message=FALSE}
+library(tidyverse)
+library(rlang)
+
+# make some sample
+set.seed(1234)
+df <- 2 %>% 
+    rerun(rnorm(100, 10, 2) %>% round()) %>% 
+    bind_cols()
+colnames(df) <- c("x", "y")
+
+# simple plot
+p <- df %>% 
+    ggplot(aes(x, y)) + 
+    geom_point(position = position_jitter(width = 1), 
+               alpha = 0.7) +
+    theme_minimal()
+p
+```
+
+**Our objective here is to 'zone' out the points that fall in the 50th percentile of both x and y.**
+
+```{r}
+summary(df)
+
+# filter values within (w) q1, q3
+(w <- df %>% 
+    filter(x >= quantile(x, probs = 0.25),
+           x <= quantile(x, probs = 0.75),
+           y >= quantile(y, probs = 0.25),
+           y <= quantile(y, probs = 0.75)))
+
+# points that fall outside q1, q3
+v <- anti_join(df, w, by = c("x", "y"))
+
+# modify previous plot
+w %>% 
+    ggplot(aes(x, y)) + 
+    geom_jitter(width = 1, col = "red") + 
+    geom_jitter(data = v, aes(x, y), alpha = 0.7) + 
+    theme_minimal()
+```
+
+The way that we express our filtering conditions is what we aim to simplify in this post.
+
+```{r, eval=FALSE}
+filter(
+    data = df,
+    x >= quantile(x, probs = 0.25),
+    x <= quantile(x, probs = 0.75),
+    y >= quantile(y, probs = 0.25),
+    y <= quantile(y, probs = 0.75)
+    ))
+```
+
+## Expression
+
+We start from forming a simple expression in literal text. 
+
+```{r}
+text_expression <- function(var, ops, pct) {
+    sprintf("%s %s quantile(%s, probs = %g)", var, ops, var, pct)
+}
+text_expression("x", ">=", .75)
+text_expression("y", "<=", .75)
+```
+
+## Rlang
+
+We use `rlang` to transform text into R expression.
+
+```{r}
+custom_filter <- function(x, filter_expr) {
+    expr <- parse_expr(filter_expr)
+    df %>% filter(!!expr)
+}
+custom_filter(x, text_expression("x", ">=", .75))
+```
+
+## Multiple Arguments
+
+It takes the following steps, 
+
+1. Use `purrr::map` to form multiple expressions
+2. Use `;` or `\n` to join formed expressions
+3. Use `rlang::parse_exprs` to transform texts into R expressions
+4. Use `!!!` (3x bang) to slice expressions
+
+```{r}
+# the following has 3 expressions
+parse_exprs("NULL; list()\n foo(bar)")
+```
+
+Let's continue onto our example. 
+
+```{r}
+# form 'head' of our expressions
+(ehead <- map(.x = list("x", "y"), .f = paste, list(">=", "<=")))
+
+# form 'taik' of our expressions
+(etail <- map(.x = list("x", "y"), 
+             .f = ~ sprintf('quantile(%s, probs = %g)', .x, .y),
+             list = c(.25, .75)))
+
+# combine head and tail
+(exprs <- map2(ehead, etail, ~ sprintf("%s %s", .x, .y)))
+
+# collapse our expressions into a long string
+(exprs <- exprs %>% 
+    unlist() %>% 
+    # use ';' or "\n"
+    paste0(collapse = ";"))
+```
+
+## Apply Custom Filtering
+
+```{r}
+# modify our custom filtering to fit multiple expressions
+custom_filter = function(x, exprs) {
+    # take note of the plurar form
+    exprs_list <- parse_exprs(exprs)
+    # apply on data frame
+    x %>% filter(!!!exprs_list)
+}
+# thats it
+(w2 <- df %>% custom_filter(exprs))
+```
+
+```{r, message=FALSE}
+w2 %>% 
+    ggplot(aes(x, y)) +
+    geom_point(position = position_jitter(width = 1), col = "red") + 
+    geom_point(data = anti_join(df, w), aes(x, y)) +
+    theme_minimal()
+
+# final check
+all(w == w2)
+```
+

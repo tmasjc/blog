@@ -1,0 +1,93 @@
+---
+title: Map + Reduce in Purrr
+author: Thomas Jc
+date: '2018-10-31'
+slug: map-reduce-in-purrr
+categories:
+  - rstats
+tags:
+  - purrr
+editor_options: 
+  chunk_output_type: console
+---
+
+
+
+<p>Say you have a list which tells you what is y at x. You intend to manipulate y based on certain condition of x.</p>
+<p>For example, given</p>
+<pre class="r"><code># here x = year, y = some value
+(some_list &lt;- list(
+    &quot;year1&quot; = 60,
+    &quot;year2&quot; = 70,
+    &quot;year3&quot; = 75,
+    &quot;year4&quot; = 80,
+    &quot;year5&quot; = 100
+))</code></pre>
+<pre><code>## $year1
+## [1] 60
+## 
+## $year2
+## [1] 70
+## 
+## $year3
+## [1] 75
+## 
+## $year4
+## [1] 80
+## 
+## $year5
+## [1] 100</code></pre>
+<p>What is the cumulative sum of y at year 1, 3, 5?</p>
+<p>In R, it seems natural to do it in a data frame.</p>
+<pre class="r"><code>library(dplyr)
+
+# first convert to data frame
+df &lt;- unlist(some_list) %&gt;% as.data.frame()
+
+# assign a column name
+names(df) &lt;- &quot;y&quot;
+
+# calc cumulative sum
+df %&gt;% mutate(cum_y = cumsum(y))</code></pre>
+<pre><code>##     y cum_y
+## 1  60    60
+## 2  70   130
+## 3  75   205
+## 4  80   285
+## 5 100   385</code></pre>
+<p>There is another convenient way to complete the same job.</p>
+<pre class="r"><code># what we have
+some_list</code></pre>
+<pre><code>## $year1
+## [1] 60
+## 
+## $year2
+## [1] 70
+## 
+## $year3
+## [1] 75
+## 
+## $year4
+## [1] 80
+## 
+## $year5
+## [1] 100</code></pre>
+<pre class="r"><code># what we want
+cum_x &lt;- c(1, 3, 5)
+
+library(purrr)
+
+# essentially a double loop
+map(cum_x, function(x) {
+    # here &#39;map&#39; extracts the component from list (x[1], x[2], ...)
+    # and reduce using function &#39;sum&#39;
+    reduce(map(1:x, ~ some_list[[.x]]), sum)
+})</code></pre>
+<pre><code>## [[1]]
+## [1] 60
+## 
+## [[2]]
+## [1] 205
+## 
+## [[3]]
+## [1] 385</code></pre>

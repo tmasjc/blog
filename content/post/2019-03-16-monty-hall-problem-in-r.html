@@ -1,0 +1,71 @@
+---
+title: Monty Hall Problem in R
+author: Thomas Jc
+date: '2019-03-15'
+slug: monty-hall-problem-in-r
+categories: []
+tags: 
+    - monte-carlo
+---
+
+
+
+<p>A few lines of code to one of the most classic problem in probability.</p>
+<pre class="r"><code>library(magrittr)
+set.seed(1212)
+
+new_game &lt;- function(x = 3) {
+    
+    # doors
+    doors = as.integer(1:x)
+    
+    # initialize the prize behind of those doors
+    prize = sample(doors, size = 1)
+    
+    # guest make a guess
+    guess = sample(doors, size = 1)
+    
+    # open one of the doors knowing which has the prize
+    open = doors[-c(prize, guess)][[1]]
+    
+    # if guest choose to switch 
+    switch_guess = doors[-c(guess, open)]
+    
+    # if guest does not switch
+    no_switch_guess = guess
+    
+    return(list(
+        prize = prize,
+        original_guess = guess,
+        open = open,
+        switch = switch_guess,
+        no_switch = no_switch_guess
+    ))
+}
+
+
+new_game()</code></pre>
+<pre><code>## $prize
+## [1] 2
+## 
+## $original_guess
+## [1] 1
+## 
+## $open
+## [1] 3
+## 
+## $switch
+## [1] 2
+## 
+## $no_switch
+## [1] 1</code></pre>
+<pre class="r"><code># simulate many trials
+trials = 10000
+
+# if switch everytime, what are the total winnings?
+replicate(trials, with(new_game(), switch == prize)) %&gt;% sum()</code></pre>
+<pre><code>## [1] 6720</code></pre>
+<pre class="r"><code># if NO switch everytime, what are the total winnings?
+replicate(trials, with(new_game(), no_switch == prize)) %&gt;% sum()</code></pre>
+<pre><code>## [1] 3341</code></pre>
+<p>There you go. The math checks out.</p>

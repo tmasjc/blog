@@ -1,0 +1,83 @@
+---
+title: Rowwise Operation
+author: tmasjc
+date: '2019-03-24'
+slug: rowwise-operation
+categories: []
+tags: 
+    - plyr
+    - data.table
+editor_options: 
+  chunk_output_type: console
+---
+
+Compare multiple methods to get row-wise operation done on a data frame.
+
+In this case, we wish to extract the corresponding highest value column.
+
+```{r, message=FALSE}
+library(tidyverse)
+set.seed(1212)
+
+# a dummy data frame 
+dummy_df <- matrix(runif(15, min = 1, max = 9), ncol = 3) %>% as_data_frame()
+colnames(dummy_df) <- c("x", "y", "z")
+```
+
+#### Method 1: `dplyr::rowwise`
+
+```{r}
+use_rowwise <- function(df) {
+    df %>% 
+        rowwise() %>% 
+        mutate(max = names(df)[which.max(c(x, y, z))])
+}
+use_rowwise(dummy_df)
+```
+
+#### Method 2: `plyr::apply` 
+
+```{r}
+use_apply <- function(df) {
+    df %>% 
+        mutate(max = names(df)[apply(df, 1, which.max)])
+}
+use_apply(dummy_df)
+```
+
+#### Method 3: `max.col` from `data.table`
+
+```{r, message=FALSE}
+library(data.table)
+use_datatable <- function(df) {
+    dt <- as.data.table(df)
+    dt[, max :=  names(.SD)[max.col(.SD)], .SDcols = 1:3]
+}
+use_datatable(dummy_df) %>% print()
+```
+
+#### Efficiency
+
+Lets do benchmarking on a larger data frame.
+
+```{r, cache=TRUE}
+library(microbenchmark)
+
+# for benchmarking
+large_df <- matrix(runif(30e5), ncol = 3) %>% as_data_frame()
+colnames(large_df) <- names(dummy_df)
+dim(large_df)
+
+microbenchmark(
+    use_rowwise(large_df),
+    use_apply(large_df),
+    use_datatable(large_df),
+    times = 30
+)
+```
+
+Oh yea, `data.table` is blazingly fast.
+
+
+
+

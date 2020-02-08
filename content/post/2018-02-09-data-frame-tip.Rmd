@@ -1,0 +1,78 @@
+---
+title: Data.Table
+description: Performing long-to-wide transformation on large data frame
+author: Thomas Jc
+date: '2018-02-09'
+slug: long-to-wide
+categories:
+  - rstats
+tags:
+  - data.table
+---
+
+
+A quick walkthrough on using ``data.table`` in performing long-to-wide operation on data frame. Significant improvement on speed.
+
+```{r, message=FALSE}
+library(dplyr)
+library(tidyr)
+library(data.table)
+
+# set
+options(DT.options = list(pageLength = 5, dom = 'tip'))
+set.seed(123)
+rand <- runif(1e7, min = 1, max = length(LETTERS)) %>% round()
+
+# Make some dummy data
+df <- data.frame(
+    letters = LETTERS[rand] %>% sample(),
+    num = (1:length(LETTERS))[rand] %>% sample()
+)
+# Add count for spreading later
+df <- df %>% group_by(letters) %>% mutate(count = 1:length(letters)) %>% arrange(letters, count)
+head(df, 10)
+```
+
+Let's try out different methods on converting above long data frame to wide format. Our objective is to group them by `letters` and each row lists how many times the particular letter is called, from 1 to N. 
+
+```{r}
+# For example
+(df %>% spread(count, num) %>% head())[1:5, 1:10]
+```
+
+### Method 1: The Usual Spread
+
+```{r, cache=TRUE}
+t1 <- system.time(m1 <- df %>% spread(count, num))
+(m1 %>% head())[1:5, 1:10]
+```
+
+
+### Method 2: D-Cast
+
+
+```{r, cache=TRUE}
+t2 <- system.time(m2 <- df %>% dcast(letters ~ count, value.var = "num"))
+(m2 %>% head())[1:5, 1:10]
+```
+
+
+### Method 3: D-Cast with Data Table
+
+```{r}
+# Convert to data table
+dt <- df %>% as.data.table()
+t3 <- system.time(m3 <- dt %>% dcast(letters ~ count, value.var = "num"))
+(m3 %>% head())[1:5, 1:10]
+```
+
+### Result 
+
+Shown below.
+
+```{r}
+res <- list(t1, t2, t3)
+names(res) <- c("Spread", "DCast", "DCast w/ Data Table")
+res
+```
+

@@ -1,0 +1,115 @@
+---
+title: Labels Detection w/ Google Cloud Vision
+description: Using Simple Post Request
+author: Thomas Jc
+date: '2018-02-05'
+slug: simple-request-to-google-cloud-vision
+categories:
+  - rstats
+tags:
+  - httr
+  - gcp
+---
+
+A quick 10 on using ``Google Cloud Vision REST API`` to perform data analysis on images.
+
+Endpoint
+
+> https://vision.googleapis.com/v1/images:annotate
+
+### Authentication
+
+First you must authenticate your requests. There are 2 ways to do it. 
+
+1. [Using an API key](https://support.google.com/cloud/answer/6158862?hl=en) 
+2. [Using A Service Account](https://cloud.google.com/iam/docs/creating-managing-service-accounts#creating_a_service_account)
+
+
+### Request Body and Responses
+
+The body of your POST request contains a JSON object, containing a single requests list, which itself contains one or more objects of type ``AnnotateImageRequest``.
+
+```json
+{
+  "requests":[
+    {
+      "image":{
+        "content":"/9j/7QBEUGhvdG9...image contents...eYxxxzj/Coa6Bax//Z"
+      },
+      "features":[
+        {
+          "type":"LABEL_DETECTION",
+          "maxResults":1
+        }
+      ]
+    }
+  ]
+}
+```
+
+Full documentation [here](https://cloud.google.com/vision/docs/reference/rest/v1/images/annotate).
+
+### Providing The Image
+
+Several ways to do this as well,
+
+1. Base64-encoded image string
+2. Google Cloud Storage URI
+3. Public Accessible Image
+
+### JSON Response Format
+
+The annotate request receives a JSON response of type AnnotateImageResponse. Although the requests are similar for each feature type, the responses for each feature type can be quite different. Consult the Vision API Reference for complete information.
+
+### A Quick Demo
+
+```{r, eval=FALSE}
+# Specify image url
+imgURI <- "http://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/
+Rembrandt_van_Rijn_-_Self-Portrait_-_Google_Art_Project.jpg/
+463px-Rembrandt_van_Rijn_-_Self-Portrait_-_Google_Art_Project.jpg"
+
+# Specify endpoint mentioned above
+endpoint <- "https://vision.googleapis.com/v1/images:annotate"
+
+# Set API token in R environment
+# options(gcv_api_token = "")
+
+if(!is.null(getOption("gcv_api_token"))){
+  baseURI <- paste0(endpoint, "?key=", getOption("gcv_api_token"))
+}else{
+  stop("API token not set")
+}
+
+# Post request body
+body <- sprintf('{
+        "requests":[
+            {
+                "image":{
+                    "source":{
+                        "imageUri":
+                            "%s"
+                    }
+                },
+                "features":[
+                    {
+                        "type":"LABEL_DETECTION",
+                        "maxResults":%i
+                    }
+                    ]
+            }
+            ]
+        }', imgURI, 10
+                )
+
+# Send request
+res <- httr::POST(baseURI, body = body, encode = "json", config = httr::verbose())
+
+# Extract content (specific mime type)yhat
+lbs <- httr::content(res, type = "application/json")
+
+# Convert result to data frame
+lbs$responses[[1]]$labelAnnotations %>% bind_rows()
+```
+
+P.S. Check out [Google Art and Culture project](https://www.google.com/culturalinstitute/beta/entity/m0bskv2).

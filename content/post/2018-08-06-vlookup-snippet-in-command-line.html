@@ -1,0 +1,62 @@
+---
+title: Vlookup Snippet in Command Line
+author: Thomas Jc
+date: '2018-08-06'
+slug: vlookup-snippet-in-command-line
+categories:
+  - rstats
+tags:
+  - shell
+---
+
+
+
+<p>A general <code>Rscript</code> to run in command line, to extract value from table.</p>
+<pre class="r"><code>#!/usr/bin/env Rscript --vanilla
+library(argparser)
+library(readr)
+library(stringr)
+
+# read from stdin
+p &lt;- arg_parser(description = &quot;Parse value from a table read from a text file.&quot;)
+
+# required arguments
+p &lt;- add_argument(p, c(&quot;txt&quot;, &quot;--key&quot;, &quot;--value&quot;, &quot;--lookup&quot;), 
+                  help = c(&quot;text file&quot;, &quot;key identifier&quot;, &quot;key id value&quot;, &quot;item to lookup&quot;))
+p &lt;- add_argument(p, &quot;--regex&quot;, help = &quot;regex pattern to extract, if any&quot;, default = &quot;.*&quot;)
+args &lt;- parse_args(p)
+
+# mimic vlookup function in Excel
+vlookup &lt;- function(this, df, key, lookup) {
+    m &lt;- match(this, df[[key]])
+    df[[lookup]][m]
+}
+
+# read from text file 
+df &lt;- read_table(args$txt)
+
+# extract value
+val &lt;- with(args, vlookup(value, df, key, lookup))
+
+# extract pattern (optional)
+str_extract(val, args$regex)</code></pre>
+<p>For example: <code>docker-machine ls</code> gives</p>
+<pre class="bash"><code>NAME    ACTIVE   DRIVER       STATE     URL                         SWARM   DOCKER        ERRORS
+myvm1   -        virtualbox   Running   tcp://192.168.99.100:2376           v18.05.0-ce
+myvm2   -        virtualbox   Running   tcp://192.168.99.101:2376           v18.05.0-ce</code></pre>
+<p>To extract IP address of a particular virtual machine, we can do</p>
+<pre class="bash"><code>docker-machine ls &gt; machines.txt
+
+vlookup.R -k NAME -v myvm1 -l URL -r &quot;\\d{3}(\\.\\d{2,3})+&quot; machines.txt</code></pre>
+<pre class="bash"><code>Parsed with column specification:
+cols(
+  NAME = col_character(),
+  ACTIVE = col_character(),
+  DRIVER = col_character(),
+  STATE = col_character(),
+  URL = col_character(),
+  SWARM = col_character(),
+  DOCKER = col_character(),
+  ERRORS = col_character()
+)
+[1] &quot;192.168.99.100&quot;</code></pre>

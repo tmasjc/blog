@@ -1,0 +1,296 @@
+---
+title: 'Exercise: Sales Forecast using MCM'
+author: tmasjc
+date: '2019-04-09'
+slug: sales-forecast-using-monte-carlo
+categories: []
+tags: 
+    - monte-carlo
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+## Background
+
+Often, Monte Carlo simulation can come in handy to calculate risk or evaluate investments in projects. This is a simple demonstration.
+
+## Exercise
+
+The following provides the breakdown of profit made by a business unit. All metrics are measured in daily basis.
+
+    Profit = Income - Expenses
+    
+        Income = Sales (S) * Profit Margin per Sale (M)
+        
+            M assumes an uniform dist. from $350 to $400
+        
+            S = Number of Leads (L) * Conversion Rate (R)
+        
+                 L assumes an uniform dist. with from 3000 to 4000
+                 
+                 R assumes a normal dist. with mean of 4% and sd of 0.5%
+            
+        Expenses = Fixed Overhead (H) + Total Cost of the Leads (C)
+        
+            C = Cost Per Lead (Cpl) * Number of Leads (L)
+            
+                Cpl assumes an uniform dist. from $8 to $10
+        
+            H assumes a constant of $20000
+            
+
+In summary, 
+
+
+    Profit = Leads * Conversion Rate * Profit Margin per Sale - (Cost per Lead * Leads + Fixed Overhead)
+
+            
+```{r lib, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(ggthemes)
+
+# ggplot theme
+old <- theme_set(theme_tufte() + theme(text = element_text(family = 'Menlo')))
+options(scipen = 99)
+```
+
+## Profit Forecast Model
+
+An oversimplified daily profit forecast model,
+
+```{r forecast_profit}
+# profit forecast function
+forecast_profit <- function() {
+    
+    # number of leads
+    L <- runif(n = 1, min = 3000, max = 4000)
+    
+    # conversion rate
+    R <- rnorm(n = 1, mean = .04, sd = .005)
+    
+    # average profit margin per sale
+    M <- runif(n = 1, min = 350, max = 400)
+    
+    # average cost per lead
+    Cpl <- runif(n = 1, min = 8, max = 10)
+    
+    # fixed overhead
+    H <- 20e3
+    
+    # return profit
+    (L * R * M) - (L * Cpl + H)
+}
+
+# run simulation 
+set.seed(1212)
+nn = 10e3
+daily <- tibble(ind = 1:nn, profit = replicate(nn, forecast_profit()))
+```
+
+```{r plot_outcome_hist}
+# view outcome distribution
+daily %>% 
+    ggplot(aes(profit)) +
+    geom_histogram(aes(y = ..density..), 
+                   col = "black", fill = "salmon", alpha = .7, bins = 45) + 
+    geom_density(col = "red", size = 1.5) +
+    geom_vline(xintercept = quantile(daily$profit, c(0.025, 0.5, 0.975)), 
+               lty = 4, col = "navyblue", size = 1.2) + 
+    scale_x_continuous(labels = scales::dollar) +
+    theme(axis.text.y = element_blank(), axis.ticks.y = element_blank()) +
+    labs(x = "Profit", y = "Density")
+```
+
+If we set a profitability goal of **`r scales::dollar(100e3)` a month**, what is the probability that we achieve that? How about the probability that we lose money?
+
+```{r forecast_monthly}
+# forecast monthly goal and risk
+forecast_monthly <- function(df, n = 1000, goal = 100e3) {
+  
+  # we draw samples from our daily forecast 
+  res <- replicate(n, sum(sample(df$profit, 30)))
+  
+  # likelihood that we exceed our profit goal
+  p1 <- length(which(res >= goal)) / n
+  
+  # likelihood that we do not make profit (incur loss)
+  p2 <- length(which(res < 0)) / n
+  
+  return(
+    list(
+      df = tibble(ind = 1:n, profit = res),
+      goal = goal,
+      profit_prob = p1,
+      loss_prob = p2
+    ))
+  
+}
+```
+
+```{r}
+daily <- tibble(ind = 1:nn, profit = replicate(nn, forecast_profit()))
+```
+
+```{r print_monthly}
+monthly <- forecast_monthly(daily)
+sprintf("Probability of hitting goal is %s", scales::percent(monthly$profit_prob))
+sprintf("Probability of incurring losses is %s", scales::percent(monthly$loss_prob))
+```
+
+We can also plot the cumulative probability for clearer visualization.
+
+```{r plot_cumulative}
+# plot cumulative probability
+plot_cumulative <- function(daily, ...) {
+  monthly <- forecast_monthly(daily, ...)
+  monthly$df %>% 
+    ggplot(aes(profit)) + 
+    stat_ecdf() + 
+    geom_vline(xintercept = c(0, monthly$goal), lty = 4, col = "lightgray") +
+    geom_hline(yintercept = c(1 - monthly$profit_prob, monthly$loss_prob), lty = 4, col = "lightgray") +
+    annotate(x = c(monthly$goal, 0), 
+             y = c(1 - monthly$profit_prob, monthly$loss_prob), 
+             geom = "point", col = "red", size = 2) +
+    scale_x_continuous(labels = scales::dollar) +
+    scale_y_continuous(labels = scales::percent) + 
+    labs(x = "Profit", y = "Cumulative Probability")
+}
+plot_cumulative(daily)
+```
+
+## Update Model
+
+What if we further assume that cost per lead and conversion rate are correlated?
+
+```{r cost_conversion_corr}
+# assume the true parameter (conversion) is some cubic function
+x <- seq(8, 10, by = .1)
+y = 9.46 - 3.206667 * x + 0.36 * x ^ 2 - 0.01333333 * x ^ 3
+
+# bind to data frame
+cc <- tibble(x, y) %>% 
+    distinct() %>% 
+    arrange(x) %>% 
+    rename(cost_per_lead = x, conversion = y)
+
+# if we take linear regression for curve fitting
+fit <- lm(y ~ x, data = cc)
+```
+
+
+```{r update_forecast}
+# update profit function
+update_forecast <- function() {
+    
+    # number of leads
+    L <- runif(n = 1, min = 3000, max = 4000)
+    
+    # average profit margin per sale
+    M <- runif(n = 1, min = 350, max = 400)
+    
+    # average cost per lead
+    Cpl <- runif(n = 1, min = 8, max = 10)
+    
+    # conversion rate
+    #R <- 9.46 - 3.206667 * Cpl + 0.36 * Cpl ^ 2 - 0.01333333 * Cpl ^ 3
+    R <- predict(fit, newdata = data.frame(x = Cpl))
+    
+    # fixed overhead
+    H <- 20e3
+    
+    # return profit
+    (L * R * M) - (L * Cpl + H)
+}
+# remember to update function name
+daily <- tibble(ind = 1:nn, profit = replicate(nn, update_forecast()))
+```
+
+```{r ref.label="print_monthly"}
+
+```
+
+## Sensitivity Analysis
+
+What if we are offered an option to increase our leads at the cost of fixed overheads increase? 
+
+```{r sens_forecast}
+# add variation to leads and overhead
+sens_forecast <- function() {
+    
+    # number of leads
+    L <- runif(n = 1, min = 3000, max = 4000) * runif(1, min = 1.15, max = 1.25)
+    
+    # average profit margin per sale
+    M <- runif(n = 1, min = 350, max = 400)
+    
+    # average cost per lead
+    Cpl <- runif(n = 1, min = 8, max = 10)
+    
+    # conversion rate
+    #R <- 9.46 - 3.206667 * Cpl + 0.36 * Cpl ^ 2 - 0.01333333 * Cpl ^ 3
+    R <- predict(fit, newdata = data.frame(x = Cpl))
+    
+    # fixed overhead
+    H <- 20e3 * runif(1, min = 1.25, max = 1.30)
+    
+    # return profit
+    (L * R * M) - (L * Cpl + H)
+}
+# 
+daily <- tibble(ind = 1:nn, profit = replicate(nn, sens_forecast()))
+```
+
+```{r ref.label="print_monthly"}
+
+```
+
+
+## Finding Optimal
+
+What is the maximum cost per lead we can accept if we wish to cover our probability of losses at X%? 
+
+```{r, cache=TRUE}
+# profit forecast function
+reduce_risk <- function(max) {
+    
+    # number of leads
+    L <- runif(n = 1, min = 3000, max = 4000)
+    
+    # conversion rate
+    R <- rnorm(n = 1, mean = .04, sd = .005)
+    
+    # average profit margin per sale
+    M <- runif(n = 1, min = 350, max = 400)
+    
+    # fixed overhead
+    H <- 20e3
+    
+    # we need to vary this
+    Cpl <- runif(n = 1, min = 8, max = max)
+    
+    # return profit
+    (L * R * M) - (L * Cpl + H)
+}
+
+# grid linear search
+cpl <- seq(8.1, 9.9, by = 0.05)
+
+#-- we increase the number of trials here **
+opt <- purrr::map_lgl(cpl, ~ {
+  d = replicate(nn * 2, reduce_risk(.x))
+  m = forecast_monthly(data.frame(profit = d), nn * 2)
+  m$loss_prob > 0.05
+}) %>% set_names(cpl)
+
+# the first occurance of 'true'
+sprintf("Maximum cost per lead allowed to reduce risk down to 0.05 is $%s", names(which.max(opt) - 1))
+```
+
+
+
+

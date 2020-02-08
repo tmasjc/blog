@@ -1,0 +1,46 @@
+---
+title: Trigger Dingtalk Robot from R
+author: tmasjc
+date: '2019-11-10'
+slug: trigger-dingtalk-webhook-from-r
+categories: []
+tags: 
+    - httr
+    - webhooks
+---
+
+Dingtalk is the official comm tool in our work. They provide an interface which allow users to add robot to a group. A robot is merely a webhook that receives POST requests. More details can be found on docs. 
+
+Here I use the signature method to provide extra security. For this method to work, we need 3 piece of information. Token (1) and secret (2) can be obtained from the webhook setting. Signing (3) process is demonstrated below.
+
+Docs: https://ding-doc.dingtalk.com/doc#/serverapi2/krgddi
+
+```{r, eval=FALSE}
+library(digest)
+library(magrittr)
+library(httr)
+library(jsonlite)
+library(glue)
+
+# you need to obtain these from webhook setting
+url    = "https://oapi.dingtalk.com/robot/send"
+token  = "some-token"
+secret = "some-secret"
+ts     = round(as.numeric(Sys.time()) * 1000)
+
+# obtain signature 
+str  <- paste(ts, secret, sep = "\n")
+hmc  <- digest::hmac(secret, str, algo = "sha256", raw = TRUE)
+sign <- hmc %>% base64Encode() %>% URLencode(reserved = TRUE)
+endp <- glue("{url}?access_token={token}&timestamp={ts}&sign={sign}")
+
+# there are other types of body, RTD
+body <- list(
+    msgtype = "text",
+    text = list(content = "周末写代码的愉悦大于一切")
+)
+
+# send to webhook 
+POST(url = endp, body = body, encode = "json", verbose())
+```
+

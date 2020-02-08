@@ -1,0 +1,91 @@
+---
+title: Dynamic UI in Shiny
+author: tmasjc
+date: '2019-06-20'
+slug: dynamic-ui
+categories: []
+tags: 
+    - shiny
+    - rlang
+---
+
+A quick demo on how to render dynamic user interface in Shiny applications. In this case, a new text output element is shown when user enters a new line in the text input. The color toggles alternatively as well. 
+
+Techniques here involves using `shiny::renderUI` and R's metaprogramming. 
+
+```{r, message=FALSE, warning=FALSE, eval=FALSE}
+library(shiny)
+library(purrr)
+library(stringr)
+
+## Demo: Render UI Function ----
+shinyApp(
+    
+    ui <- fluidPage(
+    
+        # user's input 
+        column(
+            width = 11,
+            offset = 1,
+            textAreaInput(
+                "text", label = "",
+                placeholder = "Please insert name here. Use new line to break.",
+                width = "1200px", height = "250px"
+            )
+        ),
+        # dynamic print output here
+        column(width = 7, offset = 1, uiOutput("renderNames")),
+        column(width = 7, offset = 1, uiOutput("renderIDs"))
+    ),
+
+    server <- function(input, output, session) {
+        
+        # helper function
+        split_text <- function(x) {
+            
+            # split text and remove empty 
+            str_split(x, "\n")[[1]] %>% 
+                str_remove("\n") %>% 
+                keep(~ nchar(.x) > 1) %>% 
+                unlist()
+        }
+    
+        output$renderNames <- renderUI({
+            
+            # count number of lines
+            n <- length(split_text(input$text))
+            
+            # render input according to n
+            rn <- map_chr(1:n, ~ str_glue("verbatimTextOutput(outputId = 'id{.x}', placeholder = TRUE)"))
+            map(rn, ~ eval(parse(text = .x)))
+            
+        })
+        
+        output$renderIDs <- renderUI({
+            
+            n <- length(split_text(input$text))
+            
+            # toggle color here
+            m <- ifelse(1:n %% 2 == 0, "dodgerblue", "purple")
+            
+            # render color to respective id 
+            rb <- map2(1:n, m, ~ paste0("tags$head(tags$style(HTML (' #id", .x, "{ color: ", .y, "}')))"))
+            map(rb, ~ eval(parse(text = .x)))
+            
+        })
+        
+        observeEvent(input$text, {
+            
+            # return splitted texts
+            txt <- split_text(input$text)
+            
+            # render output according to n
+            res <- map2(1:length(txt), txt, ~ paste0("output$id", .x,  "<- renderText({ 'hello ", .y, "' })"))
+            map(res, ~ eval(parse(text = .x)))
+        })
+      
+    }
+    
+)
+```
+

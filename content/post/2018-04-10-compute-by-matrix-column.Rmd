@@ -1,0 +1,26 @@
+---
+title: Compute by Matrix Column
+description: Dealing with text2vec 'dgCMatrix'
+author: Thomas Jc
+date: '2018-04-10'
+slug: compute-by-matrix-column
+categories:
+  - rstats
+tags:
+  - matrix
+---
+
+```{r, message=FALSE}
+library(tidyverse)
+
+# dummy data
+mat <- matrix(rnorm(20 * 5, mean = 100, sd = sqrt(10)) %>% round(digits = 2), 20, 5)
+mat
+
+# find index by maximum value in a column
+data_frame(
+    column = 1:ncol(mat),
+    row = apply(mat, 2, which.max)
+)
+```
+

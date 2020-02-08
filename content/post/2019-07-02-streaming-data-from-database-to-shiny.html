@@ -1,0 +1,106 @@
+---
+title: Streaming Data From Database to Shiny
+author: tmasjc
+date: '2019-07-02'
+slug: streaming-data-from-database-to-shiny
+categories: []
+tags: 
+    - shiny
+    - database
+---
+
+
+
+<p>First, a script that simulate data streaming. It rewrites the table every <code>p</code> second. Here we set it to 1.</p>
+<pre class="r"><code>library(config)
+library(DBI)
+library(dplyr)
+library(purrr)
+library(tryCatchLog)
+
+db &lt;- config::get(config = &quot;some-mysql&quot;)
+
+# local Docker container
+conn &lt;- dbConnect(
+    drv = RMySQL::MySQL(),
+    username = db$username,
+    password = db$password,
+    host = db$host,
+    port = db$port,
+    dbname = db$dbname
+)
+
+stopifnot(DBI::dbRemoveTable(conn, &quot;int_stream&quot;))
+
+generate &lt;- function() {
+    data.frame(ind  = LETTERS,
+               int = round(rnorm(
+                   length(LETTERS), mean = 10, sd = 2
+               )))
+}
+
+insert_to_db &lt;- function(p = 1) {
+    stopifnot(dbWriteTable(conn, &quot;int_stream&quot;, generate(), overwrite = TRUE))
+    message(paste(&quot;Success:&quot;, Sys.time()))
+    Sys.sleep(p)
+}
+replicate(60, insert_to_db())
+
+DBI::dbDisconnect(conn)</code></pre>
+<p>Here we create a Shiny app. It consists of a <code>reactive</code> object that schedules to be invalid after a given time and then auto updates itself.</p>
+<pre class="r"><code>library(shiny)
+library(dplyr)
+library(ggplot2)
+library(pool)
+library(config)
+
+# Setup ----
+
+db &lt;- config::get(config = &quot;some-mysql&quot;)
+
+# pooling object 
+pool &lt;- dbPool(
+    drv = RMySQL::MySQL(),
+    username = db$username,
+    password = db$password,
+    host = db$host,
+    port = db$port,
+    dbname = db$dbname
+)
+
+# close connection upon shutting down app
+onStop(function() {
+    poolClose(pool)
+})
+
+# App ----
+
+ui &lt;- fluidPage(
+    column(4, tableOutput(&quot;tbl&quot;)),
+    column(8, plotOutput(&quot;plot&quot;, width = &quot;100%&quot;, height = &quot;800px&quot;))
+)
+
+server &lt;- function(input, output, session) {
+    tbl_data &lt;- reactive({
+        # in miliseconds
+        invalidateLater(1000)
+        pool %&gt;% 
+            tbl(&quot;int_stream&quot;) %&gt;% 
+            group_by(group) %&gt;% 
+            summarise(max = max(int, na.rm = TRUE)) %&gt;% 
+            collect()
+    })
+    
+    output$tbl &lt;- renderTable({
+        tbl_data()
+    })
+    
+    output$plot &lt;- renderPlot({
+        tbl_data() %&gt;% 
+            ggplot(aes(group, max)) +
+            geom_bar(stat = &quot;identity&quot;) + 
+            theme_bw()
+    })
+}
+
+shinyApp(ui, server)</code></pre>

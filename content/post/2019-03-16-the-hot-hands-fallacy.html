@@ -1,0 +1,43 @@
+---
+title: Curry's Streaking Hot Hand
+author: Thomas Jc
+date: '2019-03-16'
+slug: streaking-hot-hand
+categories: []
+tags: 
+    - monte-carlo
+editor_options: 
+  chunk_output_type: console
+---
+
+
+
+<p>Steph Curry averaging <strong>.411</strong> in 3-point field goal percentage during the 2016-17 season. On November 7 2016, he made 13 out of 17 3-point attemps. How likely was it to happen?</p>
+<pre class="r"><code>library(ggplot2)
+library(dplyr)
+set.seed(123)
+
+# 3-point fg pct
+steph_curry = 0.411
+
+# simulation trials
+trials = 10000
+
+# simulate shot game in 17 attemps
+made &lt;- replicate(trials, sum(rbinom(n = 17, size = 1, prob = steph_curry)))
+
+# plot it out
+made %&gt;% 
+    as_data_frame() %&gt;% 
+    ggplot(aes(made)) +
+    geom_histogram(bins = 60) + 
+    geom_vline(xintercept = 13, col = &quot;red&quot;, lty = 4) +
+    scale_x_continuous(breaks = seq(1, 20, 1)) + 
+    theme_light(base_family = &quot;Menlo&quot;) + 
+    labs(title = &quot;Steph Curry&#39;s Super Hot Hand&quot;, 
+         x = &quot;3-point made&quot;, 
+         y = &quot;Count&quot;)</code></pre>
+<pre><code>## Warning: `as_data_frame()` is deprecated, use `as_tibble()` (but mind the new semantics).
+## This warning is displayed once per session.</code></pre>
+<p><img src="/post/2019-03-16-the-hot-hands-fallacy_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<p>Answer: 0%</p>

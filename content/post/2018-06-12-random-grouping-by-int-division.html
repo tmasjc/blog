@@ -1,0 +1,42 @@
+---
+title: Random Grouping by Int Division
+author: Thomas Jc
+date: '2018-06-12'
+slug: random-grouping-by-int-division
+categories:
+  - General
+tags:
+  - math
+---
+
+
+
+<p>One way to assign a random grouping is to perform modulo operation.</p>
+<pre class="r"><code>library(dplyr)
+library(ggplot2)
+
+# Generate N numbers
+randnums &lt;- function(n, min = 0, max = 10000){
+    sample(x = c(min:max), size = n, replace = FALSE)
+}
+nums &lt;- randnums(1000)
+
+# Find int division
+mods &lt;- nums %% 3
+
+# Check groupings
+table(mods)</code></pre>
+<pre><code>## mods
+##   0   1   2 
+## 302 345 353</code></pre>
+<pre class="r"><code># Repeat many times
+reps &lt;- purrr::map(1:2000, ~table(randnums(1000) %% 3))
+
+reps %&gt;% 
+    unlist() %&gt;% 
+    bind_cols(mod = rep(c(0, 1, 2), 2000), val = .) %&gt;% 
+    ggplot(aes(val, fill = factor(mod))) + 
+    geom_density(alpha = 0.7) +
+    labs(x = &quot;&quot;, y = &quot;&quot;, fill = &quot;Remainder&quot;) +
+    theme_minimal()</code></pre>
+<p><img src="/post/2018-06-12-random-grouping-by-int-division_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>

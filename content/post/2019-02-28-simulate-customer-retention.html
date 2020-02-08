@@ -1,0 +1,153 @@
+---
+title: Simulate Customer Retention
+author: tmasjc
+date: '2019-02-28'
+slug: simulate-customer-retention
+categories: []
+tags: 
+    - survival
+---
+
+
+
+<p>The code below simulate a scenario where <code>nc</code> customers onboard during a <code>ts</code> timespan. However, none of them managed to retain for more than <code>sp</code> periods. The objective is to compare various customer retention analysis especially periodic and retrospective analysis techniques.</p>
+<pre class="r"><code>library(tidyverse)
+library(charlatan)
+
+# Generate Some Samples  ----------------------------------------------
+
+# seeding
+set.seed(123)
+
+# number of customers
+nc = 500
+# timespan (entire periods)
+ts = 1:12
+# survival periods
+sp = 3
+
+# generate some customers data
+cust_info &lt;- data_frame(
+  id = paste0(&quot;KB&quot;, ch_integer(n = nc, min = 100)),
+  jobs = sample(ch_job(n = 4, locale = &quot;zh_TW&quot;), 
+                size = length(id), replace = TRUE)
+)
+
+# generate a sequence of vector with length n 
+make_seq &lt;- function(n, x) {
+  
+  # initiate an empty vector
+  vec = rep(0, n)
+  
+  # generate index with range no more than x
+  ind = 1 : (2 + x)
+  while(diff(range(ind)) &gt; x) {
+    ind = runif(x, 1, n + 1)
+  }
+  
+  # fill vector with 1s 
+  vec[ind] &lt;- 1
+  
+  return(vec)
+}
+  
+# repeats ts times
+surv_times &lt;- nc %&gt;% 
+  replicate(make_seq(max(ts), sp)) %&gt;% 
+  t() %&gt;% as_data_frame()
+names(surv_times) &lt;- paste0(&quot;M&quot;, ts)
+
+# calc initial register period
+join &lt;- apply(surv_times, 1, function(x) min(which(x == 1)))
+
+# samples 
+dat &lt;- bind_cols(cust_info, join = join, surv_times)
+head(dat)  </code></pre>
+<pre><code>## # A tibble: 6 x 15
+##   id    jobs    join    M1    M2    M3    M4    M5    M6    M7    M8    M9   M10
+##   &lt;chr&gt; &lt;chr&gt;  &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 KB514 清潔工     1     1     1     0     1     0     0     0     0     0     0
+## 2 KB562 清潔工     1     1     1     0     0     0     0     0     0     0     0
+## 3 KB278 不動產／商…     4     0     0     0     1     1     1     0     0     0     0
+## 4 KB625 清潔工     7     0     0     0     0     0     0     1     0     1     1
+## 5 KB294 產品事業處…     4     0     0     0     1     1     0     1     0     0     0
+## 6 KB917 財務或會計…     5     0     0     0     0     1     0     0     1     0     0
+## # … with 2 more variables: M11 &lt;dbl&gt;, M12 &lt;dbl&gt;</code></pre>
+<pre class="r"><code># Active Customers ---------------------------------------------
+
+calc_active_rate &lt;- function(m) {
+  dat %&gt;% 
+    gather(period, active, -c(id, jobs, join)) %&gt;% 
+    filter(join &lt;= m, period == paste0(&quot;M&quot;, m)) %&gt;% 
+    summarise(rate = mean(active)) %&gt;% 
+    `[[`(&quot;rate&quot;)
+}
+active_rate &lt;- map_dbl(ts, calc_active_rate)
+
+# make plot
+data_frame(ts, active_rate) %&gt;% 
+  ggplot(aes(ts, active_rate, group = 1)) +
+  geom_point() +
+  geom_line(col = &quot;navyblue&quot;) + 
+  scale_x_continuous(breaks = 1:12) +
+  scale_y_continuous(labels = scales::percent) + 
+  coord_cartesian(ylim = seq(0, 1, 0.05)) + 
+  theme_minimal() +
+  labs(x = &quot;Month&quot;, y = &quot;Active Customers %&quot;)</code></pre>
+<p><img src="/post/2019-02-28-simulate-customer-retention_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<pre class="r"><code># Periodic Survival -------------------------------------------------------
+
+# (active at period t + 1) / (active at period t)
+rolling_active &lt;- function(t) {
+  
+  # subset those who active at period t
+  s = dat[dat[which(names(dat) == paste0(&quot;M&quot;, t))] == 1, ]
+  
+  # remain in the subsequent period
+  r = s[which(names(s) == paste0(&quot;M&quot;, t + 1))] == 1
+  
+  # return
+  sum(r) / nrow(s)
+}
+
+# (active at period t + 1) / (register at period t) 
+rolling_retain &lt;- function(t) {
+  
+  # subset those who join at period t
+  s = subset(dat, join == t)
+  
+  # remain in the subsequent period
+  r = s[which(names(s) == paste0(&quot;M&quot;, t + 1))] == 1
+  
+  # return
+  sum(r) / nrow(s)
+}
+
+# put result into a data frame
+res &lt;- data_frame(
+  ind = 1:(max(ts) - 1),
+  grp_by_register_period = map_dbl(ind, rolling_retain),
+  grp_by_active_period = map_dbl(ind, rolling_active)
+) 
+
+# make plot
+res %&gt;% 
+  gather(var, val, -ind) %&gt;% 
+  ggplot(aes(ind, val, col = var)) + 
+  geom_line() + 
+  scale_color_discrete(labels = c(&quot;Group By Active Period&quot;, 
+                                  &quot;Group By Register Period&quot;)) +
+  scale_x_continuous(breaks = ts) +
+  scale_y_continuous(labels = scales::percent) +
+  theme_minimal() +
+  theme(legend.position = &quot;bottom&quot;) +
+  labs(x = &quot;Month&quot;, y = &quot;Retention Rate %&quot;, col = &quot;&quot;)</code></pre>
+<p><img src="/post/2019-02-28-simulate-customer-retention_files/figure-html/unnamed-chunk-1-2.png" width="672" /></p>
+<pre class="r"><code># Cohort Analysis ---------------------------------------------------------
+
+# export to Excel to do pivot table
+file &lt;- dat %&gt;% 
+  select(-jobs) %&gt;% 
+  gather(month, active, -c(id, join)) %&gt;% 
+  mutate(month = factor(str_remove(month, &quot;^M&quot;)))
+# write_csv(file, &quot;some/path&quot;)</code></pre>

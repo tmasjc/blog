@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+  <meta name="generator" content="Hugo 0.64.0" />
+
+  
+  <meta name="description" content="Applied data science breadcrumbs">
+  
+
+  
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
+  
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+
+  
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+
+  
+  <link rel="manifest" href="/site.webmanifest">
+
+  
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+  <meta name="msapplication-TileColor" content="#da532c">
+
+  <meta name="theme-color" content="#ffffff">
+
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" />
+
+  
+  <title>Programming in dplyr - Row Filtering | Not So Formal</title>
+  
+
+  <style>
+ 
+@font-face {
+    font-family: 'PT Sans';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../fonts/pt-sans-v11-latin-regular.eot');  
+    src: local('PT Sans'), local('PTSans-Regular'),
+         url('../fonts/pt-sans-v11-latin-regular.eot?#iefix') format('embedded-opentype'),  
+         url('../fonts/pt-sans-v11-latin-regular.woff2') format('woff2'),  
+         url('../fonts/pt-sans-v11-latin-regular.woff') format('woff'),  
+         url('../fonts/pt-sans-v11-latin-regular.ttf') format('truetype'),  
+         url('../fonts/pt-sans-v11-latin-regular.svg#PTSans') format('svg');  
+  }
+
+small {
+    opacity: 0.5;
+}
+
+body {
+  min-width: 300px;
+  font-family: "PT Sans"
+}
+
+.custom-navbar {
+  margin-bottom: 1em;
+  height: 60px;
+}
+
+.custom-navbar a {
+  display: inline-block;
+  padding: 18px 0;
+  margin-right: 1em;
+  font-weight: bold;
+}
+
+.custom-navbar a:hover,
+.custom-navbar a:focus {
+  text-decoration: none;
+}
+
+@media print {
+  .custom-navbar {
+    display: none;
+  }
+}
+
+article {
+  padding-bottom: 1em;
+}
+
+img {
+  max-width: 100%;
+}
+
+
+body {
+  background-color: #2C363F;
+}
+
+
+
+body {
+  color: #FFF;
+}
+
+
+
+a {
+  color: #F2F5EA;
+}
+
+
+
+a:hover,
+a:focus {
+  color: #E75A7C;
+}
+
+
+
+.custom-navbar {
+  background-color: #212529;
+}
+
+
+
+.custom-navbar a {
+  color: #AED9E0;
+}
+
+
+
+.custom-navbar a:hover,
+.custom-navbar a:focus {
+  color: #E75A7C;
+}
+
+
+
+.container {
+  max-width: 800px;
+}
+
+
+
+pre {
+  display: block;
+  padding: 9.5px;
+  word-break: break-all;
+  word-wrap: break-word;
+  background-color: #dee2e6;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+pre code {
+  padding: 0;
+  font-size: .8em;
+  color: inherit;
+  white-space: pre-wrap;
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+}
+
+code {
+  padding: 2px 2px;
+  color: #000;
+  background-color: #f5f5f5;
+   
+  border-radius: 4px;
+  font-size: .7em;
+}
+
+
+
+blockquote,
+.blockquote {
+  padding: 10px 20px;
+  margin: 0 0 20px;
+  font-size: 1em;
+  border-left: 5px solid #6c757d;
+}
+
+</style>
+
+</head>
+
+<body>
+  <nav class="custom-navbar">
+  <div class="container">
+    
+    <a href="/">Home</a>
+    
+    <a href="https://tmasjc.github.io/">About</a>
+    
+  </div>
+</nav>
+  
+  <div class="container">
+    <article>
+      <h1>Programming in dplyr - Row Filtering</h1>
+<p>
+  <small class="text-secondary">
+  
+  
+  Oct 28, 2018
+  </small>
+  
+
+<small><a href="/tags/dplyr">#dplyr</a></small>
+
+
+<small><a href="/tags/tidyeval">#tidyeval</a></small>
+
+
+</p>
+
+
+
+<div id="how-do-you-program-the-row-filtering-dynamically-when-working-with-dplyr-verb" class="section level4">
+<h4>How do you program the row filtering dynamically when working with <code>dplyr</code> verb?</h4>
+<p>Say we have a dataframe with 2 columns, x and y.</p>
+<pre class="r"><code>library(tidyverse)
+library(rlang)
+
+# make some sample
+set.seed(1234)
+df &lt;- 2 %&gt;% 
+    rerun(rnorm(100, 10, 2) %&gt;% round()) %&gt;% 
+    bind_cols()
+colnames(df) &lt;- c(&quot;x&quot;, &quot;y&quot;)
+
+# simple plot
+p &lt;- df %&gt;% 
+    ggplot(aes(x, y)) + 
+    geom_point(position = position_jitter(width = 1), 
+               alpha = 0.7) +
+    theme_minimal()
+p</code></pre>
+<p><img src="/post/2018-10-28-programming-in-dplyr-row-filtering_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<p><strong>Our objective here is to ‘zone’ out the points that fall in the 50th percentile of both x and y.</strong></p>
+<pre class="r"><code>summary(df)</code></pre>
+<pre><code>##        x               y        
+##  Min.   : 5.00   Min.   : 4.00  
+##  1st Qu.: 8.00   1st Qu.: 9.00  
+##  Median : 9.00   Median :10.00  
+##  Mean   : 9.71   Mean   :10.06  
+##  3rd Qu.:11.00   3rd Qu.:11.00  
+##  Max.   :15.00   Max.   :16.00</code></pre>
+<pre class="r"><code># filter values within (w) q1, q3
+(w &lt;- df %&gt;% 
+    filter(x &gt;= quantile(x, probs = 0.25),
+           x &lt;= quantile(x, probs = 0.75),
+           y &gt;= quantile(y, probs = 0.25),
+           y &lt;= quantile(y, probs = 0.75)))</code></pre>
+<pre><code>## # A tibble: 42 x 2
+##        x     y
+##    &lt;dbl&gt; &lt;dbl&gt;
+##  1     8    11
+##  2    11     9
+##  3    11    10
+##  4     9    10
+##  5     9    11
+##  6     8    10
+##  7     9    10
+##  8     8     9
+##  9     8    10
+## 10     8    11
+## # … with 32 more rows</code></pre>
+<pre class="r"><code># points that fall outside q1, q3
+v &lt;- anti_join(df, w, by = c(&quot;x&quot;, &quot;y&quot;))
+
+# modify previous plot
+w %&gt;% 
+    ggplot(aes(x, y)) + 
+    geom_jitter(width = 1, col = &quot;red&quot;) + 
+    geom_jitter(data = v, aes(x, y), alpha = 0.7) + 
+    theme_minimal()</code></pre>
+<p><img src="/post/2018-10-28-programming-in-dplyr-row-filtering_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>The way that we express our filtering conditions is what we aim to simplify in this post.</p>
+<pre class="r"><code>filter(
+    data = df,
+    x &gt;= quantile(x, probs = 0.25),
+    x &lt;= quantile(x, probs = 0.75),
+    y &gt;= quantile(y, probs = 0.25),
+    y &lt;= quantile(y, probs = 0.75)
+    ))</code></pre>
+</div>
+<div id="expression" class="section level2">
+<h2>Expression</h2>
+<p>We start from forming a simple expression in literal text.</p>
+<pre class="r"><code>text_expression &lt;- function(var, ops, pct) {
+    sprintf(&quot;%s %s quantile(%s, probs = %g)&quot;, var, ops, var, pct)
+}
+text_expression(&quot;x&quot;, &quot;&gt;=&quot;, .75)</code></pre>
+<pre><code>## [1] &quot;x &gt;= quantile(x, probs = 0.75)&quot;</code></pre>
+<pre class="r"><code>text_expression(&quot;y&quot;, &quot;&lt;=&quot;, .75)</code></pre>
+<pre><code>## [1] &quot;y &lt;= quantile(y, probs = 0.75)&quot;</code></pre>
+</div>
+<div id="rlang" class="section level2">
+<h2>Rlang</h2>
+<p>We use <code>rlang</code> to transform text into R expression.</p>
+<pre class="r"><code>custom_filter &lt;- function(x, filter_expr) {
+    expr &lt;- parse_expr(filter_expr)
+    df %&gt;% filter(!!expr)
+}
+custom_filter(x, text_expression(&quot;x&quot;, &quot;&gt;=&quot;, .75))</code></pre>
+<pre><code>## # A tibble: 32 x 2
+##        x     y
+##    &lt;dbl&gt; &lt;dbl&gt;
+##  1    11     9
+##  2    12    10
+##  3    11     8
+##  4    11    10
+##  5    12    10
+##  6    15    10
+##  7    11    12
+##  8    11     9
+##  9    12    12
+## 10    13     9
+## # … with 22 more rows</code></pre>
+</div>
+<div id="multiple-arguments" class="section level2">
+<h2>Multiple Arguments</h2>
+<p>It takes the following steps,</p>
+<ol style="list-style-type: decimal">
+<li>Use <code>purrr::map</code> to form multiple expressions</li>
+<li>Use <code>;</code> or <code>\n</code> to join formed expressions</li>
+<li>Use <code>rlang::parse_exprs</code> to transform texts into R expressions</li>
+<li>Use <code>!!!</code> (3x bang) to slice expressions</li>
+</ol>
+<pre class="r"><code># the following has 3 expressions
+parse_exprs(&quot;NULL; list()\n foo(bar)&quot;)</code></pre>
+<pre><code>## [[1]]
+## NULL
+## 
+## [[2]]
+## list()
+## 
+## [[3]]
+## foo(bar)</code></pre>
+<p>Let’s continue onto our example.</p>
+<pre class="r"><code># form &#39;head&#39; of our expressions
+(ehead &lt;- map(.x = list(&quot;x&quot;, &quot;y&quot;), .f = paste, list(&quot;&gt;=&quot;, &quot;&lt;=&quot;)))</code></pre>
+<pre><code>## [[1]]
+## [1] &quot;x &gt;=&quot; &quot;x &lt;=&quot;
+## 
+## [[2]]
+## [1] &quot;y &gt;=&quot; &quot;y &lt;=&quot;</code></pre>
+<pre class="r"><code># form &#39;taik&#39; of our expressions
+(etail &lt;- map(.x = list(&quot;x&quot;, &quot;y&quot;), 
+             .f = ~ sprintf(&#39;quantile(%s, probs = %g)&#39;, .x, .y),
+             list = c(.25, .75)))</code></pre>
+<pre><code>## [[1]]
+## [1] &quot;quantile(x, probs = 0.25)&quot; &quot;quantile(x, probs = 0.75)&quot;
+## 
+## [[2]]
+## [1] &quot;quantile(y, probs = 0.25)&quot; &quot;quantile(y, probs = 0.75)&quot;</code></pre>
+<pre class="r"><code># combine head and tail
+(exprs &lt;- map2(ehead, etail, ~ sprintf(&quot;%s %s&quot;, .x, .y)))</code></pre>
+<pre><code>## [[1]]
+## [1] &quot;x &gt;= quantile(x, probs = 0.25)&quot; &quot;x &lt;= quantile(x, probs = 0.75)&quot;
+## 
+## [[2]]
+## [1] &quot;y &gt;= quantile(y, probs = 0.25)&quot; &quot;y &lt;= quantile(y, probs = 0.75)&quot;</code></pre>
+<pre class="r"><code># collapse our expressions into a long string
+(exprs &lt;- exprs %&gt;% 
+    unlist() %&gt;% 
+    # use &#39;;&#39; or &quot;\n&quot;
+    paste0(collapse = &quot;;&quot;))</code></pre>
+<pre><code>## [1] &quot;x &gt;= quantile(x, probs = 0.25);x &lt;= quantile(x, probs = 0.75);y &gt;= quantile(y, probs = 0.25);y &lt;= quantile(y, probs = 0.75)&quot;</code></pre>
+</div>
+<div id="apply-custom-filtering" class="section level2">
+<h2>Apply Custom Filtering</h2>
+<pre class="r"><code># modify our custom filtering to fit multiple expressions
+custom_filter = function(x, exprs) {
+    # take note of the plurar form
+    exprs_list &lt;- parse_exprs(exprs)
+    # apply on data frame
+    x %&gt;% filter(!!!exprs_list)
+}
+# thats it
+(w2 &lt;- df %&gt;% custom_filter(exprs))</code></pre>
+<pre><code>## # A tibble: 42 x 2
+##        x     y
+##    &lt;dbl&gt; &lt;dbl&gt;
+##  1     8    11
+##  2    11     9
+##  3    11    10
+##  4     9    10
+##  5     9    11
+##  6     8    10
+##  7     9    10
+##  8     8     9
+##  9     8    10
+## 10     8    11
+## # … with 32 more rows</code></pre>
+<pre class="r"><code>w2 %&gt;% 
+    ggplot(aes(x, y)) +
+    geom_point(position = position_jitter(width = 1), col = &quot;red&quot;) + 
+    geom_point(data = anti_join(df, w), aes(x, y)) +
+    theme_minimal()</code></pre>
+<p><img src="/post/2018-10-28-programming-in-dplyr-row-filtering_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<pre class="r"><code># final check
+all(w == w2)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+</div>
+
+    </article>
+  </div>
+
+  
+  
+  
+
+  
+
+  
+</body>
+
+</html>

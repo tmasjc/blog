@@ -1,0 +1,62 @@
+---
+title: Monty Hall Problem in R
+author: Thomas Jc
+date: '2019-03-15'
+slug: monty-hall-problem-in-r
+categories: []
+tags: 
+    - monte-carlo
+---
+
+A few lines of code to one of the most classic problem in probability. 
+
+```{r}
+library(magrittr)
+set.seed(1212)
+
+new_game <- function(x = 3) {
+    
+    # doors
+    doors = as.integer(1:x)
+    
+    # initialize the prize behind of those doors
+    prize = sample(doors, size = 1)
+    
+    # guest make a guess
+    guess = sample(doors, size = 1)
+    
+    # open one of the doors knowing which has the prize
+    open = doors[-c(prize, guess)][[1]]
+    
+    # if guest choose to switch 
+    switch_guess = doors[-c(guess, open)]
+    
+    # if guest does not switch
+    no_switch_guess = guess
+    
+    return(list(
+        prize = prize,
+        original_guess = guess,
+        open = open,
+        switch = switch_guess,
+        no_switch = no_switch_guess
+    ))
+}
+
+
+new_game()
+```
+
+```{r}
+# simulate many trials
+trials = 10000
+
+# if switch everytime, what are the total winnings?
+replicate(trials, with(new_game(), switch == prize)) %>% sum()
+
+# if NO switch everytime, what are the total winnings?
+replicate(trials, with(new_game(), no_switch == prize)) %>% sum()
+```
+
+There you go. The math checks out.
+
