@@ -18,7 +18,7 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
   contentLinkHoverColor = "#FF9F1C"
   navbarBackgroundColor = "#212529"
   navbarLinkColor = "#FFF"
-  navbarLinkHoverColor = "#E71D36"
+  navbarLinkHoverColor = "#FF9F1C"
   wrapperMaxWidth = "800px"
   customDateFormat = "Jan 2, 2006"
   customCodeStyle = true
@@ -30,16 +30,13 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
   faviconSafariPinnedTabColor = "#5bbad5"
   faviconMsApplicationTileColor = "#da532c"
   faviconThemeColor = "#ffffff"
+  highlightjsTheme = "github-gist"
 
 [menu]
   [[menu.nav]]
-  name = "Home"
+  name = "notsoformal"
   url = "/"
   weight = 1
-  [[menu.nav]]
-  name = "About"
-  url = "https://tmasjc.github.io/"
-  weight = 2
 
 [markup]
   defaultMarkdownHandler = "goldmark"
