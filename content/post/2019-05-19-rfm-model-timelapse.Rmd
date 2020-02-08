@@ -151,7 +151,7 @@ anim <- long_dfs %>%
          title = "Week {closest_state}") +
     transition_states(m, transition_length = 1, state_length = 5) +
     ease_aes('linear')
-#anim_save(animation = anim, filename = "moving_rfm.gif", path = "content/etc/")
+#anim_save(animation = anim, filename = "moving_rfm.gif", path = "content/etc")
 ```
 
 ![](/etc/moving_rfm.gif)

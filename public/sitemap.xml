@@ -3,427 +3,432 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>http://notsoformal.xyz/tags/httr/</loc>
+    <loc>/tags/httr/</loc>
     <lastmod>2019-11-10T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/</loc>
+    <loc>/</loc>
     <lastmod>2019-11-10T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/post/</loc>
+    <loc>/post/</loc>
     <lastmod>2019-11-10T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/tags/</loc>
+    <loc>/tags/</loc>
     <lastmod>2019-11-10T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/2019-11-10-trigger-dingtalk-webhook-from-r/</loc>
+    <loc>/2019-11-10-trigger-dingtalk-webhook-from-r/</loc>
     <lastmod>2019-11-10T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/tags/webhooks/</loc>
+    <loc>/tags/webhooks/</loc>
     <lastmod>2019-11-10T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/2019-10-06-is-james-harden-been-given-special-treatment-by-referee/</loc>
+    <loc>/2019-10-06-is-james-harden-been-given-special-treatment-by-referee/</loc>
     <lastmod>2019-10-06T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/tags/isittrue/</loc>
+    <loc>/tags/isittrue/</loc>
     <lastmod>2019-10-06T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/tags/database/</loc>
+    <loc>/tags/database/</loc>
     <lastmod>2019-07-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/tags/shiny/</loc>
+    <loc>/tags/shiny/</loc>
     <lastmod>2019-07-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/2019-07-02-streaming-data-from-database-to-shiny/</loc>
+    <loc>/2019-07-02-streaming-data-from-database-to-shiny/</loc>
     <lastmod>2019-07-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/2019-06-20-dynamic-ui/</loc>
+    <loc>/2019-06-20-dynamic-ui/</loc>
     <lastmod>2019-06-20T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/tags/rlang/</loc>
+    <loc>/tags/rlang/</loc>
     <lastmod>2019-06-20T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/tags/gganimate/</loc>
+    <loc>/tags/gganimate/</loc>
     <lastmod>2019-05-19T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/tags/ggplot2/</loc>
+    <loc>/tags/ggplot2/</loc>
     <lastmod>2019-05-19T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/2019-05-19-rfm-model-timelapse/</loc>
+    <loc>/2019-05-19-rfm-model-timelapse/</loc>
     <lastmod>2019-05-19T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/2019-04-21-biased-coin-toss/</loc>
+    <loc>/2019-04-21-biased-coin-toss/</loc>
     <lastmod>2019-04-21T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/tags/monte-carlo/</loc>
+    <loc>/tags/monte-carlo/</loc>
     <lastmod>2019-04-21T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/2019-04-09-case-study-sales-forecast-using-monte-carlo/</loc>
+    <loc>/2019-04-09-case-study-sales-forecast-using-monte-carlo/</loc>
     <lastmod>2019-04-09T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/tags/data.table/</loc>
+    <loc>/tags/data.table/</loc>
     <lastmod>2019-03-24T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/tags/plyr/</loc>
+    <loc>/tags/plyr/</loc>
     <lastmod>2019-03-24T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/2019-03-24-rowwise-operation/</loc>
+    <loc>/2019-03-24-rowwise-operation/</loc>
     <lastmod>2019-03-24T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/2019-03-16-the-hot-hands-fallacy/</loc>
+    <loc>/2019-03-16-the-hot-hands-fallacy/</loc>
     <lastmod>2019-03-16T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/2019-03-16-monty-hall-problem-in-r/</loc>
+    <loc>/2019-03-16-monty-hall-problem-in-r/</loc>
     <lastmod>2019-03-15T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/2019-03-10-pokemon-card-game/</loc>
+    <loc>/2019-03-10-pokemon-card-game/</loc>
     <lastmod>2019-03-10T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/2019-02-28-simulate-customer-retention/</loc>
+    <loc>/2019-02-28-simulate-customer-retention/</loc>
     <lastmod>2019-02-28T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/tags/survival/</loc>
+    <loc>/tags/survival/</loc>
     <lastmod>2019-02-28T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/2019-02-24-tossing-coin/</loc>
+    <loc>/2019-02-24-tossing-coin/</loc>
     <lastmod>2019-02-24T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/tags/bayesian/</loc>
+    <loc>/tags/bayesian/</loc>
     <lastmod>2019-01-20T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/2019-01-20-simple-bayesian/</loc>
+    <loc>/2019-01-20-simple-bayesian/</loc>
     <lastmod>2019-01-20T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/tags/descr/</loc>
+    <loc>/tags/descr/</loc>
     <lastmod>2018-11-26T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/2018-11-26-pseudo-r-squared/</loc>
+    <loc>/2018-11-26-pseudo-r-squared/</loc>
     <lastmod>2018-11-26T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/2018-10-31-map-reduce-in-purrr/</loc>
+    <loc>/2018-10-31-map-reduce-in-purrr/</loc>
     <lastmod>2018-10-31T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/tags/purrr/</loc>
+    <loc>/tags/purrr/</loc>
     <lastmod>2018-10-31T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/tags/dplyr/</loc>
+    <loc>/tags/dplyr/</loc>
     <lastmod>2018-10-28T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/2018-10-28-programming-in-dplyr-row-filtering/</loc>
+    <loc>/2018-10-28-programming-in-dplyr-row-filtering/</loc>
     <lastmod>2018-10-28T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/tags/tidyeval/</loc>
+    <loc>/tags/tidyeval/</loc>
     <lastmod>2018-10-28T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/tags/fedora/</loc>
+    <loc>/tags/fedora/</loc>
     <lastmod>2018-10-26T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/tags/hugo/</loc>
+    <loc>/tags/hugo/</loc>
     <lastmod>2018-10-26T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/tags/snap/</loc>
+    <loc>/tags/snap/</loc>
     <lastmod>2018-10-26T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/tags/ubuntu/</loc>
+    <loc>/tags/ubuntu/</loc>
     <lastmod>2018-10-26T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/use-snap-to-install-the-hugo-edge-version-on-fedora-and-ubuntu/</loc>
+    <loc>/use-snap-to-install-the-hugo-edge-version-on-fedora-and-ubuntu/</loc>
     <lastmod>2018-10-26T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/tags/awk/</loc>
+    <loc>/tags/awk/</loc>
     <lastmod>2018-10-11T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/tags/command-line/</loc>
+    <loc>/tags/command-line/</loc>
     <lastmod>2018-10-11T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/script-to-add-a-page-level-variable-to-content-front-matter-in-hugo/</loc>
+    <loc>/script-to-add-a-page-level-variable-to-content-front-matter-in-hugo/</loc>
     <lastmod>2018-10-11T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/2018-09-07-dynamic-variable-name-in-dplyr/</loc>
+    <loc>/2018-09-07-dynamic-variable-name-in-dplyr/</loc>
     <lastmod>2018-09-07T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/tags/shell/</loc>
+    <loc>/tags/shell/</loc>
     <lastmod>2018-08-06T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/2018-08-06-vlookup-snippet-in-command-line/</loc>
+    <loc>/2018-08-06-vlookup-snippet-in-command-line/</loc>
     <lastmod>2018-08-06T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/2018-08-05-check-binary-true-false-columns/</loc>
+    <loc>/2018-08-05-check-binary-true-false-columns/</loc>
     <lastmod>2018-08-05T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/tags/mysql/</loc>
+    <loc>/tags/mysql/</loc>
     <lastmod>2018-08-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/2018-08-02-split-data-frame-into-smaller-chunks/</loc>
+    <loc>/2018-08-02-split-data-frame-into-smaller-chunks/</loc>
     <lastmod>2018-08-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/2018-06-25-dixon-q-test/</loc>
+    <loc>/2018-06-25-dixon-q-test/</loc>
     <lastmod>2018-06-25T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/tags/outliers/</loc>
+    <loc>/tags/outliers/</loc>
     <lastmod>2018-06-25T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/tags/math/</loc>
+    <loc>/tags/math/</loc>
     <lastmod>2018-06-12T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/2018-06-12-random-grouping-by-int-division/</loc>
+    <loc>/2018-06-12-random-grouping-by-int-division/</loc>
     <lastmod>2018-06-12T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/tags/saas/</loc>
+    <loc>/tags/saas/</loc>
     <lastmod>2018-06-12T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/2018-06-12-twelve-factor-app/</loc>
+    <loc>/2018-06-12-twelve-factor-app/</loc>
     <lastmod>2018-06-12T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/2018-06-08-application-configuration-into-docker-container/</loc>
+    <loc>/2018-06-08-application-configuration-into-docker-container/</loc>
     <lastmod>2018-06-08T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/tags/docker/</loc>
+    <loc>/tags/docker/</loc>
     <lastmod>2018-06-08T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/2018-04-10-compute-by-matrix-column/</loc>
+    <loc>/2018-04-10-compute-by-matrix-column/</loc>
     <lastmod>2018-04-10T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/tags/matrix/</loc>
+    <loc>/tags/matrix/</loc>
     <lastmod>2018-04-10T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/2018-03-08-mit-tech-review/</loc>
+    <loc>/2018-03-08-mit-tech-review/</loc>
     <lastmod>2018-03-08T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/2018-02-09-data-frame-tip/</loc>
+    <loc>/2018-02-09-data-frame-tip/</loc>
     <lastmod>2018-02-09T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/tags/paralleldist/</loc>
+    <loc>/tags/paralleldist/</loc>
     <lastmod>2018-02-09T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/2018-02-09-par-dist/</loc>
+    <loc>/2018-02-09-par-dist/</loc>
     <lastmod>2018-02-09T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/tags/gcp/</loc>
+    <loc>/tags/gcp/</loc>
     <lastmod>2018-02-05T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/2018-02-05-simple-request-to-google-cloud-vision/</loc>
+    <loc>/2018-02-05-simple-request-to-google-cloud-vision/</loc>
     <lastmod>2018-02-05T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/2018-01-21-visualise-count-observations/</loc>
+    <loc>/2018-01-23-se-to-nse/</loc>
+    <lastmod>2018-01-23T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2018-01-21-visualise-count-observations/</loc>
     <lastmod>2018-01-21T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/tags/drivethru/</loc>
+    <loc>/tags/drivethru/</loc>
     <lastmod>2018-01-21T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/tags/reactive/</loc>
+    <loc>/tags/reactive/</loc>
     <lastmod>2018-01-17T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/2018-01-17-reactiveval-ues/</loc>
+    <loc>/2018-01-17-reactiveval-ues/</loc>
     <lastmod>2018-01-17T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/tags/general/</loc>
+    <loc>/tags/general/</loc>
     <lastmod>2018-01-16T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/2018-01-16-hello-world-my-first-post/</loc>
+    <loc>/2018-01-16-hello-world-my-first-post/</loc>
     <lastmod>2018-01-16T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/creating-a-new-theme/</loc>
+    <loc>/creating-a-new-theme/</loc>
     <lastmod>2014-09-28T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/tags/theme/</loc>
+    <loc>/tags/theme/</loc>
     <lastmod>2014-09-28T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/about/</loc>
+    <loc>/about/</loc>
     <lastmod>2014-04-09T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/goisforlovers/</loc>
+    <loc>/goisforlovers/</loc>
     <lastmod>2014-04-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/tags/fun/</loc>
+    <loc>/tags/fun/</loc>
     <lastmod>2014-04-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/hugoisforlovers/</loc>
+    <loc>/hugoisforlovers/</loc>
     <lastmod>2014-04-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/tags/git/</loc>
+    <loc>/tags/git/</loc>
     <lastmod>2014-04-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/tags/go/</loc>
+    <loc>/tags/go/</loc>
     <lastmod>2014-04-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/tags/templates/</loc>
+    <loc>/tags/templates/</loc>
     <lastmod>2014-04-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/tags/jekyll/</loc>
+    <loc>/tags/jekyll/</loc>
     <lastmod>2014-03-10T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/migrate-from-jekyll/</loc>
+    <loc>/migrate-from-jekyll/</loc>
     <lastmod>2014-03-10T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://notsoformal.xyz/tags/migration/</loc>
+    <loc>/tags/migration/</loc>
     <lastmod>2014-03-10T00:00:00+00:00</lastmod>
   </url>
   

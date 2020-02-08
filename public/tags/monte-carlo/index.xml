@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>monte-carlo on Not So Formal</title>
-    <link>http://notsoformal.xyz/tags/monte-carlo/</link>
+    <link>/tags/monte-carlo/</link>
     <description>Recent content in monte-carlo on Not So Formal</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 21 Apr 2019 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="http://notsoformal.xyz/tags/monte-carlo/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/tags/monte-carlo/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Biased Coin Toss</title>
-      <link>http://notsoformal.xyz/2019-04-21-biased-coin-toss/</link>
+      <link>/2019-04-21-biased-coin-toss/</link>
       <pubDate>Sun, 21 Apr 2019 00:00:00 +0000</pubDate>
       
-      <guid>http://notsoformal.xyz/2019-04-21-biased-coin-toss/</guid>
+      <guid>/2019-04-21-biased-coin-toss/</guid>
       <description>From this paper “What’s Past Is Not Prologue” comes a quiz,
  You are presented with two coins: one is fair, and the other has a 60% chance of coming up heads. Unfortunately, you don’t know which is which. How many flips would you need to perform in parallel on the two coins to give yourself a 95% chance of correctly identifying the biased one?
  The following demonstrates 2 simulation methods to obtain the result.</description>
@@ -24,10 +24,10 @@
     
     <item>
       <title>Exercise: Sales Forecast using MCM</title>
-      <link>http://notsoformal.xyz/2019-04-09-case-study-sales-forecast-using-monte-carlo/</link>
+      <link>/2019-04-09-case-study-sales-forecast-using-monte-carlo/</link>
       <pubDate>Tue, 09 Apr 2019 00:00:00 +0000</pubDate>
       
-      <guid>http://notsoformal.xyz/2019-04-09-case-study-sales-forecast-using-monte-carlo/</guid>
+      <guid>/2019-04-09-case-study-sales-forecast-using-monte-carlo/</guid>
       <description>Background Often, Monte Carlo simulation can come in handy to calculate risk or evaluate investments in projects. This is a simple demonstration.
  Exercise The following provides the breakdown of profit made by a business unit. All metrics are measured in daily basis.
 Profit = Income - Expenses Income = Sales (S) * Profit Margin per Sale (M) M assumes an uniform dist. from $350 to $400 S = Number of Leads (L) * Conversion Rate (R) L assumes an uniform dist.</description>
@@ -35,40 +35,40 @@ Profit = Income - Expenses Income = Sales (S) * Profit Margin per Sale (M) M ass
     
     <item>
       <title>Curry&#39;s Streaking Hot Hand</title>
-      <link>http://notsoformal.xyz/2019-03-16-the-hot-hands-fallacy/</link>
+      <link>/2019-03-16-the-hot-hands-fallacy/</link>
       <pubDate>Sat, 16 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>http://notsoformal.xyz/2019-03-16-the-hot-hands-fallacy/</guid>
+      <guid>/2019-03-16-the-hot-hands-fallacy/</guid>
       <description>Steph Curry averaging .411 in 3-point field goal percentage during the 2016-17 season. On November 7 2016, he made 13 out of 17 3-point attemps. How likely was it to happen?
 library(ggplot2) library(dplyr) set.seed(123) # 3-point fg pct steph_curry = 0.411 # simulation trials trials = 10000 # simulate shot game in 17 attemps made &amp;lt;- replicate(trials, sum(rbinom(n = 17, size = 1, prob = steph_curry))) # plot it out made %&amp;gt;% as_data_frame() %&amp;gt;% ggplot(aes(made)) + geom_histogram(bins = 60) + geom_vline(xintercept = 13, col = &amp;quot;red&amp;quot;, lty = 4) + scale_x_continuous(breaks = seq(1, 20, 1)) + theme_light(base_family = &amp;quot;Menlo&amp;quot;) + labs(title = &amp;quot;Steph Curry&amp;#39;s Super Hot Hand&amp;quot;, x = &amp;quot;3-point made&amp;quot;, y = &amp;quot;Count&amp;quot;) ## Warning: `as_data_frame()` is deprecated, use `as_tibble()` (but mind the new semantics).</description>
     </item>
     
     <item>
       <title>Monty Hall Problem in R</title>
-      <link>http://notsoformal.xyz/2019-03-16-monty-hall-problem-in-r/</link>
+      <link>/2019-03-16-monty-hall-problem-in-r/</link>
       <pubDate>Fri, 15 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>http://notsoformal.xyz/2019-03-16-monty-hall-problem-in-r/</guid>
+      <guid>/2019-03-16-monty-hall-problem-in-r/</guid>
       <description>A few lines of code to one of the most classic problem in probability.
 library(magrittr) set.seed(1212) new_game &amp;lt;- function(x = 3) { # doors doors = as.integer(1:x) # initialize the prize behind of those doors prize = sample(doors, size = 1) # guest make a guess guess = sample(doors, size = 1) # open one of the doors knowing which has the prize open = doors[-c(prize, guess)][[1]] # if guest choose to switch switch_guess = doors[-c(guess, open)] # if guest does not switch no_switch_guess = guess return(list( prize = prize, original_guess = guess, open = open, switch = switch_guess, no_switch = no_switch_guess )) } new_game() ## $prize ## [1] 2 ## ## $original_guess ## [1] 1 ## ## $open ## [1] 3 ## ## $switch ## [1] 2 ## ## $no_switch ## [1] 1 # simulate many trials trials = 10000 # if switch everytime, what are the total winnings?</description>
     </item>
     
     <item>
       <title>Pokemon Card Game</title>
-      <link>http://notsoformal.xyz/2019-03-10-pokemon-card-game/</link>
+      <link>/2019-03-10-pokemon-card-game/</link>
       <pubDate>Sun, 10 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>http://notsoformal.xyz/2019-03-10-pokemon-card-game/</guid>
+      <guid>/2019-03-10-pokemon-card-game/</guid>
       <description>Imagine a Pokemon card game consists of (N = 586) unique cards. How many are the odds of collecting them all if we purchase many?
 library(magrittr) library(purrr) # A set of cards consists of N cards N = 586 # is it a complete set? complete_set &amp;lt;- function(n, m) { deck = sample(n, size = m, replace = TRUE) ifelse(length(unique(deck)) == n, TRUE, FALSE) } # what are the odds of getting full set if you purchase many cards?</description>
     </item>
     
     <item>
       <title>Tossing Coin Game</title>
-      <link>http://notsoformal.xyz/2019-02-24-tossing-coin/</link>
+      <link>/2019-02-24-tossing-coin/</link>
       <pubDate>Sun, 24 Feb 2019 00:00:00 +0000</pubDate>
       
-      <guid>http://notsoformal.xyz/2019-02-24-tossing-coin/</guid>
+      <guid>/2019-02-24-tossing-coin/</guid>
       <description>The use of simulation experiments to better probability patterns is called the Monte Carlo method. This is an example.
 Tossing Coin Game Tom and Jerry play a simple game of tossing a coin. If given heads, Tom pays Jerry a dollar. Otherwise, Jerry pays Tom a dollar.
 set.seed(1212) # how many tosses? number_of_tosses = 50 # simulate n tosses # 1 = head, -1 = tail (tosses &amp;lt;- sample(c(1, -1), size = number_of_tosses, replace = TRUE, prob = c(.</description>

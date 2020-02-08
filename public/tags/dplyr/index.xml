@@ -2,43 +2,52 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>dplyr on Not So Formal</title>
-    <link>http://notsoformal.xyz/tags/dplyr/</link>
+    <link>/tags/dplyr/</link>
     <description>Recent content in dplyr on Not So Formal</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 28 Oct 2018 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="http://notsoformal.xyz/tags/dplyr/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/tags/dplyr/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Programming in dplyr - Row Filtering</title>
-      <link>http://notsoformal.xyz/2018-10-28-programming-in-dplyr-row-filtering/</link>
+      <link>/2018-10-28-programming-in-dplyr-row-filtering/</link>
       <pubDate>Sun, 28 Oct 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://notsoformal.xyz/2018-10-28-programming-in-dplyr-row-filtering/</guid>
+      <guid>/2018-10-28-programming-in-dplyr-row-filtering/</guid>
       <description>How do you program the row filtering dynamically when working with dplyr verb? Say we have a dataframe with 2 columns, x and y.
 library(tidyverse) library(rlang) # make some sample set.seed(1234) df &amp;lt;- 2 %&amp;gt;% rerun(rnorm(100, 10, 2) %&amp;gt;% round()) %&amp;gt;% bind_cols() colnames(df) &amp;lt;- c(&amp;quot;x&amp;quot;, &amp;quot;y&amp;quot;) # simple plot p &amp;lt;- df %&amp;gt;% ggplot(aes(x, y)) + geom_point(position = position_jitter(width = 1), alpha = 0.7) + theme_minimal() p Our objective here is to ‘zone’ out the points that fall in the 50th percentile of both x and y.</description>
     </item>
     
     <item>
       <title>Programming in dplyr - Column Manipulation</title>
-      <link>http://notsoformal.xyz/2018-09-07-dynamic-variable-name-in-dplyr/</link>
+      <link>/2018-09-07-dynamic-variable-name-in-dplyr/</link>
       <pubDate>Fri, 07 Sep 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://notsoformal.xyz/2018-09-07-dynamic-variable-name-in-dplyr/</guid>
+      <guid>/2018-09-07-dynamic-variable-name-in-dplyr/</guid>
       <description>How do you program the column manipulation dynamically when working with dplyr verb? Say, we have a dataframe with multiple columns in pair,
 library(tidyverse) # simulate some data df &amp;lt;- rerun(3 * 2, rnorm(10, 5, 2)) %&amp;gt;% bind_cols() # imagine some column names colnames(df) &amp;lt;- map(c(&amp;quot;weight&amp;quot;, &amp;quot;height&amp;quot;, &amp;quot;length&amp;quot;), paste0, c(&amp;quot;.x&amp;quot;, &amp;quot;.y&amp;quot;)) %&amp;gt;% unlist() df ## # A tibble: 10 x 6 ## weight.x weight.y height.x height.y length.x length.y ## &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; ## 1 6.</description>
     </item>
     
     <item>
       <title>Cleaning Messy Data</title>
-      <link>http://notsoformal.xyz/2018-03-08-mit-tech-review/</link>
+      <link>/2018-03-08-mit-tech-review/</link>
       <pubDate>Thu, 08 Mar 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://notsoformal.xyz/2018-03-08-mit-tech-review/</guid>
+      <guid>/2018-03-08-mit-tech-review/</guid>
       <description>Get some sample data.
 library(rvest) library(dplyr) # Scrap info from MIT Technology Review xml &amp;lt;- &amp;quot;https://www.technologyreview.com/lists/companies/2017/intro/&amp;quot; %&amp;gt;% read_html() info &amp;lt;- xml %&amp;gt;% html_nodes(css = &amp;quot;.company__stats__item , .company__title&amp;quot;) %&amp;gt;% html_text() # Do not need &amp;quot;Valuation&amp;quot; info &amp;lt;- info[-(info %&amp;gt;% grep(pattern = &amp;quot;^Valuation\\s&amp;quot;))] head(info, 10) ## [1] &amp;quot;Nvidia&amp;quot; ## [2] &amp;quot;\n\t\t\tHeadquarters\n\t\t\t\n\t\t\tSanta Clara, California\n\t\t&amp;quot; ## [3] &amp;quot;Industry Intelligent machines&amp;quot; ## [4] &amp;quot;Status Public&amp;quot; ## [5] &amp;quot;Years on the List\n\t\t\t\n\t\t\t\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\t2015\n\t\t\t\t\t,\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\t2016\n\t\t\t\t\t,\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\t2017\n\t\t\t\t\t\n\t\t\n\t\t\n\t\t&amp;quot; ## [6] &amp;quot;SpaceX&amp;quot; ## [7] &amp;quot;\n\t\t\tHeadquarters\n\t\t\t\n\t\t\tHawthorne, California\n\t\t&amp;quot; ## [8] &amp;quot;Industry Transportation&amp;quot; ## [9] &amp;quot;Status Private&amp;quot; ## [10] &amp;quot;Years on the List\n\t\t\t\n\t\t\t\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\t2011\n\t\t\t\t\t,\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\t2012\n\t\t\t\t\t,\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\t2013\n\t\t\t\t\t,\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\t2014\n\t\t\t\t\t,\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\t2015\n\t\t\t\t\t,\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\t2016\n\t\t\t\t\t,\n\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\t2017\n\t\t\t\t\t\n\t\t\n\t\t\n\t\t&amp;quot; Convert from vector to data frame.</description>
+    </item>
+    
+    <item>
+      <title>SE to NSE</title>
+      <link>/2018-01-23-se-to-nse/</link>
+      <pubDate>Tue, 23 Jan 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/2018-01-23-se-to-nse/</guid>
+      <description>library(dplyr) ## ## Attaching package: &amp;#39;dplyr&amp;#39; ## The following objects are masked from &amp;#39;package:stats&amp;#39;: ## ## filter, lag ## The following objects are masked from &amp;#39;package:base&amp;#39;: ## ## intersect, setdiff, setequal, union measure &amp;lt;- list(&amp;quot;mean&amp;quot;, &amp;quot;sd&amp;quot;, &amp;quot;max&amp;quot;, &amp;quot;min&amp;quot;) vars &amp;lt;- list(&amp;quot;disp&amp;quot;, &amp;quot;hp&amp;quot;, &amp;quot;wt&amp;quot;) # Set names fnames &amp;lt;- lapply(X = measure, FUN = function(x, y)paste0(x, &amp;quot;-&amp;quot;, y), y = vars) %&amp;gt;% unlist() # Set functions ffuns &amp;lt;- lapply(X = measure, FUN = function(x, y)paste0(x, &amp;quot;(&amp;quot;, y, &amp;quot;)&amp;quot;), y = vars) %&amp;gt;% unlist() mtcars %&amp;gt;% # group by cylinder group_by(cyl) %&amp;gt;% summarise_(.</description>
     </item>
     
   </channel>

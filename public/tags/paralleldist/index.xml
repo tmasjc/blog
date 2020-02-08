@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>parallelDist on Not So Formal</title>
-    <link>http://notsoformal.xyz/tags/paralleldist/</link>
+    <link>/tags/paralleldist/</link>
     <description>Recent content in parallelDist on Not So Formal</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Fri, 09 Feb 2018 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="http://notsoformal.xyz/tags/paralleldist/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/tags/paralleldist/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>parDist</title>
-      <link>http://notsoformal.xyz/2018-02-09-par-dist/</link>
+      <link>/2018-02-09-par-dist/</link>
       <pubDate>Fri, 09 Feb 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://notsoformal.xyz/2018-02-09-par-dist/</guid>
+      <guid>/2018-02-09-par-dist/</guid>
       <description>Problem Statement:  We have a large dataset. We need to compute its distance matrix (i.e. for clustering purposes). The complexity for a N * P matrix is N(N-1)/2 * 3P
   Create Sample library(dplyr) ## ## Attaching package: &amp;#39;dplyr&amp;#39; ## The following objects are masked from &amp;#39;package:stats&amp;#39;: ## ## filter, lag ## The following objects are masked from &amp;#39;package:base&amp;#39;: ## ## intersect, setdiff, setequal, union pts &amp;lt;- rnorm(1e4, mean = c(5, 5, 10, 10, 15, 15), sd = 1) %&amp;gt;% matrix(ncol = 2, byrow = T) pts %&amp;gt;% plot(xlab = &amp;quot;x&amp;quot;, ylab = &amp;quot;y&amp;quot;)  Package ‘parallelDist’ parallelDist is a fast parallelized alternative to R’s native dist function.</description>
     </item>

@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>database on Not So Formal</title>
-    <link>http://notsoformal.xyz/tags/database/</link>
+    <link>/tags/database/</link>
     <description>Recent content in database on Not So Formal</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 02 Jul 2019 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="http://notsoformal.xyz/tags/database/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/tags/database/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Streaming Data From Database to Shiny</title>
-      <link>http://notsoformal.xyz/2019-07-02-streaming-data-from-database-to-shiny/</link>
+      <link>/2019-07-02-streaming-data-from-database-to-shiny/</link>
       <pubDate>Tue, 02 Jul 2019 00:00:00 +0000</pubDate>
       
-      <guid>http://notsoformal.xyz/2019-07-02-streaming-data-from-database-to-shiny/</guid>
+      <guid>/2019-07-02-streaming-data-from-database-to-shiny/</guid>
       <description>First, a script that simulate data streaming. It rewrites the table every p second. Here we set it to 1.
 library(config) library(DBI) library(dplyr) library(purrr) library(tryCatchLog) db &amp;lt;- config::get(config = &amp;quot;some-mysql&amp;quot;) # local Docker container conn &amp;lt;- dbConnect( drv = RMySQL::MySQL(), username = db$username, password = db$password, host = db$host, port = db$port, dbname = db$dbname ) stopifnot(DBI::dbRemoveTable(conn, &amp;quot;int_stream&amp;quot;)) generate &amp;lt;- function() { data.frame(ind = LETTERS, int = round(rnorm( length(LETTERS), mean = 10, sd = 2 ))) } insert_to_db &amp;lt;- function(p = 1) { stopifnot(dbWriteTable(conn, &amp;quot;int_stream&amp;quot;, generate(), overwrite = TRUE)) message(paste(&amp;quot;Success:&amp;quot;, Sys.</description>
     </item>

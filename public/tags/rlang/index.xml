@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>rlang on Not So Formal</title>
-    <link>http://notsoformal.xyz/tags/rlang/</link>
+    <link>/tags/rlang/</link>
     <description>Recent content in rlang on Not So Formal</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 20 Jun 2019 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="http://notsoformal.xyz/tags/rlang/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/tags/rlang/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Dynamic UI in Shiny</title>
-      <link>http://notsoformal.xyz/2019-06-20-dynamic-ui/</link>
+      <link>/2019-06-20-dynamic-ui/</link>
       <pubDate>Thu, 20 Jun 2019 00:00:00 +0000</pubDate>
       
-      <guid>http://notsoformal.xyz/2019-06-20-dynamic-ui/</guid>
+      <guid>/2019-06-20-dynamic-ui/</guid>
       <description>A quick demo on how to render dynamic user interface in Shiny applications. In this case, a new text output element is shown when user enters a new line in the text input. The color toggles alternatively as well.
 Techniques here involves using shiny::renderUI and R’s metaprogramming.
 library(shiny) library(purrr) library(stringr) ## Demo: Render UI Function ---- shinyApp( ui &amp;lt;- fluidPage( # user&amp;#39;s input column( width = 11, offset = 1, textAreaInput( &amp;quot;text&amp;quot;, label = &amp;quot;&amp;quot;, placeholder = &amp;quot;Please insert name here.</description>
