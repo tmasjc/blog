@@ -2,390 +2,390 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Not So Formal</title>
-    <link>https://notsoformal.xyz/tags/</link>
+    <link>http://notsoformal.xyz/tags/</link>
     <description>Recent content in Tags on Not So Formal</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 10 Nov 2019 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="https://notsoformal.xyz/tags/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://notsoformal.xyz/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>httr</title>
-      <link>https://notsoformal.xyz/tags/httr/</link>
+      <link>http://notsoformal.xyz/tags/httr/</link>
       <pubDate>Sun, 10 Nov 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://notsoformal.xyz/tags/httr/</guid>
+      <guid>http://notsoformal.xyz/tags/httr/</guid>
       <description></description>
     </item>
     
     <item>
       <title>webhooks</title>
-      <link>https://notsoformal.xyz/tags/webhooks/</link>
+      <link>http://notsoformal.xyz/tags/webhooks/</link>
       <pubDate>Sun, 10 Nov 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://notsoformal.xyz/tags/webhooks/</guid>
+      <guid>http://notsoformal.xyz/tags/webhooks/</guid>
       <description></description>
     </item>
     
     <item>
       <title>isittrue</title>
-      <link>https://notsoformal.xyz/tags/isittrue/</link>
+      <link>http://notsoformal.xyz/tags/isittrue/</link>
       <pubDate>Sun, 06 Oct 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://notsoformal.xyz/tags/isittrue/</guid>
+      <guid>http://notsoformal.xyz/tags/isittrue/</guid>
       <description></description>
     </item>
     
     <item>
       <title>database</title>
-      <link>https://notsoformal.xyz/tags/database/</link>
+      <link>http://notsoformal.xyz/tags/database/</link>
       <pubDate>Tue, 02 Jul 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://notsoformal.xyz/tags/database/</guid>
+      <guid>http://notsoformal.xyz/tags/database/</guid>
       <description></description>
     </item>
     
     <item>
       <title>shiny</title>
-      <link>https://notsoformal.xyz/tags/shiny/</link>
+      <link>http://notsoformal.xyz/tags/shiny/</link>
       <pubDate>Tue, 02 Jul 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://notsoformal.xyz/tags/shiny/</guid>
+      <guid>http://notsoformal.xyz/tags/shiny/</guid>
       <description></description>
     </item>
     
     <item>
       <title>rlang</title>
-      <link>https://notsoformal.xyz/tags/rlang/</link>
+      <link>http://notsoformal.xyz/tags/rlang/</link>
       <pubDate>Thu, 20 Jun 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://notsoformal.xyz/tags/rlang/</guid>
+      <guid>http://notsoformal.xyz/tags/rlang/</guid>
       <description></description>
     </item>
     
     <item>
       <title>gganimate</title>
-      <link>https://notsoformal.xyz/tags/gganimate/</link>
+      <link>http://notsoformal.xyz/tags/gganimate/</link>
       <pubDate>Sun, 19 May 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://notsoformal.xyz/tags/gganimate/</guid>
+      <guid>http://notsoformal.xyz/tags/gganimate/</guid>
       <description></description>
     </item>
     
     <item>
       <title>ggplot2</title>
-      <link>https://notsoformal.xyz/tags/ggplot2/</link>
+      <link>http://notsoformal.xyz/tags/ggplot2/</link>
       <pubDate>Sun, 19 May 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://notsoformal.xyz/tags/ggplot2/</guid>
+      <guid>http://notsoformal.xyz/tags/ggplot2/</guid>
       <description></description>
     </item>
     
     <item>
       <title>monte-carlo</title>
-      <link>https://notsoformal.xyz/tags/monte-carlo/</link>
+      <link>http://notsoformal.xyz/tags/monte-carlo/</link>
       <pubDate>Sun, 21 Apr 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://notsoformal.xyz/tags/monte-carlo/</guid>
+      <guid>http://notsoformal.xyz/tags/monte-carlo/</guid>
       <description></description>
     </item>
     
     <item>
       <title>data.table</title>
-      <link>https://notsoformal.xyz/tags/data.table/</link>
+      <link>http://notsoformal.xyz/tags/data.table/</link>
       <pubDate>Sun, 24 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://notsoformal.xyz/tags/data.table/</guid>
+      <guid>http://notsoformal.xyz/tags/data.table/</guid>
       <description></description>
     </item>
     
     <item>
       <title>plyr</title>
-      <link>https://notsoformal.xyz/tags/plyr/</link>
+      <link>http://notsoformal.xyz/tags/plyr/</link>
       <pubDate>Sun, 24 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://notsoformal.xyz/tags/plyr/</guid>
+      <guid>http://notsoformal.xyz/tags/plyr/</guid>
       <description></description>
     </item>
     
     <item>
       <title>survival</title>
-      <link>https://notsoformal.xyz/tags/survival/</link>
+      <link>http://notsoformal.xyz/tags/survival/</link>
       <pubDate>Thu, 28 Feb 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://notsoformal.xyz/tags/survival/</guid>
+      <guid>http://notsoformal.xyz/tags/survival/</guid>
       <description></description>
     </item>
     
     <item>
       <title>bayesian</title>
-      <link>https://notsoformal.xyz/tags/bayesian/</link>
+      <link>http://notsoformal.xyz/tags/bayesian/</link>
       <pubDate>Sun, 20 Jan 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://notsoformal.xyz/tags/bayesian/</guid>
+      <guid>http://notsoformal.xyz/tags/bayesian/</guid>
       <description></description>
     </item>
     
     <item>
       <title>descr</title>
-      <link>https://notsoformal.xyz/tags/descr/</link>
+      <link>http://notsoformal.xyz/tags/descr/</link>
       <pubDate>Mon, 26 Nov 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://notsoformal.xyz/tags/descr/</guid>
+      <guid>http://notsoformal.xyz/tags/descr/</guid>
       <description></description>
     </item>
     
     <item>
       <title>purrr</title>
-      <link>https://notsoformal.xyz/tags/purrr/</link>
+      <link>http://notsoformal.xyz/tags/purrr/</link>
       <pubDate>Wed, 31 Oct 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://notsoformal.xyz/tags/purrr/</guid>
+      <guid>http://notsoformal.xyz/tags/purrr/</guid>
       <description></description>
     </item>
     
     <item>
       <title>dplyr</title>
-      <link>https://notsoformal.xyz/tags/dplyr/</link>
+      <link>http://notsoformal.xyz/tags/dplyr/</link>
       <pubDate>Sun, 28 Oct 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://notsoformal.xyz/tags/dplyr/</guid>
+      <guid>http://notsoformal.xyz/tags/dplyr/</guid>
       <description></description>
     </item>
     
     <item>
       <title>tidyeval</title>
-      <link>https://notsoformal.xyz/tags/tidyeval/</link>
+      <link>http://notsoformal.xyz/tags/tidyeval/</link>
       <pubDate>Sun, 28 Oct 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://notsoformal.xyz/tags/tidyeval/</guid>
+      <guid>http://notsoformal.xyz/tags/tidyeval/</guid>
       <description></description>
     </item>
     
     <item>
       <title>fedora</title>
-      <link>https://notsoformal.xyz/tags/fedora/</link>
+      <link>http://notsoformal.xyz/tags/fedora/</link>
       <pubDate>Fri, 26 Oct 2018 12:59:51 -0500</pubDate>
       
-      <guid>https://notsoformal.xyz/tags/fedora/</guid>
+      <guid>http://notsoformal.xyz/tags/fedora/</guid>
       <description></description>
     </item>
     
     <item>
       <title>hugo</title>
-      <link>https://notsoformal.xyz/tags/hugo/</link>
+      <link>http://notsoformal.xyz/tags/hugo/</link>
       <pubDate>Fri, 26 Oct 2018 12:59:51 -0500</pubDate>
       
-      <guid>https://notsoformal.xyz/tags/hugo/</guid>
+      <guid>http://notsoformal.xyz/tags/hugo/</guid>
       <description></description>
     </item>
     
     <item>
       <title>snap</title>
-      <link>https://notsoformal.xyz/tags/snap/</link>
+      <link>http://notsoformal.xyz/tags/snap/</link>
       <pubDate>Fri, 26 Oct 2018 12:59:51 -0500</pubDate>
       
-      <guid>https://notsoformal.xyz/tags/snap/</guid>
+      <guid>http://notsoformal.xyz/tags/snap/</guid>
       <description></description>
     </item>
     
     <item>
       <title>ubuntu</title>
-      <link>https://notsoformal.xyz/tags/ubuntu/</link>
+      <link>http://notsoformal.xyz/tags/ubuntu/</link>
       <pubDate>Fri, 26 Oct 2018 12:59:51 -0500</pubDate>
       
-      <guid>https://notsoformal.xyz/tags/ubuntu/</guid>
+      <guid>http://notsoformal.xyz/tags/ubuntu/</guid>
       <description></description>
     </item>
     
     <item>
       <title>awk</title>
-      <link>https://notsoformal.xyz/tags/awk/</link>
+      <link>http://notsoformal.xyz/tags/awk/</link>
       <pubDate>Wed, 10 Oct 2018 12:43:20 -0500</pubDate>
       
-      <guid>https://notsoformal.xyz/tags/awk/</guid>
+      <guid>http://notsoformal.xyz/tags/awk/</guid>
       <description></description>
     </item>
     
     <item>
       <title>command-line</title>
-      <link>https://notsoformal.xyz/tags/command-line/</link>
+      <link>http://notsoformal.xyz/tags/command-line/</link>
       <pubDate>Wed, 10 Oct 2018 12:43:20 -0500</pubDate>
       
-      <guid>https://notsoformal.xyz/tags/command-line/</guid>
+      <guid>http://notsoformal.xyz/tags/command-line/</guid>
       <description></description>
     </item>
     
     <item>
       <title>shell</title>
-      <link>https://notsoformal.xyz/tags/shell/</link>
+      <link>http://notsoformal.xyz/tags/shell/</link>
       <pubDate>Mon, 06 Aug 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://notsoformal.xyz/tags/shell/</guid>
+      <guid>http://notsoformal.xyz/tags/shell/</guid>
       <description></description>
     </item>
     
     <item>
       <title>mysql</title>
-      <link>https://notsoformal.xyz/tags/mysql/</link>
+      <link>http://notsoformal.xyz/tags/mysql/</link>
       <pubDate>Thu, 02 Aug 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://notsoformal.xyz/tags/mysql/</guid>
+      <guid>http://notsoformal.xyz/tags/mysql/</guid>
       <description></description>
     </item>
     
     <item>
       <title>outliers</title>
-      <link>https://notsoformal.xyz/tags/outliers/</link>
+      <link>http://notsoformal.xyz/tags/outliers/</link>
       <pubDate>Mon, 25 Jun 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://notsoformal.xyz/tags/outliers/</guid>
+      <guid>http://notsoformal.xyz/tags/outliers/</guid>
       <description></description>
     </item>
     
     <item>
       <title>math</title>
-      <link>https://notsoformal.xyz/tags/math/</link>
+      <link>http://notsoformal.xyz/tags/math/</link>
       <pubDate>Tue, 12 Jun 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://notsoformal.xyz/tags/math/</guid>
+      <guid>http://notsoformal.xyz/tags/math/</guid>
       <description></description>
     </item>
     
     <item>
       <title>saas</title>
-      <link>https://notsoformal.xyz/tags/saas/</link>
+      <link>http://notsoformal.xyz/tags/saas/</link>
       <pubDate>Tue, 12 Jun 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://notsoformal.xyz/tags/saas/</guid>
+      <guid>http://notsoformal.xyz/tags/saas/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Docker</title>
-      <link>https://notsoformal.xyz/tags/docker/</link>
+      <link>http://notsoformal.xyz/tags/docker/</link>
       <pubDate>Fri, 08 Jun 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://notsoformal.xyz/tags/docker/</guid>
+      <guid>http://notsoformal.xyz/tags/docker/</guid>
       <description></description>
     </item>
     
     <item>
       <title>matrix</title>
-      <link>https://notsoformal.xyz/tags/matrix/</link>
+      <link>http://notsoformal.xyz/tags/matrix/</link>
       <pubDate>Tue, 10 Apr 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://notsoformal.xyz/tags/matrix/</guid>
+      <guid>http://notsoformal.xyz/tags/matrix/</guid>
       <description></description>
     </item>
     
     <item>
       <title>parallelDist</title>
-      <link>https://notsoformal.xyz/tags/paralleldist/</link>
+      <link>http://notsoformal.xyz/tags/paralleldist/</link>
       <pubDate>Fri, 09 Feb 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://notsoformal.xyz/tags/paralleldist/</guid>
+      <guid>http://notsoformal.xyz/tags/paralleldist/</guid>
       <description></description>
     </item>
     
     <item>
       <title>gcp</title>
-      <link>https://notsoformal.xyz/tags/gcp/</link>
+      <link>http://notsoformal.xyz/tags/gcp/</link>
       <pubDate>Mon, 05 Feb 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://notsoformal.xyz/tags/gcp/</guid>
+      <guid>http://notsoformal.xyz/tags/gcp/</guid>
       <description></description>
     </item>
     
     <item>
       <title>drivethru</title>
-      <link>https://notsoformal.xyz/tags/drivethru/</link>
+      <link>http://notsoformal.xyz/tags/drivethru/</link>
       <pubDate>Sun, 21 Jan 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://notsoformal.xyz/tags/drivethru/</guid>
+      <guid>http://notsoformal.xyz/tags/drivethru/</guid>
       <description></description>
     </item>
     
     <item>
       <title>reactive</title>
-      <link>https://notsoformal.xyz/tags/reactive/</link>
+      <link>http://notsoformal.xyz/tags/reactive/</link>
       <pubDate>Wed, 17 Jan 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://notsoformal.xyz/tags/reactive/</guid>
+      <guid>http://notsoformal.xyz/tags/reactive/</guid>
       <description></description>
     </item>
     
     <item>
       <title>general</title>
-      <link>https://notsoformal.xyz/tags/general/</link>
+      <link>http://notsoformal.xyz/tags/general/</link>
       <pubDate>Tue, 16 Jan 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://notsoformal.xyz/tags/general/</guid>
+      <guid>http://notsoformal.xyz/tags/general/</guid>
       <description></description>
     </item>
     
     <item>
       <title>theme</title>
-      <link>https://notsoformal.xyz/tags/theme/</link>
+      <link>http://notsoformal.xyz/tags/theme/</link>
       <pubDate>Sun, 28 Sep 2014 00:00:00 +0000</pubDate>
       
-      <guid>https://notsoformal.xyz/tags/theme/</guid>
+      <guid>http://notsoformal.xyz/tags/theme/</guid>
       <description></description>
     </item>
     
     <item>
       <title>fun</title>
-      <link>https://notsoformal.xyz/tags/fun/</link>
+      <link>http://notsoformal.xyz/tags/fun/</link>
       <pubDate>Wed, 02 Apr 2014 00:00:00 +0000</pubDate>
       
-      <guid>https://notsoformal.xyz/tags/fun/</guid>
+      <guid>http://notsoformal.xyz/tags/fun/</guid>
       <description></description>
     </item>
     
     <item>
       <title>git</title>
-      <link>https://notsoformal.xyz/tags/git/</link>
+      <link>http://notsoformal.xyz/tags/git/</link>
       <pubDate>Wed, 02 Apr 2014 00:00:00 +0000</pubDate>
       
-      <guid>https://notsoformal.xyz/tags/git/</guid>
+      <guid>http://notsoformal.xyz/tags/git/</guid>
       <description></description>
     </item>
     
     <item>
       <title>go</title>
-      <link>https://notsoformal.xyz/tags/go/</link>
+      <link>http://notsoformal.xyz/tags/go/</link>
       <pubDate>Wed, 02 Apr 2014 00:00:00 +0000</pubDate>
       
-      <guid>https://notsoformal.xyz/tags/go/</guid>
+      <guid>http://notsoformal.xyz/tags/go/</guid>
       <description></description>
     </item>
     
     <item>
       <title>templates</title>
-      <link>https://notsoformal.xyz/tags/templates/</link>
+      <link>http://notsoformal.xyz/tags/templates/</link>
       <pubDate>Wed, 02 Apr 2014 00:00:00 +0000</pubDate>
       
-      <guid>https://notsoformal.xyz/tags/templates/</guid>
+      <guid>http://notsoformal.xyz/tags/templates/</guid>
       <description></description>
     </item>
     
     <item>
       <title>jekyll</title>
-      <link>https://notsoformal.xyz/tags/jekyll/</link>
+      <link>http://notsoformal.xyz/tags/jekyll/</link>
       <pubDate>Mon, 10 Mar 2014 00:00:00 +0000</pubDate>
       
-      <guid>https://notsoformal.xyz/tags/jekyll/</guid>
+      <guid>http://notsoformal.xyz/tags/jekyll/</guid>
       <description></description>
     </item>
     
     <item>
       <title>migration</title>
-      <link>https://notsoformal.xyz/tags/migration/</link>
+      <link>http://notsoformal.xyz/tags/migration/</link>
       <pubDate>Mon, 10 Mar 2014 00:00:00 +0000</pubDate>
       
-      <guid>https://notsoformal.xyz/tags/migration/</guid>
+      <guid>http://notsoformal.xyz/tags/migration/</guid>
       <description></description>
     </item>
     

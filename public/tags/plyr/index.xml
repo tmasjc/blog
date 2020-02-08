@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>plyr on Not So Formal</title>
-    <link>https://notsoformal.xyz/tags/plyr/</link>
+    <link>http://notsoformal.xyz/tags/plyr/</link>
     <description>Recent content in plyr on Not So Formal</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 24 Mar 2019 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="https://notsoformal.xyz/tags/plyr/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://notsoformal.xyz/tags/plyr/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Rowwise Operation</title>
-      <link>https://notsoformal.xyz/2019-03-24-rowwise-operation/</link>
+      <link>http://notsoformal.xyz/2019-03-24-rowwise-operation/</link>
       <pubDate>Sun, 24 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://notsoformal.xyz/2019-03-24-rowwise-operation/</guid>
+      <guid>http://notsoformal.xyz/2019-03-24-rowwise-operation/</guid>
       <description>Compare multiple methods to get row-wise operation done on a data frame.
 In this case, we wish to extract the corresponding highest value column.
 library(tidyverse) set.seed(1212) # a dummy data frame dummy_df &amp;lt;- matrix(runif(15, min = 1, max = 9), ncol = 3) %&amp;gt;% as_data_frame() ## Warning: `as_data_frame()` is deprecated, use `as_tibble()` (but mind the new semantics). ## This warning is displayed once per session. colnames(dummy_df) &amp;lt;- c(&amp;quot;x&amp;quot;, &amp;quot;y&amp;quot;, &amp;quot;z&amp;quot;) Method 1: dplyr::rowwise use_rowwise &amp;lt;- function(df) { df %&amp;gt;% rowwise() %&amp;gt;% mutate(max = names(df)[which.</description>

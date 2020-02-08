@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>general on Not So Formal</title>
-    <link>https://notsoformal.xyz/tags/general/</link>
+    <link>http://notsoformal.xyz/tags/general/</link>
     <description>Recent content in general on Not So Formal</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 16 Jan 2018 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="https://notsoformal.xyz/tags/general/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://notsoformal.xyz/tags/general/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Hello World!</title>
-      <link>https://notsoformal.xyz/2018-01-16-hello-world-my-first-post/</link>
+      <link>http://notsoformal.xyz/2018-01-16-hello-world-my-first-post/</link>
       <pubDate>Tue, 16 Jan 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://notsoformal.xyz/2018-01-16-hello-world-my-first-post/</guid>
+      <guid>http://notsoformal.xyz/2018-01-16-hello-world-my-first-post/</guid>
       <description>Decided to start a blog in 2018, as a hub for my collection of code and thoughts.
 I set out my goal for this year, to be more active in contributing to open source and open data community.
 Hopefully, this place will be crowded with materials soon.</description>

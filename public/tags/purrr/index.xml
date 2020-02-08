@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>purrr on Not So Formal</title>
-    <link>https://notsoformal.xyz/tags/purrr/</link>
+    <link>http://notsoformal.xyz/tags/purrr/</link>
     <description>Recent content in purrr on Not So Formal</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 31 Oct 2018 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="https://notsoformal.xyz/tags/purrr/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://notsoformal.xyz/tags/purrr/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Map &#43; Reduce in Purrr</title>
-      <link>https://notsoformal.xyz/2018-10-31-map-reduce-in-purrr/</link>
+      <link>http://notsoformal.xyz/2018-10-31-map-reduce-in-purrr/</link>
       <pubDate>Wed, 31 Oct 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://notsoformal.xyz/2018-10-31-map-reduce-in-purrr/</guid>
+      <guid>http://notsoformal.xyz/2018-10-31-map-reduce-in-purrr/</guid>
       <description>Say you have a list which tells you what is y at x. You intend to manipulate y based on certain condition of x.
 For example, given
 # here x = year, y = some value (some_list &amp;lt;- list( &amp;quot;year1&amp;quot; = 60, &amp;quot;year2&amp;quot; = 70, &amp;quot;year3&amp;quot; = 75, &amp;quot;year4&amp;quot; = 80, &amp;quot;year5&amp;quot; = 100 )) ## $year1 ## [1] 60 ## ## $year2 ## [1] 70 ## ## $year3 ## [1] 75 ## ## $year4 ## [1] 80 ## ## $year5 ## [1] 100 What is the cumulative sum of y at year 1, 3, 5?</description>
@@ -24,10 +24,10 @@ For example, given
     
     <item>
       <title>Check Binary True / False Columns</title>
-      <link>https://notsoformal.xyz/2018-08-05-check-binary-true-false-columns/</link>
+      <link>http://notsoformal.xyz/2018-08-05-check-binary-true-false-columns/</link>
       <pubDate>Sun, 05 Aug 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://notsoformal.xyz/2018-08-05-check-binary-true-false-columns/</guid>
+      <guid>http://notsoformal.xyz/2018-08-05-check-binary-true-false-columns/</guid>
       <description>2 methods which identify columns attributes, which are the true / false columns?
 library(tidyverse) data(&amp;quot;mtcars&amp;quot;) Method 1: apply # use apply m1 &amp;lt;- apply(mtcars, 2, function(x) { na.omit(x) %in% c(0, 1) %&amp;gt;% all() }) %&amp;gt;% which(. == 1) %&amp;gt;% names() m1 ## [1] &amp;quot;vs&amp;quot; &amp;quot;am&amp;quot;  Method 2: map + which # first identify binary columns m2 &amp;lt;- map(mtcars, ~ unique(.) %&amp;gt;% length()) %$% which(. == 2, arr.ind = TRUE) %&amp;gt;% # then identity if true / false only map(~ unique(mtcars[[.</description>
     </item>

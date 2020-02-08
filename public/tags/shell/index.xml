@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>shell on Not So Formal</title>
-    <link>https://notsoformal.xyz/tags/shell/</link>
+    <link>http://notsoformal.xyz/tags/shell/</link>
     <description>Recent content in shell on Not So Formal</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Mon, 06 Aug 2018 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="https://notsoformal.xyz/tags/shell/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://notsoformal.xyz/tags/shell/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Vlookup Snippet in Command Line</title>
-      <link>https://notsoformal.xyz/2018-08-06-vlookup-snippet-in-command-line/</link>
+      <link>http://notsoformal.xyz/2018-08-06-vlookup-snippet-in-command-line/</link>
       <pubDate>Mon, 06 Aug 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://notsoformal.xyz/2018-08-06-vlookup-snippet-in-command-line/</guid>
+      <guid>http://notsoformal.xyz/2018-08-06-vlookup-snippet-in-command-line/</guid>
       <description>A general Rscript to run in command line, to extract value from table.
 #!/usr/bin/env Rscript --vanilla library(argparser) library(readr) library(stringr) # read from stdin p &amp;lt;- arg_parser(description = &amp;quot;Parse value from a table read from a text file.&amp;quot;) # required arguments p &amp;lt;- add_argument(p, c(&amp;quot;txt&amp;quot;, &amp;quot;--key&amp;quot;, &amp;quot;--value&amp;quot;, &amp;quot;--lookup&amp;quot;), help = c(&amp;quot;text file&amp;quot;, &amp;quot;key identifier&amp;quot;, &amp;quot;key id value&amp;quot;, &amp;quot;item to lookup&amp;quot;)) p &amp;lt;- add_argument(p, &amp;quot;--regex&amp;quot;, help = &amp;quot;regex pattern to extract, if any&amp;quot;, default = &amp;quot;.</description>
     </item>

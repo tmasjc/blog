@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>saas on Not So Formal</title>
-    <link>https://notsoformal.xyz/tags/saas/</link>
+    <link>http://notsoformal.xyz/tags/saas/</link>
     <description>Recent content in saas on Not So Formal</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 12 Jun 2018 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="https://notsoformal.xyz/tags/saas/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://notsoformal.xyz/tags/saas/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Twelve-Factor App</title>
-      <link>https://notsoformal.xyz/2018-06-12-twelve-factor-app/</link>
+      <link>http://notsoformal.xyz/2018-06-12-twelve-factor-app/</link>
       <pubDate>Tue, 12 Jun 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://notsoformal.xyz/2018-06-12-twelve-factor-app/</guid>
+      <guid>http://notsoformal.xyz/2018-06-12-twelve-factor-app/</guid>
       <description>The Twelve-Factor App is a methodology for building software-as-a-service apps that:
 It uses declarative formats for setup automation; It works with a clean contract with the operating system for greater portability between environments; It limits the differences between development and production, for continuous deployment; And it allows for scaling up and down without major changes.  From clearlytech:
 1. Codebase - One codebase tracked in revision control, many deploys 2.</description>

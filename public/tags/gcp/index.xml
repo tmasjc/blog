@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>gcp on Not So Formal</title>
-    <link>https://notsoformal.xyz/tags/gcp/</link>
+    <link>http://notsoformal.xyz/tags/gcp/</link>
     <description>Recent content in gcp on Not So Formal</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Mon, 05 Feb 2018 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="https://notsoformal.xyz/tags/gcp/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://notsoformal.xyz/tags/gcp/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Labels Detection w/ Google Cloud Vision</title>
-      <link>https://notsoformal.xyz/2018-02-05-simple-request-to-google-cloud-vision/</link>
+      <link>http://notsoformal.xyz/2018-02-05-simple-request-to-google-cloud-vision/</link>
       <pubDate>Mon, 05 Feb 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://notsoformal.xyz/2018-02-05-simple-request-to-google-cloud-vision/</guid>
+      <guid>http://notsoformal.xyz/2018-02-05-simple-request-to-google-cloud-vision/</guid>
       <description>A quick 10 on using Google Cloud Vision REST API to perform data analysis on images.
 Endpoint
  https://vision.googleapis.com/v1/images:annotate

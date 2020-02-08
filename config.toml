@@ -1,4 +1,4 @@
-baseURL = "https://notsoformal.xyz"
+baseURL = "http://notsoformal.xyz"
 languageCode = "en-us"
 title = "Not So Formal"
 theme = "minimal-bootstrap-hugo-theme"

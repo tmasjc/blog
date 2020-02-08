@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>drivethru on Not So Formal</title>
-    <link>https://notsoformal.xyz/tags/drivethru/</link>
+    <link>http://notsoformal.xyz/tags/drivethru/</link>
     <description>Recent content in drivethru on Not So Formal</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 21 Jan 2018 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="https://notsoformal.xyz/tags/drivethru/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://notsoformal.xyz/tags/drivethru/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Bar, Bended Bar, and Treemap</title>
-      <link>https://notsoformal.xyz/2018-01-21-visualise-count-observations/</link>
+      <link>http://notsoformal.xyz/2018-01-21-visualise-count-observations/</link>
       <pubDate>Sun, 21 Jan 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://notsoformal.xyz/2018-01-21-visualise-count-observations/</guid>
+      <guid>http://notsoformal.xyz/2018-01-21-visualise-count-observations/</guid>
       <description>In this exercise, we will visualize Standard &amp;amp; Poor’s 500 Index industry composition.
 Gettting sp500_sectora We will scrap the sp500_sectora from Wikipedia page, with rvest.
 library(dplyr) library(rvest) url &amp;lt;- &amp;quot;https://en.wikipedia.org/wiki/List_of_S%26P_500_companies&amp;quot; sp500 &amp;lt;- url %&amp;gt;% read_html() %&amp;gt;% # How do I select css? html_node(css = &amp;quot;table.wikitable&amp;quot;) %&amp;gt;% html_table() %&amp;gt;% mutate(sector = factor(`GICS Sector`)) %&amp;gt;% as_tibble() sp500 ## # A tibble: 505 x 10 ## Symbol Security `SEC filings` `GICS Sector` `GICS Sub Indus… `Headquarters L… ## &amp;lt;chr&amp;gt; &amp;lt;chr&amp;gt; &amp;lt;chr&amp;gt; &amp;lt;chr&amp;gt; &amp;lt;chr&amp;gt; &amp;lt;chr&amp;gt; ## 1 MMM 3M Comp… reports Industrials Industrial Cong… St.</description>
