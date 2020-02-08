@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>webhooks on Not So Formal</title>
+    <link>/tags/webhooks/</link>
+    <description>Recent content in webhooks on Not So Formal</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 10 Nov 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/webhooks/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Trigger Dingtalk Robot from R</title>
+      <link>/2019-11-10-trigger-dingtalk-webhook-from-r/</link>
+      <pubDate>Sun, 10 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/2019-11-10-trigger-dingtalk-webhook-from-r/</guid>
+      <description>Dingtalk is the official comm tool in our work. They provide an interface which allow users to add robot to a group. A robot is merely a webhook that receives POST requests. More details can be found on docs.
+Here I use the signature method to provide extra security. For this method to work, we need 3 piece of information. Token (1) and secret (2) can be obtained from the webhook setting.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>matrix on Not So Formal</title>
+    <link>/tags/matrix/</link>
+    <description>Recent content in matrix on Not So Formal</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 10 Apr 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/matrix/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Compute by Matrix Column</title>
+      <link>/2018-04-10-compute-by-matrix-column/</link>
+      <pubDate>Tue, 10 Apr 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/2018-04-10-compute-by-matrix-column/</guid>
+      <description>library(tidyverse) # dummy data mat &amp;lt;- matrix(rnorm(20 * 5, mean = 100, sd = sqrt(10)) %&amp;gt;% round(digits = 2), 20, 5) mat ## [,1] [,2] [,3] [,4] [,5] ## [1,] 98.54 97.35 97.87 100.25 100.55 ## [2,] 104.57 99.15 97.69 97.38 105.13 ## [3,] 100.09 103.99 100.44 102.01 98.99 ## [4,] 100.24 101.53 100.89 100.07 101.49 ## [5,] 94.90 99.45 99.07 102.14 99.20 ## [6,] 109.11 101.44 100.49 99.05 98.</description>
+    </item>
+    
+  </channel>
+</rss>

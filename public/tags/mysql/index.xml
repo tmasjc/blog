@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>mysql on Not So Formal</title>
+    <link>/tags/mysql/</link>
+    <description>Recent content in mysql on Not So Formal</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 02 Aug 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/mysql/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Split Data Frame into Smaller Chunks</title>
+      <link>/2018-08-02-split-data-frame-into-smaller-chunks/</link>
+      <pubDate>Thu, 02 Aug 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/2018-08-02-split-data-frame-into-smaller-chunks/</guid>
+      <description>When writing from Docker container to MySQL,
+Error: MySQL server has gone away... try split your dataset into smaller chunks,
+library(tidyverse) library(MASS) data(&amp;quot;Boston&amp;quot;) df &amp;lt;- Boston # cut into desired chunks, here chunk size = 100 indices &amp;lt;- (nrow(df) %&amp;gt;% seq() - 1) %/% 100 df_chunks &amp;lt;- split(df, indices) and write into database with iteration.
+library(DBI) # remember to append, do not overwrite lapply(df_chunks, dbWriteTable, conn = mycon, name = mytable, append = TRUE, row.</description>
+    </item>
+    
+  </channel>
+</rss>

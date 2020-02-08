@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>gcp on Not So Formal</title>
+    <link>/tags/gcp/</link>
+    <description>Recent content in gcp on Not So Formal</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 05 Feb 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/gcp/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Labels Detection w/ Google Cloud Vision</title>
+      <link>/2018-02-05-simple-request-to-google-cloud-vision/</link>
+      <pubDate>Mon, 05 Feb 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/2018-02-05-simple-request-to-google-cloud-vision/</guid>
+      <description>A quick 10 on using Google Cloud Vision REST API to perform data analysis on images.
+Endpoint
+ https://vision.googleapis.com/v1/images:annotate
+ Authentication First you must authenticate your requests. There are 2 ways to do it.
+Using an API key Using A Service Account   Request Body and Responses The body of your POST request contains a JSON object, containing a single requests list, which itself contains one or more objects of type AnnotateImageRequest.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>shiny on Not So Formal</title>
+    <link>/tags/shiny/</link>
+    <description>Recent content in shiny on Not So Formal</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 02 Jul 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/shiny/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Streaming Data From Database to Shiny</title>
+      <link>/2019-07-02-streaming-data-from-database-to-shiny/</link>
+      <pubDate>Tue, 02 Jul 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/2019-07-02-streaming-data-from-database-to-shiny/</guid>
+      <description>First, a script that simulate data streaming. It rewrites the table every p second. Here we set it to 1.
+library(config) library(DBI) library(dplyr) library(purrr) library(tryCatchLog) db &amp;lt;- config::get(config = &amp;quot;some-mysql&amp;quot;) # local Docker container conn &amp;lt;- dbConnect( drv = RMySQL::MySQL(), username = db$username, password = db$password, host = db$host, port = db$port, dbname = db$dbname ) stopifnot(DBI::dbRemoveTable(conn, &amp;quot;int_stream&amp;quot;)) generate &amp;lt;- function() { data.frame(ind = LETTERS, int = round(rnorm( length(LETTERS), mean = 10, sd = 2 ))) } insert_to_db &amp;lt;- function(p = 1) { stopifnot(dbWriteTable(conn, &amp;quot;int_stream&amp;quot;, generate(), overwrite = TRUE)) message(paste(&amp;quot;Success:&amp;quot;, Sys.</description>
+    </item>
+    
+    <item>
+      <title>Dynamic UI in Shiny</title>
+      <link>/2019-06-20-dynamic-ui/</link>
+      <pubDate>Thu, 20 Jun 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/2019-06-20-dynamic-ui/</guid>
+      <description>A quick demo on how to render dynamic user interface in Shiny applications. In this case, a new text output element is shown when user enters a new line in the text input. The color toggles alternatively as well.
+Techniques here involves using shiny::renderUI and R’s metaprogramming.
+library(shiny) library(purrr) library(stringr) ## Demo: Render UI Function ---- shinyApp( ui &amp;lt;- fluidPage( # user&amp;#39;s input column( width = 11, offset = 1, textAreaInput( &amp;quot;text&amp;quot;, label = &amp;quot;&amp;quot;, placeholder = &amp;quot;Please insert name here.</description>
+    </item>
+    
+    <item>
+      <title>reactiveVal(ues)</title>
+      <link>/2018-01-17-reactiveval-ues/</link>
+      <pubDate>Wed, 17 Jan 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/2018-01-17-reactiveval-ues/</guid>
+      <description>Let’s say we wish to toggle between 2 objects and assign either one of them to 1 common reactive value.
+For an instance, we have a plot output and 2 buttons,
+* when button one is pressed, plot displays a histogram of a normal distribution,
+* when button two is pressed, plot displays a histogram of a uniform distribution.
+How can we do that?
+Use reactiveVal or reactiveValues.
+reactiveVal is very similar to reactiveValues, except that the former is for a single reactive value (like a variable).</description>
+    </item>
+    
+  </channel>
+</rss>
