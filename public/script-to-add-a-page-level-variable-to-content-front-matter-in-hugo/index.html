@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+  <meta name="generator" content="Hugo 0.64.0" />
+
+  
+  <meta name="description" content="Applied data science breadcrumbs">
+  
+
+  
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
+  
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+
+  
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+
+  
+  <link rel="manifest" href="/site.webmanifest">
+
+  
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+  <meta name="msapplication-TileColor" content="#da532c">
+
+  <meta name="theme-color" content="#ffffff">
+
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" />
+
+  
+  <title>Script to add a page-level variable to content front matter in hugo | Not So Formal</title>
+  
+
+  <style>
+ 
+@font-face {
+    font-family: 'PT Sans';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../fonts/pt-sans-v11-latin-regular.eot');  
+    src: local('PT Sans'), local('PTSans-Regular'),
+         url('../fonts/pt-sans-v11-latin-regular.eot?#iefix') format('embedded-opentype'),  
+         url('../fonts/pt-sans-v11-latin-regular.woff2') format('woff2'),  
+         url('../fonts/pt-sans-v11-latin-regular.woff') format('woff'),  
+         url('../fonts/pt-sans-v11-latin-regular.ttf') format('truetype'),  
+         url('../fonts/pt-sans-v11-latin-regular.svg#PTSans') format('svg');  
+  }
+
+small {
+    opacity: 0.5;
+}
+
+body {
+  min-width: 300px;
+  font-family: "PT Sans"
+}
+
+.custom-navbar {
+  margin-bottom: 1em;
+  height: 60px;
+}
+
+.custom-navbar a {
+  display: inline-block;
+  padding: 18px 0;
+  margin-right: 1em;
+  font-weight: bold;
+}
+
+.custom-navbar a:hover,
+.custom-navbar a:focus {
+  text-decoration: none;
+}
+
+@media print {
+  .custom-navbar {
+    display: none;
+  }
+}
+
+article {
+  padding-bottom: 1em;
+}
+
+img {
+  max-width: 100%;
+}
+
+
+body {
+  background-color: #2C363F;
+}
+
+
+
+body {
+  color: #FFF;
+}
+
+
+
+a {
+  color: #F2F5EA;
+}
+
+
+
+a:hover,
+a:focus {
+  color: #E75A7C;
+}
+
+
+
+.custom-navbar {
+  background-color: #212529;
+}
+
+
+
+.custom-navbar a {
+  color: #AED9E0;
+}
+
+
+
+.custom-navbar a:hover,
+.custom-navbar a:focus {
+  color: #E75A7C;
+}
+
+
+
+.container {
+  max-width: 800px;
+}
+
+
+
+pre {
+  display: block;
+  padding: 9.5px;
+  word-break: break-all;
+  word-wrap: break-word;
+  background-color: #dee2e6;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+pre code {
+  padding: 0;
+  font-size: .8em;
+  color: inherit;
+  white-space: pre-wrap;
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+}
+
+code {
+  padding: 2px 2px;
+  color: #000;
+  background-color: #f5f5f5;
+   
+  border-radius: 4px;
+  font-size: .7em;
+}
+
+
+
+blockquote,
+.blockquote {
+  padding: 10px 20px;
+  margin: 0 0 20px;
+  font-size: 1em;
+  border-left: 5px solid #6c757d;
+}
+
+</style>
+
+</head>
+
+<body>
+  <nav class="custom-navbar">
+  <div class="container">
+    
+    <a href="/">Home</a>
+    
+    <a href="https://tmasjc.github.io/">About</a>
+    
+  </div>
+</nav>
+  
+  <div class="container">
+    <article>
+      <h1>Script to add a page-level variable to content front matter in hugo</h1>
+<p>
+  <small class="text-secondary">
+  
+  
+  Oct 10, 2018, updated Oct 11, 2018
+  </small>
+  
+
+<small><a href="/tags/hugo">#hugo</a></small>
+
+
+<small><a href="/tags/command-line">#command-line</a></small>
+
+
+<small><a href="/tags/awk">#awk</a></small>
+
+
+</p>
+<p>This was originally a question posed on the <a href="https://discourse.gohugo.io/t/set-frontmatter-params-in-list-template/14645">hugo discussion forums</a>.</p>
+<p>The user wanted to loop through all her content files and add a <code>weight</code> page-level variable to the front matter. The value of <code>weight</code> needed to be the first 2 characters of the content filename, since her content was named like <code>01_content.md</code>, <code>02_content.md</code>, etc.</p>
+<p>She then wanted to <code>range</code> through her pages by their weight, like so:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">{{ <span style="color:#ff79c6">range</span> .Pages.ByWeight }}
+&lt;!<span style="color:#ff79c6">--</span> some code <span style="color:#ff79c6">--</span>&gt;
+{{ end }}
+</code></pre></div><h2 id="the-script">The script</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#ff79c6">#!/bin/bash
+</span><span style="color:#ff79c6"></span>
+<span style="color:#ff79c6">for</span> file in *.md; <span style="color:#ff79c6">do</span>
+    <span style="color:#8be9fd;font-style:italic">weight</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">${</span><span style="color:#8be9fd;font-style:italic">file</span>:<span style="color:#8be9fd;font-style:italic">0</span>:<span style="color:#8be9fd;font-style:italic">2</span><span style="color:#f1fa8c">}</span>
+    awk -v <span style="color:#8be9fd;font-style:italic">weight</span><span style="color:#ff79c6">=</span><span style="color:#8be9fd;font-style:italic">$weight</span> <span style="color:#f1fa8c">&#39;/---/{
+</span><span style="color:#f1fa8c">        count++
+</span><span style="color:#f1fa8c">        if(count == 2){
+</span><span style="color:#f1fa8c">        sub(&#34;---&#34;,&#34;weight: &#34; weight &#34;\n---&#34;,$0)
+</span><span style="color:#f1fa8c">        }
+</span><span style="color:#f1fa8c">    }
+</span><span style="color:#f1fa8c">    {print}&#39;</span> <span style="color:#8be9fd;font-style:italic">$file</span> &gt; tmp <span style="color:#ff79c6">&amp;&amp;</span> mv tmp <span style="color:#8be9fd;font-style:italic">$file</span>
+<span style="color:#ff79c6">done</span>
+</code></pre></div><h2 id="explained">Explained</h2>
+<p>Loop through all files in the directory with extension <code>.md</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#ff79c6">for</span> file in *.md; <span style="color:#ff79c6">do</span>
+    <span style="color:#6272a4"># ...</span>
+<span style="color:#ff79c6">done</span>
+</code></pre></div><p>Set a variable using the first 2 characters of the filename:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#8be9fd;font-style:italic">weight</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">${</span><span style="color:#8be9fd;font-style:italic">file</span>:<span style="color:#8be9fd;font-style:italic">0</span>:<span style="color:#8be9fd;font-style:italic">2</span><span style="color:#f1fa8c">}</span>
+</code></pre></div><p>Call an <code>awk</code> program and pass it a <code>weight</code> variable:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">awk -v <span style="color:#8be9fd;font-style:italic">weight</span><span style="color:#ff79c6">=</span><span style="color:#8be9fd;font-style:italic">$weight</span>
+</code></pre></div><p>When the <code>awk</code> program encounters the 2nd occurrence of <code>---</code> (which is how you end front matter in YAML), it inserts the <code>weight</code> page-level variable on the line above:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f1fa8c">&#39;/---/{
+</span><span style="color:#f1fa8c">    count++
+</span><span style="color:#f1fa8c">    if(count == 2){
+</span><span style="color:#f1fa8c">    sub(&#34;---&#34;,&#34;weight: &#34; weight &#34;\n---&#34;,$0)
+</span><span style="color:#f1fa8c">    }
+</span><span style="color:#f1fa8c">}
+</span><span style="color:#f1fa8c">{print}&#39;</span>
+</code></pre></div><p>Redirect the output of the <code>awk</code> program to a tmp file, then overwrite the original content file with the tmp file:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">&gt; tmp <span style="color:#ff79c6">&amp;&amp;</span> mv tmp <span style="color:#8be9fd;font-style:italic">$file</span>
+</code></pre></div><h2 id="result">Result</h2>
+<p>Original <code>01_content.md</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yml" data-lang="yml">---
+<span style="color:#ff79c6">title</span>: <span style="color:#f1fa8c">&#34;Some title&#34;</span>
+<span style="color:#ff79c6">draft</span>: <span style="color:#ff79c6">false</span>
+---
+</code></pre></div><p>Updated <code>01_content.md</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yml" data-lang="yml">---
+<span style="color:#ff79c6">title</span>: <span style="color:#f1fa8c">&#34;Some title&#34;</span>
+<span style="color:#ff79c6">draft</span>: <span style="color:#ff79c6">false</span>
+<span style="color:#ff79c6">weight</span>: <span style="color:#bd93f9">01</span>
+---
+</code></pre></div>
+    </article>
+  </div>
+
+  
+  
+  
+
+  
+
+  
+</body>
+
+</html>
