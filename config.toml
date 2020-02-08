@@ -12,13 +12,13 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 
 [params]
   description = "Applied data science breadcrumbs"
-  contentBackgroundColor = "#2C363F"
-  contentTextColor = "#FFF"
-  contentLinkColor = "#F2F5EA"
-  contentLinkHoverColor = "#E75A7C"
+  contentBackgroundColor = "#ffffff"
+  contentTextColor = "#000"
+  contentLinkColor = "#E71D36"
+  contentLinkHoverColor = "#FF9F1C"
   navbarBackgroundColor = "#212529"
-  navbarLinkColor = "#AED9E0"
-  navbarLinkHoverColor = "#E75A7C"
+  navbarLinkColor = "#FFF"
+  navbarLinkHoverColor = "#E71D36"
   wrapperMaxWidth = "800px"
   customDateFormat = "Jan 2, 2006"
   customCodeStyle = true
