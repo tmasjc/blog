@@ -1,0 +1,14 @@
+{
+    "about": {
+        "text" : "Personal code snippets of @tmasjc"
+    },
+    "engine": {
+        "text" : "Site powered by Hugo"
+    },
+    "theme": {
+        "text" : "Minimal Bootstrap Theme by Zachary Betz"
+    },
+    "image": {
+        "text" : "Image by Mads Schmidt Rasmussen from unsplash.com"
+    }
+}

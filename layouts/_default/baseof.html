@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+
+{{ partial "head.html" . }}
+
+<body>
+  {{ partial "nav.html" . }}
+
+  <div class="container">
+      <div class="row">
+          <div class="col-sm-3">
+              {{ partial "sidebar.html" . }}
+          </div>
+          <div class="col-sm-9">
+              <article>
+                {{ block "main" . }}{{ end }}
+              </article>
+          </div>
+      </div>
+  </div>
+
+  {{ partial "bootstrap-js.html" . }}
+  {{ partial "google-analytics-async.html" . }}
+  {{ partial "mastodon-js.html" . }}
+  {{ partial "cookie-consent.html" . }}
+</body>
+
+</html>
