@@ -1,3 +1,1 @@
-## notsoformal.xyz
-
-Built with Hugo.
+Built with Hugo and ❤️
