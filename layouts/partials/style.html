@@ -18,9 +18,16 @@ small a {
     color: #000;
 }
 
+.intro {
+    font-family: monospace;
+    font-size: .8em;
+    margin-bottom: 1px;
+}
+
 body {
   min-width: 300px;
-  font-family: "PT Sans"
+  font-family: "PT Sans";
+  background: url("bg.jpg") bottom center repeat white;
 }
 
 .custom-navbar {
@@ -83,6 +90,10 @@ a {
   color: #007bff;
 }
 {{ end }}
+article > p > a {
+    text-transform: uppercase;
+    font-weight: 500;
+}
 
 {{ with .Site.Params.contentLinkHoverColor }}
 a:hover,

@@ -14,11 +14,11 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
   description = "Applied data science breadcrumbs"
   contentBackgroundColor = "#ffffff"
   contentTextColor = "#000"
-  contentLinkColor = "#E71D36"
-  contentLinkHoverColor = "#FF9F1C"
-  navbarBackgroundColor = "#212529"
-  navbarLinkColor = "#FFF"
-  navbarLinkHoverColor = "#FF9F1C"
+  contentLinkColor = "#000"
+  contentLinkHoverColor = "#E71D36"
+  navbarBackgroundColor = "transparent"
+  navbarLinkColor = "#000"
+  navbarLinkHoverColor = "#E71D36"
   wrapperMaxWidth = "800px"
   customDateFormat = "Jan 2, 2006"
   customCodeStyle = true
@@ -34,7 +34,7 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 
 [menu]
   [[menu.nav]]
-  name = "notsoformal"
+  name = "~home"
   url = "/"
   weight = 1
 
