@@ -21,7 +21,7 @@ small a {
 .intro {
     font-family: monospace;
     font-size: .8em;
-    margin-bottom: 1px;
+    font-style: italic;
 }
 
 body {
@@ -191,4 +191,11 @@ blockquote,
   border-left: 5px solid #6c757d;
 }
 {{ end }}
+
+@media only screen and (max-width: 768px) {
+  /* For mobile phones: */
+  .intro {
+      display: none;
+  }
+}
 </style>
