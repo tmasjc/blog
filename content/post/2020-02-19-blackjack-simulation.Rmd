@@ -1,0 +1,151 @@
+---
+title: Blackjack simulation
+author: Thomas Jc
+date: '2020-02-19'
+slug: blackjack-simulation
+categories: []
+tags: 
+    - monte-carlo
+publishdate: '2020-02-19'
+lastmod: '2020-02-19'
+editor_options: 
+  chunk_output_type: console
+---
+
+A game of Blackjack is played by 5 players where one of them being the dealer. Usually any player except dealer can choose to forbid the round if they get 15-point in hand dealt. However, in this occasion everyone agrees that 15-point is not allowed to forbid and player must continue to draw. 
+
+**The question is, does the dealer stand an advantage in this case?**
+
+```{r, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(progress)
+
+# make a deck and shuffle
+shuffle_deck <- function() {
+    # ace(1) to nine + 10-point card (10, J, Q, K) 
+    c(rep(1:9, 4), rep(10, 4 * 4)) %>% sample(52) %>% as.integer()
+}
+(dd <- shuffle_deck())
+```
+
+```{r}
+is_blackjack <- function(hh) {
+    if (length(hh) != 2L) {
+        stop("Length of hand does not make sense")
+    }
+    case_when(
+        hh[1] == 1L  && hh[2] == 1L  ~ TRUE,
+        hh[1] == 1L  && hh[2] == 10L ~ TRUE,
+        hh[1] == 10L && hh[2] == 1L  ~ TRUE,
+        TRUE ~ FALSE
+    )
+}
+
+count_point  <- function(...) {
+    if (any(... == 1L)) {
+        addsome <- case_when(
+            length(...) == 2L ~ 10,
+            length(...) == 3L && sum(...) < 13 ~ 9,
+            TRUE ~ 0
+        )
+        sum(...) + addsome
+    } else {
+        sum(...)
+    }
+}
+
+check_hand   <- function(hand) {
+    # browser()
+  
+    # check for blackjack first
+    if (is_blackjack(hand[1:2])) {
+      return(99L)
+    }
+    pos <- map_dbl(2:5, ~ count_point(hand[1:.x]))
+    
+    # check for 5-card charlie
+    if (pos[4] <= 21) {
+      return(99L)
+    }
+    
+    # this is 5-card and bust
+    if (pos[3] < 15 & pos[4] > 21) {
+      return(0L)
+    }
+    
+    # opt for risk-averse play 
+    fin <- which(pos > 15 & pos <= 21)
+    
+    if (length(fin) > 1L) {
+      pos[fin[1]]
+    } else if (length(fin) == 1L) {
+      pos[fin]
+    } else {
+      0L # bust
+    }
+}
+```
+
+```{r}
+run_game <- function(f, N = 5) {
+  
+  players = rep(1:N, N)
+  
+  dck <- shuffle_deck()
+  
+  hnd <- c(1:N) %>% map_dbl( ~ check_hand(dck[which(players == .x)]))
+  
+  f(hnd[1], hnd[-1])
+  
+}
+
+calc_winloss_orig <- function(dealer, therest) {
+  
+  # compare players' card to dealer's
+  wl <- map_dbl(therest,
+                ~ case_when(.x == 15 ~ 0,
+                            dealer >  .x ~ 1,
+                            dealer == .x ~ 0,
+                            dealer <  .x ~ -1))
+  
+  # return dealer's win-loss
+  sum(wl)
+  
+}
+
+calc_winloss_new <- function(dealer, therest) {
+  wl <- map_dbl(therest,
+                ~ case_when(dealer >  .x ~ 1,
+                            dealer == .x ~ 0,
+                            dealer <  .x ~ -1))
+  sum(wl)
+}
+
+# take nn games as one session
+simulate_orig <- function(nn = 100) {
+  sum(replicate(nn, run_game(calc_winloss_orig)))
+}
+simulate_new <- function(nn = 100) {
+  sum(replicate(nn, run_game(calc_winloss_new)))
+}
+```
+
+```{r}
+trials   = 3000
+set_new  = numeric(trials)
+set_orig = numeric(trials)
+pb       = progress_bar$new(total = trials)
+
+for (i in 1:trials) {
+  pb$tick()
+  set_new[i]  <- simulate_new()
+  set_orig[i] <- simulate_orig()
+}
+saveRDS(set_new,  file = "setNew.rds")
+saveRDS(set_orig, file = "setOrig.rds")
+```
+
+
+
+
+
