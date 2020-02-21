@@ -1,0 +1,180 @@
+---
+title: Blackjack Simulation
+author: Thomas Jc
+date: '2020-02-19'
+slug: blackjack-simulation
+categories: []
+tags: 
+    - monte-carlo
+publishdate: '2020-02-19'
+lastmod: '2020-02-19'
+editor_options: 
+  chunk_output_type: console
+---
+
+
+
+<p>A game of <a href="https://en.wikipedia.org/wiki/Chinese_Blackjack">Chinese BlackJack</a> is played by N players where one of them being the dealer. Normally, any player except the dealer can choose to forfeit the round if they get 15-point (<em>free-hand</em>) dealt. However, in this occasion everyone agrees that 15-point is not allowed to forfeit and must continue to draw.
+Common sense tells us that the probability of picking a card more than 6 (go bust for player) is <span class="math inline">\(\frac{52-24-1}{52-2}\)</span> or 54% thus giving a dealer an upper edge. <strong>The question here, is the upper edge significant enough?</strong></p>
+<p>Well, not really. The fact that the game itself inherits large uncertainty, adding that probabilistic advantage won’t make a difference. Note, the x-axis here is win or lose game round, not equity (cash value).</p>
+<p><img src="/etc/blackjack_result.png" /></p>
+<hr />
+<p><a href="https://gist.github.com/tmasjc/123fa9f734403031c704b30d96d4fb5d">Code</a> used for simulation written in R.</p>
+<pre class="r"><code>library(tidyverse)
+
+# make a deck and shuffle
+shuffle_deck &lt;- function() {
+    # ace(1) to nine + 10-point card (10, J, Q, K) 
+    # suite is irrelevant
+    c(rep(1:9, 4), rep(10, 4 * 4)) %&gt;% sample(52) %&gt;% as.integer()
+}
+dd &lt;- shuffle_deck()</code></pre>
+<pre class="r"><code>is_blackjack &lt;- function(hh) {
+    if (length(hh) != 2L) {
+        stop(&quot;Length of hand does not make sense&quot;)
+    }
+    case_when(
+        hh[1] == 1L  &amp;&amp; hh[2] == 1L  ~ TRUE,
+        hh[1] == 1L  &amp;&amp; hh[2] == 10L ~ TRUE,
+        hh[1] == 10L &amp;&amp; hh[2] == 1L  ~ TRUE,
+        TRUE ~ FALSE
+    )
+}
+
+count_point  &lt;- function(...) {
+    if (any(... == 1L)) {
+        addsome &lt;- case_when(
+            length(...) == 2L ~ 10,
+            length(...) == 3L &amp;&amp; sum(...) &lt; 13 ~ 9,
+            TRUE ~ 0
+        )
+        sum(...) + addsome
+    } else {
+        sum(...)
+    }
+}
+
+check_hand   &lt;- function(hand) {
+    # browser()
+  
+    # check for blackjack first
+    if (is_blackjack(hand[1:2])) {
+      return(99L)
+    }
+    pos &lt;- map_dbl(2:5, ~ count_point(hand[1:.x]))
+    
+    # check for 5-card charlie
+    if (pos[4] &lt;= 21) {
+      return(99L)
+    }
+    
+    # this is 5-card and bust
+    if (pos[3] &lt; 15 &amp; pos[4] &gt; 21) {
+      return(0L)
+    }
+    
+    # opt for risk-averse play 
+    fin &lt;- which(pos &gt; 15 &amp; pos &lt;= 21)
+    
+    if (length(fin) &gt; 1L) {
+      pos[fin[1]]
+    } else if (length(fin) == 1L) {
+      pos[fin]
+    } else {
+      0L # bust
+    }
+}</code></pre>
+<pre class="r"><code>run_game &lt;- function(f, N = 5) {
+  
+  players = rep(1:N, N)
+  
+  dck &lt;- shuffle_deck()
+  
+  hnd &lt;- c(1:N) %&gt;% map_dbl( ~ check_hand(dck[which(players == .x)]))
+  
+  f(hnd[1], hnd[-1])
+  
+}
+
+calc_winloss_orig &lt;- function(dealer, therest) {
+  
+  # compare players&#39; card to dealer&#39;s
+  wl &lt;- map_dbl(therest,
+                # original version player can forfeit 15
+                ~ case_when(.x == 15 ~ 0,
+                            dealer &gt;  .x ~ 1,
+                            dealer == .x ~ 0,
+                            dealer &lt;  .x ~ -1))
+  
+  # return dealer&#39;s win-loss
+  sum(wl)
+  
+}
+
+calc_winloss_new &lt;- function(dealer, therest) {
+  wl &lt;- map_dbl(therest,
+                ~ case_when(dealer &gt;  .x ~ 1,
+                            dealer == .x ~ 0,
+                            dealer &lt;  .x ~ -1))
+  sum(wl)
+}
+
+# take nn games as one session
+simulate_orig &lt;- function(nn = 100) {
+  sum(replicate(nn, run_game(calc_winloss_orig)))
+}
+simulate_new &lt;- function(nn = 100) {
+  sum(replicate(nn, run_game(calc_winloss_new)))
+}</code></pre>
+<pre class="r"><code>library(progress)
+
+trials   = 3000
+set_new  = numeric(trials)
+set_orig = numeric(trials)
+pb       = progress_bar$new(total = trials)
+
+# this is going to take quite some time
+for (i in 1:trials) {
+  pb$tick()
+  set_new[i]  &lt;- simulate_new()
+  set_orig[i] &lt;- simulate_orig()
+}</code></pre>
+<pre class="r"><code>df &lt;- tibble(orig = set_orig, new = set_new) %&gt;% gather(set, val)
+
+df %&gt;%
+  mutate(set = factor(set, levels = c(&quot;orig&quot;, &quot;new&quot;))) %&gt;% 
+  ggplot(aes(val, fill = set)) +
+  geom_density(alpha = .5) +
+  scale_fill_brewer(palette = &quot;Set1&quot;, 
+                    labels = c(orig = &quot;Original&quot;,
+                               new  = &quot;Modified&quot;)) +
+  theme_minimal(base_family = &quot;Consolas&quot;) +
+  theme(legend.position = &quot;top&quot;) +
+  labs(x     = &quot;Rounds +/-&quot;, 
+       y     = &quot;Density&quot;,
+       fill  = &quot;&quot;,
+       subtitle = &quot;Modified version cannot forfeit 15-point hand&quot;,
+       title = &quot;Chinese Blackjack Simulation&quot;)</code></pre>
+<p><img src="/post/2020-02-19-blackjack-simulation_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<pre class="r"><code>library(infer)
+
+df %&gt;% 
+  group_by(set) %&gt;% 
+  summarise(mean = mean(val))</code></pre>
+<pre><code>## # A tibble: 2 x 2
+##   set     mean
+##   &lt;chr&gt;  &lt;dbl&gt;
+## 1 new    0.142
+## 2 orig  -0.494</code></pre>
+<pre class="r"><code># use bootstrap inference to determine confidence interval
+df %&gt;% 
+  specify(val ~ set) %&gt;% 
+  generate(reps = 3000, type = &quot;bootstrap&quot;) %&gt;% 
+  calculate(stat = &quot;diff in means&quot;, order = c(&quot;orig&quot;, &quot;new&quot;)) %&gt;% 
+  summarise(l = quantile(stat, 0.025),
+            m = median(stat),
+            h = quantile(stat, 0.975))</code></pre>
+<pre><code>## # A tibble: 1 x 3
+##       l      m     h
+##   &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+## 1 -2.04 -0.651 0.758</code></pre>

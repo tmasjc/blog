@@ -1,5 +1,5 @@
 ---
-title: Blackjack simulation
+title: Blackjack Simulation
 author: Thomas Jc
 date: '2020-02-19'
 slug: blackjack-simulation
@@ -12,20 +12,27 @@ editor_options:
   chunk_output_type: console
 ---
 
-A game of Blackjack is played by 5 players where one of them being the dealer. Usually any player except dealer can choose to forbid the round if they get 15-point in hand dealt. However, in this occasion everyone agrees that 15-point is not allowed to forbid and player must continue to draw. 
+A game of [Chinese BlackJack](https://en.wikipedia.org/wiki/Chinese_Blackjack) is played by N players where one of them being the dealer. Normally, any player except the dealer can choose to forfeit the round if they get 15-point (*free-hand*) dealt. However, in this occasion everyone agrees that 15-point is not allowed to forfeit and must continue to draw. 
+Common sense tells us that the probability of picking a card more than 6 (go bust for player) is $\frac{52-24-1}{52-2}$ or 54% thus giving a dealer an upper edge. **The question here, is the upper edge significant enough?** 
 
-**The question is, does the dealer stand an advantage in this case?**
+Well, not really. The fact that the game itself inherits large uncertainty, adding that probabilistic advantage won't make a difference. Note, the x-axis here is win or lose game round, not equity (cash value). 
+
+![](/etc/blackjack_result.png)
+
+----
+
+[Code](https://gist.github.com/tmasjc/123fa9f734403031c704b30d96d4fb5d) used for simulation written in R.
 
 ```{r, warning=FALSE, message=FALSE}
 library(tidyverse)
-library(progress)
 
 # make a deck and shuffle
 shuffle_deck <- function() {
     # ace(1) to nine + 10-point card (10, J, Q, K) 
+    # suite is irrelevant
     c(rep(1:9, 4), rep(10, 4 * 4)) %>% sample(52) %>% as.integer()
 }
-(dd <- shuffle_deck())
+dd <- shuffle_deck()
 ```
 
 ```{r}
@@ -103,6 +110,7 @@ calc_winloss_orig <- function(dealer, therest) {
   
   # compare players' card to dealer's
   wl <- map_dbl(therest,
+                # original version player can forfeit 15
                 ~ case_when(.x == 15 ~ 0,
                             dealer >  .x ~ 1,
                             dealer == .x ~ 0,
@@ -130,22 +138,64 @@ simulate_new <- function(nn = 100) {
 }
 ```
 
-```{r}
+```{r, eval=FALSE}
+library(progress)
+
 trials   = 3000
 set_new  = numeric(trials)
 set_orig = numeric(trials)
 pb       = progress_bar$new(total = trials)
 
+# this is going to take quite some time
 for (i in 1:trials) {
   pb$tick()
   set_new[i]  <- simulate_new()
   set_orig[i] <- simulate_orig()
 }
-saveRDS(set_new,  file = "setNew.rds")
-saveRDS(set_orig, file = "setOrig.rds")
+```
+
+```{r, echo=FALSE}
+set_orig = readRDS("../etc/blackjack_set_orig.rds")
+set_new  = readRDS("../etc/blackjack_set_new.rds")
 ```
 
 
+```{r}
+df <- tibble(orig = set_orig, new = set_new) %>% gather(set, val)
+
+df %>%
+  mutate(set = factor(set, levels = c("orig", "new"))) %>% 
+  ggplot(aes(val, fill = set)) +
+  geom_density(alpha = .5) +
+  scale_fill_brewer(palette = "Set1", 
+                    labels = c(orig = "Original",
+                               new  = "Modified")) +
+  theme_minimal(base_family = "Consolas") +
+  theme(legend.position = "top") +
+  labs(x     = "Rounds +/-", 
+       y     = "Density",
+       fill  = "",
+       subtitle = "Modified version cannot forfeit 15-point hand",
+       title = "Chinese Blackjack Simulation")
+
+```
+
+```{r}
+library(infer)
+
+df %>% 
+  group_by(set) %>% 
+  summarise(mean = mean(val))
+
+# use bootstrap inference to determine confidence interval
+df %>% 
+  specify(val ~ set) %>% 
+  generate(reps = 3000, type = "bootstrap") %>% 
+  calculate(stat = "diff in means", order = c("orig", "new")) %>% 
+  summarise(l = quantile(stat, 0.025),
+            m = median(stat),
+            h = quantile(stat, 0.975))
+```
 
 
 
