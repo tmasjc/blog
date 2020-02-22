@@ -13,6 +13,11 @@
          url('../fonts/pt-sans-v11-latin-regular.svg#PTSans') format('svg'); /* Legacy iOS */
   }
 
+#post-listing a {
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
 small a {
     opacity: 0.5;
     color: #000;
@@ -22,12 +27,19 @@ small a {
     font-family: monospace;
     font-size: .8em;
     font-style: italic;
+    line-height: 1rem;
 }
 
 body {
   min-width: 300px;
-  font-family: "PT Sans";
+  font-family: "PT Sans", Consolas, sans-serif;
+  line-height: 1.7rem;
+  word-spacing: 0.2rem;
   background: url("bg.jpg") bottom center repeat white;
+}
+
+article > p > a {
+    text-decoration: underline;
 }
 
 .custom-navbar {
@@ -90,10 +102,6 @@ a {
   color: #007bff;
 }
 {{ end }}
-article > p > a {
-    text-transform: uppercase;
-    font-weight: 500;
-}
 
 {{ with .Site.Params.contentLinkHoverColor }}
 a:hover,
