@@ -18,6 +18,9 @@ editor_options:
 Common sense tells us that the probability of picking a card more than 6 (go bust for player) is <span class="math inline">\(\frac{52-24-1}{52-2}\)</span> or 54% thus giving a dealer an upper edge. <strong>The question here, is the upper edge significant enough?</strong></p>
 <p>Well, not really. The fact that the game itself inherits large uncertainty, adding that probabilistic advantage won’t make a difference. Note, the x-axis here is win or lose game round, not equity (cash value).</p>
 <p><img src="/etc/blackjack_result.png" /></p>
+<blockquote>
+<p>Perhaps this serves as another reminder. In this complex world, relative advantage is not the same as absolute advantage. Very often, chaos and randomness dominate more than anything else. It is like there are so many finance and economics PhDs out there trying to beat the market. It is not entirely impossible, but literally only a handful of people manage to accomplish that. And they don’t go by the book.</p>
+</blockquote>
 <hr />
 <p><a href="https://gist.github.com/tmasjc/123fa9f734403031c704b30d96d4fb5d">Code</a> used for simulation written in R.</p>
 <pre class="r"><code>library(tidyverse)
@@ -177,4 +180,4 @@ df %&gt;%
 <pre><code>## # A tibble: 1 x 3
 ##       l      m     h
 ##   &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
-## 1 -2.04 -0.651 0.758</code></pre>
+## 1 -2.01 -0.630 0.752</code></pre>

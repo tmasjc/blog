@@ -19,6 +19,8 @@ Well, not really. The fact that the game itself inherits large uncertainty, addi
 
 ![](/etc/blackjack_result.png)
 
+> Perhaps this serves as another reminder. In this complex world, relative advantage is not the same as absolute advantage. Very often, chaos and randomness dominate more than anything else. It is like there are so many finance and economics PhDs out there trying to beat the market. It is not entirely impossible, but literally only a handful of people manage to accomplish that. And they don't go by the book.
+
 ----
 
 [Code](https://gist.github.com/tmasjc/123fa9f734403031c704b30d96d4fb5d) used for simulation written in R.
@@ -158,7 +160,6 @@ for (i in 1:trials) {
 set_orig = readRDS("../etc/blackjack_set_orig.rds")
 set_new  = readRDS("../etc/blackjack_set_new.rds")
 ```
-
 
 ```{r}
 df <- tibble(orig = set_orig, new = set_new) %>% gather(set, val)
