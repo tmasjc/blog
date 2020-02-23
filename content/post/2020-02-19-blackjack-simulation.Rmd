@@ -157,8 +157,8 @@ for (i in 1:trials) {
 ```
 
 ```{r, echo=FALSE}
-set_orig = readRDS("../etc/blackjack_set_orig.rds")
-set_new  = readRDS("../etc/blackjack_set_new.rds")
+set_orig = readRDS("../etc/blackjack/blackjack_set_orig.rds")
+set_new  = readRDS("../etc/blackjack/blackjack_set_new.rds")
 ```
 
 ```{r}

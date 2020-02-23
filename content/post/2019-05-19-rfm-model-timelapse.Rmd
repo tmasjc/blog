@@ -154,4 +154,4 @@ anim <- long_dfs %>%
 #anim_save(animation = anim, filename = "moving_rfm.gif", path = "content/etc")
 ```
 
-![](/etc/moving_rfm.gif)
+![](/etc/rfm/moving_rfm.gif)
