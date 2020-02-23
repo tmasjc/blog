@@ -59,7 +59,7 @@ old <- theme_set(theme_minimal() + theme(text = element_text(family = 'Menlo')))
 ```
 
 
-```{r, fig.width=9}
+```{r, fig.width=7}
 set.seed(1212)
 p <- df %>% 
     # filter those who completed at least 60 percent or 50 games of a season
