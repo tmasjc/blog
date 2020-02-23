@@ -1,0 +1,99 @@
+---
+title: "EDA: A Survey into Market Risk Premium"
+author: Thomas Jc
+date: '2020-02-23'
+slug: a-survey-into-market-risk-premium
+categories: []
+tags: 
+    - finance
+publishdate: '2020-02-23'
+lastmod: '2020-02-23'
+---
+
+This is an exploratory analysis based on [the paper](https://ssrn.com/abstract=3358901) cited below. I am interested to explore the relationship of coefficient of variation (CV) between developed and developing countries.
+
+> Fernandez, Pablo and Martinez, Mar and Fernández Acín, Isabel, Market Risk Premium and Risk-Free Rate Used for 69 Countries in 2019: A Survey (March 23, 2019). Available at SSRN: https://ssrn.com/abstract=3358901 or http://dx.doi.org/10.2139/ssrn.3358901
+
+```{r, warning=FALSE, message=FALSE, echo=FALSE}
+library(tidyverse)
+library(ggthemes)
+library(ggforce)
+library(janitor)
+library(DT)
+
+old <-
+    theme_set(
+        theme_economist_white(base_family = "Menlo") +
+            theme(
+                plot.background = element_rect(fill = "white"),
+                legend.background = element_rect(fill = "white"), 
+                legend.position = "bottom", 
+                legend.key.height = unit(2, "mm"),
+                legend.text = element_text(size = 7),
+                title = element_text(size = 9)
+            )
+    )
+
+# extract from pdf
+raw <- read_csv("../etc/riskpremium/mrp2019.csv")
+convert_to_numeric <- function(x) {
+    x %>% 
+        str_remove("%$") %>% 
+        str_replace(",", ".") %>% 
+        as.double()
+}
+mrp <- raw %>%
+    clean_names() %>%
+    mutate_at(vars(-contains("country")), convert_to_numeric)
+```
+
+To classify countries into developed or developing status, I use a general rough guide where country with GDP per capita above 24000 is considered developed. Alternatively, I could use human development index (HDI) but the former is commonly used among many economists. 
+
+```{r, message=FALSE, echo=FALSE}
+# from World Bank (year 2018)
+raw <- read_csv("../etc/riskpremium/gdpcap2018.csv")
+gdp <- raw %>% 
+    clean_names() %>% 
+    mutate(
+        country = str_remove(country, "\\s$"),
+        developed = if_else(gdp_cap2018 >= 24000, 1, 0)
+    ) %>% 
+    select(country, developed)
+# this is our working data frame
+df <- mrp %>% left_join(gdp, by = "country")
+DT::datatable(df)
+```
+
+----
+
+### EDA 
+
+```{r}
+hl.this = c("China", "United States of America", "Germany", "Japan")
+
+df %>% 
+    ggplot(aes(median, cv, col = log(answers))) +
+    geom_point() + 
+    scale_y_continuous(limits = c(0, 50)) +
+    geom_mark_circle(aes(description = country, 
+                         filter = country %in% hl.this),
+                     col = "darkgray", con.colour = "darkgray") +
+    labs(x     = "Median of MRP", 
+         y     = "Coefficient of Variation", 
+         col   = "Sample Size (log)",
+         title = "Market Risk Premium: A Survey (Fernandez, 2019)")
+```
+
+Developed or not does not seem to exhibit any relationship to variation.
+
+```{r}
+df %>% 
+    filter(!is.na(developed)) %>% 
+    ggplot(aes(factor(developed), cv)) + 
+    geom_point(position = position_jitter(width = 0.2, height = 0)) + 
+    scale_x_discrete(labels = c(`0` = "false", `1` = "true")) +
+    labs(x = "Developed Country", y = "Coefficient of Variation")
+```
+
+
+
