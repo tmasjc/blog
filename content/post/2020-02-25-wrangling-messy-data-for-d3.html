@@ -165,23 +165,26 @@ HEV
 </tr>
 </tbody>
 </table>
-<p>The data format I would like to feed to D3 is in JSON and looks like</p>
-<pre class="json"><code>[{
-    &quot;2005-01-01&quot;: {
-        &quot;Car Model X&quot;: {
-            &quot;brand&quot;: ABC,
-            &quot;model&quot;: 001,
-            &quot;type&quot;: &quot;HEV&quot;,
-            &quot;sales&quot;: 99
-        },
-        &quot;Car Model Y&quot;: {
-            &quot;brand&quot;: DEF,
-            &quot;model&quot;: 001,
-            &quot;type&quot;: &quot;HEV&quot;,
-            &quot;sales&quot;: 99
-        },
-        ...
-    } // date as first-level
+<p>The final data format I would like to feed to D3 is in JSON and looks like the following</p>
+<pre class="json"><code>[
+  {
+    &quot;date&quot;: &quot;2005-01-01&quot;,
+    &quot;record&quot;: {
+      &quot;Honda Insight&quot;: {
+        &quot;brand&quot;: &quot;Honda&quot;,
+        &quot;model&quot;: &quot;Insight&quot;,
+        &quot;type&quot;: &quot;HEV&quot;,
+        &quot;sales&quot;: 7
+      },
+      &quot;Toyota Prius&quot;: {
+        &quot;brand&quot;: &quot;Toyota&quot;,
+        &quot;model&quot;: &quot;Prius&quot;,
+        &quot;type&quot;: &quot;HEV&quot;,
+        &quot;sales&quot;: 5566
+      },      
+      ...
+    },
+    ...
 }]</code></pre>
 <hr />
 <div id="import" class="section level3">
@@ -459,7 +462,8 @@ library(listviewer)
 chunks_by_date &lt;- df %&gt;% 
     arrange(date) %&gt;% 
     filter(!is.na(sales)) %&gt;% 
-    split(.$date)
+    group_split(date, keep = TRUE)
+dates &lt;- map(chunks_by_date, ~ as.character(unique(.x$date))) # safer approach
 
 # to convert each to a list in recursion
 # must pass the dots
@@ -478,16 +482,18 @@ paste_list_name &lt;- function(brand, model, ...) {
 }
 
 # use map instead of for loop
-out &lt;- map(chunks_by_date, ~ {
-    l &lt;- pmap(.x, from_row_to_list)
-    n &lt;- pmap(.x, paste_list_name)
-    set_names(l, n)
-})
-names(out) &lt;- names(chunks_by_date)
+out &lt;- map2(
+    .x = chunks_by_date, .y = dates,
+    .f = ~ {
+            l &lt;- pmap(.x, from_row_to_list)
+            n &lt;- pmap(.x, paste_list_name)
+            list(date = .y, record = set_names(l, n))
+        }
+    )
 
 # final result
 head(out, 10) %&gt;% listviewer::jsonedit()</code></pre>
 <div id="htmlwidget-1" style="width:672px;height:480px;" class="jsonedit html-widget"></div>
-<script type="application/json" data-for="htmlwidget-1">{"x":{"data":{"2005-01-01":{"Honda Insight":{"brand":"Honda","model":"Insight","type":"HEV","sales":7},"Toyota Prius":{"brand":"Toyota","model":"Prius","type":"HEV","sales":5566},"Honda Civic":{"brand":"Honda","model":"Civic","type":"HEV","sales":1169},"Ford Escape":{"brand":"Ford","model":"Escape","type":"HEV","sales":908},"Honda Accord":{"brand":"Honda","model":"Accord","type":"HEV","sales":805}},"2005-02-01":{"Honda Insight":{"brand":"Honda","model":"Insight","type":"HEV","sales":22},"Toyota Prius":{"brand":"Toyota","model":"Prius","type":"HEV","sales":7078},"Honda Civic":{"brand":"Honda","model":"Civic","type":"HEV","sales":1353},"Ford Escape":{"brand":"Ford","model":"Escape","type":"HEV","sales":1092},"Honda Accord":{"brand":"Honda","model":"Accord","type":"HEV","sales":855}},"2005-03-01":{"Honda Insight":{"brand":"Honda","model":"Insight","type":"HEV","sales":56},"Toyota Prius":{"brand":"Toyota","model":"Prius","type":"HEV","sales":10236},"Honda Civic":{"brand":"Honda","model":"Civic","type":"HEV","sales":2896},"Ford Escape":{"brand":"Ford","model":"Escape","type":"HEV","sales":1569},"Honda Accord":{"brand":"Honda","model":"Accord","type":"HEV","sales":1862},"Lexus NA":{"brand":"Lexus","model":null,"type":"HEV","sales":13}},"2005-04-01":{"Honda Insight":{"brand":"Honda","model":"Insight","type":"HEV","sales":90},"Toyota Prius":{"brand":"Toyota","model":"Prius","type":"HEV","sales":11345},"Honda Civic":{"brand":"Honda","model":"Civic","type":"HEV","sales":3466},"Ford Escape":{"brand":"Ford","model":"Escape","type":"HEV","sales":1705},"Honda Accord":{"brand":"Honda","model":"Accord","type":"HEV","sales":2023},"Lexus NA":{"brand":"Lexus","model":null,"type":"HEV","sales":2345}},"2005-05-01":{"Honda Insight":{"brand":"Honda","model":"Insight","type":"HEV","sales":52},"Toyota Prius":{"brand":"Toyota","model":"Prius","type":"HEV","sales":9461},"Honda Civic":{"brand":"Honda","model":"Civic","type":"HEV","sales":1895},"Ford Escape":{"brand":"Ford","model":"Escape","type":"HEV","sales":1234},"Honda Accord":{"brand":"Honda","model":"Accord","type":"HEV","sales":1314},"Toyota Highlander":{"brand":"Toyota","model":"Highlander","type":"HEV","sales":35},"Lexus NA":{"brand":"Lexus","model":null,"type":"HEV","sales":2931}},"2005-06-01":{"Honda Insight":{"brand":"Honda","model":"Insight","type":"HEV","sales":69},"Toyota Prius":{"brand":"Toyota","model":"Prius","type":"HEV","sales":9622},"Honda Civic":{"brand":"Honda","model":"Civic","type":"HEV","sales":1852},"Ford Escape":{"brand":"Ford","model":"Escape","type":"HEV","sales":1126},"Honda Accord":{"brand":"Honda","model":"Accord","type":"HEV","sales":1080},"Toyota Highlander":{"brand":"Toyota","model":"Highlander","type":"HEV","sales":2869},"Lexus NA":{"brand":"Lexus","model":null,"type":"HEV","sales":2605}},"2005-07-01":{"Honda Insight":{"brand":"Honda","model":"Insight","type":"HEV","sales":68},"Toyota Prius":{"brand":"Toyota","model":"Prius","type":"HEV","sales":9691},"Honda Civic":{"brand":"Honda","model":"Civic","type":"HEV","sales":2329},"Ford Escape":{"brand":"Ford","model":"Escape","type":"HEV","sales":1168},"Honda Accord":{"brand":"Honda","model":"Accord","type":"HEV","sales":1376},"Toyota Highlander":{"brand":"Toyota","model":"Highlander","type":"HEV","sales":2564},"Lexus NA":{"brand":"Lexus","model":null,"type":"HEV","sales":2262}},"2005-08-01":{"Honda Insight":{"brand":"Honda","model":"Insight","type":"HEV","sales":80},"Toyota Prius":{"brand":"Toyota","model":"Prius","type":"HEV","sales":9850},"Honda Civic":{"brand":"Honda","model":"Civic","type":"HEV","sales":4146},"Ford Escape":{"brand":"Ford","model":"Escape","type":"HEV","sales":1363},"Honda Accord":{"brand":"Honda","model":"Accord","type":"HEV","sales":2336},"Toyota Highlander":{"brand":"Toyota","model":"Highlander","type":"HEV","sales":2925},"Lexus NA":{"brand":"Lexus","model":null,"type":"HEV","sales":2607}},"2005-09-01":{"Honda Insight":{"brand":"Honda","model":"Insight","type":"HEV","sales":83},"Toyota Prius":{"brand":"Toyota","model":"Prius","type":"HEV","sales":8193},"Honda Civic":{"brand":"Honda","model":"Civic","type":"HEV","sales":1916},"Ford Escape":{"brand":"Ford","model":"Escape","type":"HEV","sales":1808},"Honda Accord":{"brand":"Honda","model":"Accord","type":"HEV","sales":2352},"Toyota Highlander":{"brand":"Toyota","model":"Highlander","type":"HEV","sales":2715},"Lexus NA":{"brand":"Lexus","model":null,"type":"HEV","sales":2113}},"2005-10-01":{"Honda Insight":{"brand":"Honda","model":"Insight","type":"HEV","sales":37},"Toyota Prius":{"brand":"Toyota","model":"Prius","type":"HEV","sales":9939},"Honda Civic":{"brand":"Honda","model":"Civic","type":"HEV","sales":231},"Ford Escape":{"brand":"Ford","model":"Escape","type":"HEV","sales":1313},"Honda Accord":{"brand":"Honda","model":"Accord","type":"HEV","sales":1266},"Toyota Highlander":{"brand":"Toyota","model":"Highlander","type":"HEV","sales":2330},"Lexus NA":{"brand":"Lexus","model":null,"type":"HEV","sales":1904}}},"options":{"mode":"tree","modes":["code","form","text","tree","view"]}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"data":[{"date":"2005-01-01","record":{"Honda Insight":{"brand":"Honda","model":"Insight","type":"HEV","sales":7},"Toyota Prius":{"brand":"Toyota","model":"Prius","type":"HEV","sales":5566},"Honda Civic":{"brand":"Honda","model":"Civic","type":"HEV","sales":1169},"Ford Escape":{"brand":"Ford","model":"Escape","type":"HEV","sales":908},"Honda Accord":{"brand":"Honda","model":"Accord","type":"HEV","sales":805}}},{"date":"2005-02-01","record":{"Honda Insight":{"brand":"Honda","model":"Insight","type":"HEV","sales":22},"Toyota Prius":{"brand":"Toyota","model":"Prius","type":"HEV","sales":7078},"Honda Civic":{"brand":"Honda","model":"Civic","type":"HEV","sales":1353},"Ford Escape":{"brand":"Ford","model":"Escape","type":"HEV","sales":1092},"Honda Accord":{"brand":"Honda","model":"Accord","type":"HEV","sales":855}}},{"date":"2005-03-01","record":{"Honda Insight":{"brand":"Honda","model":"Insight","type":"HEV","sales":56},"Toyota Prius":{"brand":"Toyota","model":"Prius","type":"HEV","sales":10236},"Honda Civic":{"brand":"Honda","model":"Civic","type":"HEV","sales":2896},"Ford Escape":{"brand":"Ford","model":"Escape","type":"HEV","sales":1569},"Honda Accord":{"brand":"Honda","model":"Accord","type":"HEV","sales":1862},"Lexus NA":{"brand":"Lexus","model":null,"type":"HEV","sales":13}}},{"date":"2005-04-01","record":{"Honda Insight":{"brand":"Honda","model":"Insight","type":"HEV","sales":90},"Toyota Prius":{"brand":"Toyota","model":"Prius","type":"HEV","sales":11345},"Honda Civic":{"brand":"Honda","model":"Civic","type":"HEV","sales":3466},"Ford Escape":{"brand":"Ford","model":"Escape","type":"HEV","sales":1705},"Honda Accord":{"brand":"Honda","model":"Accord","type":"HEV","sales":2023},"Lexus NA":{"brand":"Lexus","model":null,"type":"HEV","sales":2345}}},{"date":"2005-05-01","record":{"Honda Insight":{"brand":"Honda","model":"Insight","type":"HEV","sales":52},"Toyota Prius":{"brand":"Toyota","model":"Prius","type":"HEV","sales":9461},"Honda Civic":{"brand":"Honda","model":"Civic","type":"HEV","sales":1895},"Ford Escape":{"brand":"Ford","model":"Escape","type":"HEV","sales":1234},"Honda Accord":{"brand":"Honda","model":"Accord","type":"HEV","sales":1314},"Toyota Highlander":{"brand":"Toyota","model":"Highlander","type":"HEV","sales":35},"Lexus NA":{"brand":"Lexus","model":null,"type":"HEV","sales":2931}}},{"date":"2005-06-01","record":{"Honda Insight":{"brand":"Honda","model":"Insight","type":"HEV","sales":69},"Toyota Prius":{"brand":"Toyota","model":"Prius","type":"HEV","sales":9622},"Honda Civic":{"brand":"Honda","model":"Civic","type":"HEV","sales":1852},"Ford Escape":{"brand":"Ford","model":"Escape","type":"HEV","sales":1126},"Honda Accord":{"brand":"Honda","model":"Accord","type":"HEV","sales":1080},"Toyota Highlander":{"brand":"Toyota","model":"Highlander","type":"HEV","sales":2869},"Lexus NA":{"brand":"Lexus","model":null,"type":"HEV","sales":2605}}},{"date":"2005-07-01","record":{"Honda Insight":{"brand":"Honda","model":"Insight","type":"HEV","sales":68},"Toyota Prius":{"brand":"Toyota","model":"Prius","type":"HEV","sales":9691},"Honda Civic":{"brand":"Honda","model":"Civic","type":"HEV","sales":2329},"Ford Escape":{"brand":"Ford","model":"Escape","type":"HEV","sales":1168},"Honda Accord":{"brand":"Honda","model":"Accord","type":"HEV","sales":1376},"Toyota Highlander":{"brand":"Toyota","model":"Highlander","type":"HEV","sales":2564},"Lexus NA":{"brand":"Lexus","model":null,"type":"HEV","sales":2262}}},{"date":"2005-08-01","record":{"Honda Insight":{"brand":"Honda","model":"Insight","type":"HEV","sales":80},"Toyota Prius":{"brand":"Toyota","model":"Prius","type":"HEV","sales":9850},"Honda Civic":{"brand":"Honda","model":"Civic","type":"HEV","sales":4146},"Ford Escape":{"brand":"Ford","model":"Escape","type":"HEV","sales":1363},"Honda Accord":{"brand":"Honda","model":"Accord","type":"HEV","sales":2336},"Toyota Highlander":{"brand":"Toyota","model":"Highlander","type":"HEV","sales":2925},"Lexus NA":{"brand":"Lexus","model":null,"type":"HEV","sales":2607}}},{"date":"2005-09-01","record":{"Honda Insight":{"brand":"Honda","model":"Insight","type":"HEV","sales":83},"Toyota Prius":{"brand":"Toyota","model":"Prius","type":"HEV","sales":8193},"Honda Civic":{"brand":"Honda","model":"Civic","type":"HEV","sales":1916},"Ford Escape":{"brand":"Ford","model":"Escape","type":"HEV","sales":1808},"Honda Accord":{"brand":"Honda","model":"Accord","type":"HEV","sales":2352},"Toyota Highlander":{"brand":"Toyota","model":"Highlander","type":"HEV","sales":2715},"Lexus NA":{"brand":"Lexus","model":null,"type":"HEV","sales":2113}}},{"date":"2005-10-01","record":{"Honda Insight":{"brand":"Honda","model":"Insight","type":"HEV","sales":37},"Toyota Prius":{"brand":"Toyota","model":"Prius","type":"HEV","sales":9939},"Honda Civic":{"brand":"Honda","model":"Civic","type":"HEV","sales":231},"Ford Escape":{"brand":"Ford","model":"Escape","type":"HEV","sales":1313},"Honda Accord":{"brand":"Honda","model":"Accord","type":"HEV","sales":1266},"Toyota Highlander":{"brand":"Toyota","model":"Highlander","type":"HEV","sales":2330},"Lexus NA":{"brand":"Lexus","model":null,"type":"HEV","sales":1904}}}],"options":{"mode":"tree","modes":["code","form","text","tree","view"]}},"evals":[],"jsHooks":[]}</script>
 <p>Done</p>
 </div>
