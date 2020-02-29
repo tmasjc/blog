@@ -1,0 +1,100 @@
+---
+title: In A Village Where People Only Want Boys
+author: Thomas Jc
+date: '2020-02-29'
+slug: in-a-village-where-people-only-want-boys
+categories: []
+tags: 
+    - monte-carlo
+publishdate: '2020-02-29'
+lastmod: '2020-02-29'
+editor_options: 
+  chunk_output_type: console
+---
+
+<script src="/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
+<script src="/rmarkdown-libs/d3/d3.min.js"></script>
+<script src="/rmarkdown-libs/dagre/dagre-d3.min.js"></script>
+<link href="/rmarkdown-libs/mermaid/dist/mermaid.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/mermaid/dist/mermaid.js"></script>
+<link href="/rmarkdown-libs/DiagrammeR-styles/styles.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/chromatography/chromatography.js"></script>
+<script src="/rmarkdown-libs/DiagrammeR-binding/DiagrammeR.js"></script>
+
+
+<p>The origin of this question is an interview question from Google.</p>
+<blockquote>
+<p>In a village in which people only want boys every family continues to have children until they have a boy. If they have a girl, they have another child. If they have a boy, they stop. What is the expected boys to girls ratio in the village?</p>
+</blockquote>
+<p>Though this can be solved mathematically (of course it can), the question is (IMO) easier to solve by thinking in a tree/branches structure.</p>
+<p>If we assume the village has N families, and the probability of having a boy or girl is 50/50, then</p>
+<div id="htmlwidget-1" style="width:672px;height:480px;" class="DiagrammeR html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"diagram":"\n    graph TB\n        N --have boys, stop--> L21[N/2]\n        N --have girls, continue--> L22[N/2]\n        L22 --boys--> L221[N/4]\n        L22 --girls--> L222[N/4]\n        L222 --boys--> L2221[N/8]\n        L222 --girls--> L2222[N/8]\n        L2222 --> L222221[N/16]\n        L2222 --> L222222[N/16]\n        L222222 --- e1[...]\n"},"evals":[],"jsHooks":[]}</script>
+<p>Here we see the obvious, as the depth of tree extends, the boy-to-girl disparity will ultimately become insignificant. The ratio will be very close to 50/50.</p>
+<p>For practice and validation sake, lets do a simulation.</p>
+<pre class="r"><code>library(magrittr)
+
+simulate_once &lt;- function(N, verbose=FALSE) {
+    
+    # nobody has anything yet...
+    boys  = 0; girls = 0;
+    
+    print_vars &lt;- function() {
+        message(&quot;BGR:&quot;, boys, &quot;/&quot;, girls)
+        message(&quot;==================&quot;)
+    }
+    
+    tryonemore &lt;- function(x, msgON) {
+        # browser()
+        if(msgON) message(x)
+        
+        # terminal condition
+        if (all(x)) {
+            boys  &lt;&lt;- boys + sum(x)
+            if (msgON) print_vars()
+            return(1)
+        }
+        
+        # assign to parent env so that we can keep track
+        boys  &lt;&lt;- boys + sum(x)
+        girls &lt;&lt;- girls + sum(!x)
+        
+        if (msgON) print_vars()
+        return(tryonemore(rbinom(sum(!x), 1, 0.5), msgON = msgON) + sum(x))
+    }
+    # init call
+    tryonemore(rbinom(N, 1, 0.5), msgON=verbose)
+    return(boys / girls)
+}
+set.seed(1111)
+simulate_once(10, verbose = TRUE)
+## 0010111010
+## BGR:5/5
+## ==================
+## 01111
+## BGR:9/6
+## ==================
+## 0
+## BGR:9/7
+## ==================
+## 1
+## BGR:10/7
+## ==================
+## [1] 1.428571</code></pre>
+<pre class="r"><code>library(purrr)
+library(ggplot2)
+
+res &lt;- map_dbl(11:1000, ~ {
+    mean(replicate(1000, simulate_once(.x)))
+})
+
+par(family = &quot;Menlo&quot;)
+plot(res,
+     type  = &quot;l&quot;,
+     xlab  = &quot;N (# families)&quot;,
+     ylab  = &quot;Expected Boys-to-Girls Ratio&quot;,)
+title(main = &quot;Simulate N from x1 to x2, 1000 times each&quot;, adj = 0)</code></pre>
+<p><img src="/post/2020-02-29-in-a-village-where-people-only-want-boys_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<pre class="r"><code>dev.off()</code></pre>
+<pre><code>## null device 
+##           1</code></pre>
