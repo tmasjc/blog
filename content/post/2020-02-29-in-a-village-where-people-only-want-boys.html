@@ -6,32 +6,25 @@ slug: in-a-village-where-people-only-want-boys
 categories: []
 tags: 
     - monte-carlo
+    - functional-programming
+    - dynamic-programming
 publishdate: '2020-02-29'
 lastmod: '2020-02-29'
 editor_options: 
   chunk_output_type: console
 ---
 
-<script src="/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
-<script src="/rmarkdown-libs/d3/d3.min.js"></script>
-<script src="/rmarkdown-libs/dagre/dagre-d3.min.js"></script>
-<link href="/rmarkdown-libs/mermaid/dist/mermaid.css" rel="stylesheet" />
-<script src="/rmarkdown-libs/mermaid/dist/mermaid.js"></script>
-<link href="/rmarkdown-libs/DiagrammeR-styles/styles.css" rel="stylesheet" />
-<script src="/rmarkdown-libs/chromatography/chromatography.js"></script>
-<script src="/rmarkdown-libs/DiagrammeR-binding/DiagrammeR.js"></script>
 
 
 <p>The origin of this question is an interview question from Google.</p>
 <blockquote>
-<p>In a village in which people only want boys every family continues to have children until they have a boy. If they have a girl, they have another child. If they have a boy, they stop. What is the expected boys to girls ratio in the village?</p>
+<p>In a village in which people only want boys every family continues to have children until they have a boy. If they have a girl, they have another child. If they have a boy, they stop. What is the expected boy to girl ratio in the village?</p>
 </blockquote>
 <p>Though this can be solved mathematically (of course it can), the question is (IMO) easier to solve by thinking in a tree/branches structure.</p>
 <p>If we assume the village has N families, and the probability of having a boy or girl is 50/50, then</p>
-<div id="htmlwidget-1" style="width:672px;height:480px;" class="DiagrammeR html-widget"></div>
-<script type="application/json" data-for="htmlwidget-1">{"x":{"diagram":"\n    graph TB\n        N --have boys, stop--> L21[N/2]\n        N --have girls, continue--> L22[N/2]\n        L22 --boys--> L221[N/4]\n        L22 --girls--> L222[N/4]\n        L222 --boys--> L2221[N/8]\n        L222 --girls--> L2222[N/8]\n        L2222 --> L222221[N/16]\n        L2222 --> L222222[N/16]\n        L222222 --- e1[...]\n"},"evals":[],"jsHooks":[]}</script>
-<p>Here we see the obvious, as the depth of tree extends, the boy-to-girl disparity will ultimately become insignificant. The ratio will be very close to 50/50.</p>
-<p>For practice and validation sake, lets do a simulation.</p>
+<p><img src="/etc/village/diagramme.png" /></p>
+<p>Here we see the obvious, as the depth of tree extends, the boy-to-girl disparity will ultimately become insignificant. Hence, the ratio will be very close to 50/50.</p>
+<p>However, the question itself is not the main interest of this post. It turns out to be quite a nice practice for simulation coding. The following attaches the source code to the simulation as it validates the answer given above. I utilize both <strong>functional (higher order function)</strong> and <strong>dynamic programming</strong> here.</p>
 <pre class="r"><code>library(magrittr)
 
 simulate_once &lt;- function(N, verbose=FALSE) {
@@ -48,7 +41,7 @@ simulate_once &lt;- function(N, verbose=FALSE) {
         # browser()
         if(msgON) message(x)
         
-        # terminal condition
+        # terminal condition: all 1 (boys)
         if (all(x)) {
             boys  &lt;&lt;- boys + sum(x)
             if (msgON) print_vars()
@@ -56,11 +49,11 @@ simulate_once &lt;- function(N, verbose=FALSE) {
         }
         
         # assign to parent env so that we can keep track
-        boys  &lt;&lt;- boys + sum(x)
+        boys  &lt;&lt;-  boys + sum(x)
         girls &lt;&lt;- girls + sum(!x)
         
         if (msgON) print_vars()
-        return(tryonemore(rbinom(sum(!x), 1, 0.5), msgON = msgON) + sum(x))
+        return(tryonemore(rbinom(sum(!x), 1, 0.5), msgON = msgON))
     }
     # init call
     tryonemore(rbinom(N, 1, 0.5), msgON=verbose)
@@ -84,17 +77,20 @@ simulate_once(10, verbose = TRUE)
 <pre class="r"><code>library(purrr)
 library(ggplot2)
 
-res &lt;- map_dbl(11:1000, ~ {
+N.range = 11:1000
+
+res &lt;- map_dbl(N.range, ~ {
     mean(replicate(1000, simulate_once(.x)))
 })
 
-par(family = &quot;Menlo&quot;)
-plot(res,
-     type  = &quot;l&quot;,
-     xlab  = &quot;N (# families)&quot;,
-     ylab  = &quot;Expected Boys-to-Girls Ratio&quot;,)
-title(main = &quot;Simulate N from x1 to x2, 1000 times each&quot;, adj = 0)</code></pre>
+data.frame(ind = N.range, ratio = res) %&gt;% 
+    ggplot(aes(ind, ratio)) +
+    geom_line() + 
+    geom_hline(yintercept = 1, lty = 4, col = &quot;blue&quot;) +
+    scale_y_continuous(limits = c(0.9, 1.2)) +
+    theme_minimal(base_family = &quot;Menlo&quot;) + 
+    labs(x       = &quot;N (# families)&quot;,
+         y       = &quot;Expected Boy-to-Girl Ratio&quot;,
+         caption = &quot;*Simulation is ran 1000 times for each N&quot;,
+         title   = &quot;Simulation for Various N&quot;)</code></pre>
 <p><img src="/post/2020-02-29-in-a-village-where-people-only-want-boys_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
-<pre class="r"><code>dev.off()</code></pre>
-<pre><code>## null device 
-##           1</code></pre>
