@@ -1,0 +1,75 @@
+---
+title: Trigger Dingtalk Robot
+author: tmasjc
+date: '2019-11-10'
+slug: trigger-dingtalk-webhook
+categories: []
+tags: 
+    - httr
+    - webhooks
+---
+
+
+
+<p>Dingtalk is the official comm tool in our work. They provide an interface which allow users to add robot to a group. A robot is merely a webhook that receives POST requests. More details can be found on docs.</p>
+<p>Here I use the signature method to provide extra security. For this method to work, we need 3 piece of information. Token (1) and secret (2) can be obtained from the webhook setting. Signing (3) process is demonstrated below. I attach both R and Python version.</p>
+<p>Docs: <a href="https://ding-doc.dingtalk.com/doc#/serverapi2/krgddi" class="uri">https://ding-doc.dingtalk.com/doc#/serverapi2/krgddi</a></p>
+<div id="r" class="section level3">
+<h3>R</h3>
+<pre class="r"><code>library(digest)
+library(magrittr)
+library(httr)
+library(jsonlite)
+library(glue)
+
+# you need to obtain these from webhook setting
+url    = &quot;https://oapi.dingtalk.com/robot/send&quot;
+token  = &quot;some-token&quot;
+secret = &quot;some-secret&quot;
+ts     = round(as.numeric(Sys.time()) * 1000)
+
+# obtain signature 
+str  &lt;- paste(ts, secret, sep = &quot;\n&quot;)
+hmc  &lt;- digest::hmac(secret, str, algo = &quot;sha256&quot;, raw = TRUE)
+sign &lt;- hmc %&gt;% base64Encode() %&gt;% URLencode(reserved = TRUE)
+endp &lt;- glue(&quot;{url}?access_token={token}&amp;timestamp={ts}&amp;sign={sign}&quot;)
+
+# there are other types of body, RTD
+body &lt;- list(
+    msgtype = &quot;text&quot;,
+    text = list(content = &quot;周末写代码的愉悦大于一切&quot;)
+)
+
+# send to webhook 
+POST(url = endp, body = body, encode = &quot;json&quot;, verbose())</code></pre>
+</div>
+<div id="python3" class="section level3">
+<h3>Python3</h3>
+<pre class="python3"><code>import time
+import hmac
+import hashlib
+import base64
+import urllib
+import requests
+
+# https://oapi.dingtalk.com/robot/send?access_token=
+url    = &quot;https://oapi.dingtalk.com/robot/send&quot;
+token  = &quot;some-token&quot;
+secret = &quot;some-secret&quot;
+ts     = int(round(time.time() * 1000))
+
+# obtain signature
+str  = &#39;{}\n{}&#39;.format(ts, secret)
+hmc  = hmac.new(secret.encode(&#39;utf-8&#39;), str.encode(&#39;utf-8&#39;), digestmod=hashlib.sha256).digest()
+sign = urllib.parse.quote_plus(base64.b64encode(hmc))
+
+# this is our request endpoint
+endp = &#39;{}?access_token={}&amp;timestamp={}&amp;sign={}&#39;.format(url, token, ts, sign)
+
+# send to webhook
+body = {&#39;msgtype&#39;:&#39;text&#39;, &#39;text&#39;:{&#39;content&#39;:&#39;今日宜清空购物车&#39;}}
+r =  requests.post(url = endp, json = body)
+
+# view response
+print(r.text)</code></pre>
+</div>
