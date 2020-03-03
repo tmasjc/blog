@@ -1,5 +1,5 @@
 ---
-title: Pokemon Card Game
+title: 'Puzzle: Pokemon Card Game'
 author: tmasjc
 date: '2019-03-10'
 slug: pokemon-card-game
@@ -42,7 +42,7 @@ card_purchase &lt;- function(n, full_set, rand, uniq) {
   n * rand  + (full_set - length(unique(deck))) * uniq
 }
 card_purchase(3000, N, random_cost, unique_cost)</code></pre>
-<pre><code>## [1] 151</code></pre>
+<pre><code>## [1] 150.75</code></pre>
 <pre class="r"><code># range of simulation, from x to y cards
 purchases = 100:2000
 sim_costs &lt;- map_dbl(purchases, ~ card_purchase(.x, N, random_cost, unique_cost))
@@ -64,7 +64,7 @@ list(
   cost = sim_costs[[opt]]
 )</code></pre>
 <pre><code>## $num_cards
-## [1] 932
+## [1] 924
 ## 
 ## $cost
-## [1] 76.17</code></pre>
+## [1] 76.14667</code></pre>

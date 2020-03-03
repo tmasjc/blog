@@ -1,11 +1,11 @@
 ---
-title: Is James Harden been given special treatment?
+title: 'EDA: Is James Harden been given special treatment?'
 author: tmasjc
 date: '2019-10-06'
 slug: is-james-harden-been-given-special-treatment-by-referee
 categories: []
 tags: 
-    - isittrue
+    - datavis
 ---
 
 This video ["8 Unbelievable Charts That Will Change The Way You See The NBA"](https://www.youtube.com/watch?v=VCIKek1f-Hs) pops out on my Youtube homepage. The first chart he argues that James Harden has been given way more free throws (834) by NBA referees compare to the rest of the players. I find the chart *'unbelievable'* indeed and so I decided to look up some data on [basketball-reference](https://www.basketball-reference.com) to determine its validatity. 

@@ -1,5 +1,5 @@
 ---
-title: Pokemon Card Game
+title: 'Puzzle: Pokemon Card Game'
 author: tmasjc
 date: '2019-03-10'
 slug: pokemon-card-game

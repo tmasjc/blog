@@ -1,5 +1,5 @@
 ---
-title: Blackjack Simulation
+title: 'Puzzle: Blackjack Simulation'
 author: Thomas Jc
 date: '2020-02-19'
 slug: blackjack-simulation
