@@ -1,4 +1,4 @@
-baseURL = "http://notsoformal.xyz"
+baseURL = "/"
 languageCode = "en-us"
 title = "Not So Formal"
 theme = "minimal-bootstrap-hugo-theme"
@@ -37,6 +37,10 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
   name = "~home"
   url = "/"
   weight = 1
+  # [[menu.nav]]
+  # name = "about"
+  # url = "/"
+  # weight = 2
 
 [markup]
   defaultMarkdownHandler = "goldmark"

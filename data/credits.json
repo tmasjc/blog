@@ -3,7 +3,7 @@
         "text" : "Personal code snippets of @tmasjc"
     },
     "engine": {
-        "text" : "Site powered by Hugo"
+        "text" : "Site powered by Hugo + Blogdown"
     },
     "theme": {
         "text" : "Minimal Bootstrap Theme by Zachary Betz"
