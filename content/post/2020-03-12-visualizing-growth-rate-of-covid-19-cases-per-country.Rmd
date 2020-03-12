@@ -1,5 +1,5 @@
 ---
-title: Visualizing Growth Rate of Covid-19 Cases per Country
+title: Visualizing Cumulative Growth of COVID-19 Cases by Day
 author: tmasjc
 date: '2020-03-12'
 slug: visualizing-growth-rate-of-covid-19-cases-per-country
