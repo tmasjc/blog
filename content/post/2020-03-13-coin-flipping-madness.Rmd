@@ -1,0 +1,77 @@
+---
+title: "Puzzle: The Riddler Feb 21 - Coin Flipping Madness"
+author: tmasjc
+date: '2020-03-13'
+slug: coin-flipping-madness
+categories: []
+tags: []
+publishdate: '2020-03-13'
+lastmod: '2020-03-13'
+editor_options: 
+  chunk_output_type: console
+---
+
+From 538's [The Riddler](https://fivethirtyeight.com/features/can-you-flip-your-way-to-victory/),
+
+> You have two fair coins, labeled A and B. When you flip coin A, you get 1 point if it comes up heads, but you lose 1 point if it comes up tails. Coin B is worth twice as much — when you flip coin B, you get 2 points if it comes up heads, but you lose 2 points if it comes up tails. </br></br>
+To play the game, you make a total of 100 flips. For each flip, you can choose either coin, and you know the outcomes of all the previous flips. In order to win, you must finish with a positive total score. In your eyes, finishing with 2 points is just as good as finishing with 200 points — any positive score is a win. (By the same token, finishing with 0 or −2 points is just as bad as finishing with −200 points.) </br></br>
+If you optimize your strategy, what percentage of games will you win? (Remember, one game consists of 100 coin flips.)
+
+```{r, message=FALSE, warning=FALSE}
+library(purrr)
+
+# flipping coin A or B with respective points
+flip_coin <- function(coin) {
+    x = ifelse(rbinom(1, 1, 0.5), 1, -1)
+    ifelse(coin == "A", x * 1, x * 2)
+}
+
+which_coin <- function(acc, i) {
+    
+    # terminal condition
+    if (i == 0) {
+        return(acc)
+    }
+    
+    ## this is our strategy: 
+    ## only when we're behind taking risk makes a difference
+    x = ifelse(acc < 0, flip_coin("B"), flip_coin("A"))
+    
+    which_coin(acc + x, i - 1)
+}
+
+set.seed(1212)
+trials = 3000
+res = replicate(trials, which_coin(0, 100))
+sum(res > 0) / trials
+```
+
+```{r, cache=TRUE}
+# create a data frame as grid for simulation
+df <- expand.grid(remaining = seq(10, 90, 10), acc = seq(-20, 20, 1))
+
+# a point on grid represents a single possibility
+# loop thru our grid to calc expected chances
+res <- map2_dbl(df$acc, df$remaining, ~ {
+    sum(replicate(trials, which_coin(.x, .y)) > 0) / trials
+})
+```
+
+
+```{r}
+library(ggplot2)
+
+df %>% 
+    # attach winning chances
+    cbind(prob = res) %>%
+    ggplot(aes(100 - remaining, acc)) + 
+    geom_raster(aes(fill = prob), interpolate = TRUE) +
+    scale_x_continuous(breaks = seq(0, 100, 10)) +
+    scale_fill_viridis_c() +
+    theme_minimal(base_family = "Menlo") + 
+    theme(legend.position = "top", legend.key.width = unit(2, "cm"), 
+          legend.title = element_text(vjust = 1.0)) + 
+    labs(x = "Flip", y = "Cumulative Score", fill = "Probability of Winning")
+
+```
+

@@ -1,0 +1,70 @@
+---
+title: "Puzzle: The Riddler Feb 21 - Coin Flipping Madness"
+author: tmasjc
+date: '2020-03-13'
+slug: coin-flipping-madness
+categories: []
+tags: []
+publishdate: '2020-03-13'
+lastmod: '2020-03-13'
+editor_options: 
+  chunk_output_type: console
+---
+
+
+
+<p>From 538’s <a href="https://fivethirtyeight.com/features/can-you-flip-your-way-to-victory/">The Riddler</a>,</p>
+<blockquote>
+<p>You have two fair coins, labeled A and B. When you flip coin A, you get 1 point if it comes up heads, but you lose 1 point if it comes up tails. Coin B is worth twice as much — when you flip coin B, you get 2 points if it comes up heads, but you lose 2 points if it comes up tails. </br></br>
+To play the game, you make a total of 100 flips. For each flip, you can choose either coin, and you know the outcomes of all the previous flips. In order to win, you must finish with a positive total score. In your eyes, finishing with 2 points is just as good as finishing with 200 points — any positive score is a win. (By the same token, finishing with 0 or −2 points is just as bad as finishing with −200 points.) </br></br>
+If you optimize your strategy, what percentage of games will you win? (Remember, one game consists of 100 coin flips.)</p>
+</blockquote>
+<pre class="r"><code>library(purrr)
+
+# flipping coin A or B with respective points
+flip_coin &lt;- function(coin) {
+    x = ifelse(rbinom(1, 1, 0.5), 1, -1)
+    ifelse(coin == &quot;A&quot;, x * 1, x * 2)
+}
+
+which_coin &lt;- function(acc, i) {
+    
+    # terminal condition
+    if (i == 0) {
+        return(acc)
+    }
+    
+    ## this is our strategy: 
+    ## only when we&#39;re behind taking risk makes a difference
+    x = ifelse(acc &lt; 0, flip_coin(&quot;B&quot;), flip_coin(&quot;A&quot;))
+    
+    which_coin(acc + x, i - 1)
+}
+
+set.seed(1212)
+trials = 3000
+res = replicate(trials, which_coin(0, 100))
+sum(res &gt; 0) / trials</code></pre>
+<pre><code>## [1] 0.6423333</code></pre>
+<pre class="r"><code># create a data frame as grid for simulation
+df &lt;- expand.grid(remaining = seq(10, 90, 10), acc = seq(-20, 20, 1))
+
+# a point on grid represents a single possibility
+# loop thru our grid to calc expected chances
+res &lt;- map2_dbl(df$acc, df$remaining, ~ {
+    sum(replicate(trials, which_coin(.x, .y)) &gt; 0) / trials
+})</code></pre>
+<pre class="r"><code>library(ggplot2)
+
+df %&gt;% 
+    # attach winning chances
+    cbind(prob = res) %&gt;%
+    ggplot(aes(100 - remaining, acc)) + 
+    geom_raster(aes(fill = prob), interpolate = TRUE) +
+    scale_x_continuous(breaks = seq(0, 100, 10)) +
+    scale_fill_viridis_c() +
+    theme_minimal(base_family = &quot;Menlo&quot;) + 
+    theme(legend.position = &quot;top&quot;, legend.key.width = unit(2, &quot;cm&quot;), 
+          legend.title = element_text(vjust = 1.0)) + 
+    labs(x = &quot;Flip&quot;, y = &quot;Cumulative Score&quot;, fill = &quot;Probability of Winning&quot;)</code></pre>
+<p><img src="/post/2020-03-13-coin-flipping-madness_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
