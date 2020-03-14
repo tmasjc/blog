@@ -20,6 +20,7 @@ To play the game, you make a total of 100 flips. For each flip, you can choose e
 If you optimize your strategy, what percentage of games will you win? (Remember, one game consists of 100 coin flips.)</p>
 </blockquote>
 <pre class="r"><code>library(purrr)
+library(furrr)
 
 # flipping coin A or B with respective points
 flip_coin &lt;- function(coin) {
@@ -27,44 +28,53 @@ flip_coin &lt;- function(coin) {
     ifelse(coin == &quot;A&quot;, x * 1, x * 2)
 }
 
-which_coin &lt;- function(acc, i) {
+# acc = accumulative score; i = remaining flip;
+run_game &lt;- function(acc, i) {
     
     # terminal condition
-    if (i == 0) {
-        return(acc)
-    }
+    if (i == 0) return(acc);
     
     ## this is our strategy: 
     ## only when we&#39;re behind taking risk makes a difference
     x = ifelse(acc &lt; 0, flip_coin(&quot;B&quot;), flip_coin(&quot;A&quot;))
     
-    which_coin(acc + x, i - 1)
+    run_game(acc + x, i - 1)
 }
 
 set.seed(1212)
 trials = 3000
-res = replicate(trials, which_coin(0, 100))
-sum(res &gt; 0) / trials</code></pre>
+res = replicate(trials, run_game(0, 100))
+sum(res &gt; 0) / trials # win game if positive</code></pre>
 <pre><code>## [1] 0.6423333</code></pre>
+<p>The answer is <strong>64%</strong>. If you play the game the optimal game, you are able to win 64% of the time. For further analysis, we can explore the winning chances at any point of in the game. For an instance, if you are left with 10 flips and are 5 points behind, what are the odds of you winning the game at the end?</p>
 <pre class="r"><code># create a data frame as grid for simulation
 df &lt;- expand.grid(remaining = seq(10, 90, 10), acc = seq(-20, 20, 1))
 
+# prepare for parellel computation
+future::plan(multiprocess)
+
 # a point on grid represents a single possibility
 # loop thru our grid to calc expected chances
-res &lt;- map2_dbl(df$acc, df$remaining, ~ {
-    sum(replicate(trials, which_coin(.x, .y)) &gt; 0) / trials
+res &lt;- future_map2_dbl(df$acc, df$remaining, ~ {
+    sum(replicate(trials, run_game(.x, .y)) &gt; 0) / trials
 })</code></pre>
+<p>We use a heat map to illustrate this.</p>
 <pre class="r"><code>library(ggplot2)
 
-df %&gt;% 
-    # attach winning chances
-    cbind(prob = res) %&gt;%
-    ggplot(aes(100 - remaining, acc)) + 
-    geom_raster(aes(fill = prob), interpolate = TRUE) +
-    scale_x_continuous(breaks = seq(0, 100, 10)) +
-    scale_fill_viridis_c() +
-    theme_minimal(base_family = &quot;Menlo&quot;) + 
-    theme(legend.position = &quot;top&quot;, legend.key.width = unit(2, &quot;cm&quot;), 
-          legend.title = element_text(vjust = 1.0)) + 
-    labs(x = &quot;Flip&quot;, y = &quot;Cumulative Score&quot;, fill = &quot;Probability of Winning&quot;)</code></pre>
+df %&gt;%
+  # attach winning chances
+  cbind(prob = res) %&gt;%
+  ggplot(aes(100 - remaining, acc)) +
+  # take note of interpolation here
+  geom_raster(aes(fill = prob), interpolate = TRUE) +
+  scale_x_continuous(breaks = seq(0, 100, 10)) +
+  scale_fill_viridis_c() +
+  theme_minimal(base_family = &quot;Menlo&quot;) +
+  theme(
+    legend.position  = &quot;top&quot;,
+    legend.key.width = unit(2, &quot;cm&quot;),
+    legend.title     = element_text(vjust = 1.0)
+  ) +
+  labs(x = &quot;Flip&quot;, y = &quot;Cumulative Score&quot;,
+       fill = &quot;Probability of Winning&quot;)</code></pre>
 <p><img src="/post/2020-03-13-coin-flipping-madness_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>

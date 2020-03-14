@@ -19,6 +19,7 @@ If you optimize your strategy, what percentage of games will you win? (Remember,
 
 ```{r, message=FALSE, warning=FALSE}
 library(purrr)
+library(furrr)
 
 # flipping coin A or B with respective points
 flip_coin <- function(coin) {
@@ -26,52 +27,62 @@ flip_coin <- function(coin) {
     ifelse(coin == "A", x * 1, x * 2)
 }
 
-which_coin <- function(acc, i) {
+# acc = accumulative score; i = remaining flip;
+run_game <- function(acc, i) {
     
     # terminal condition
-    if (i == 0) {
-        return(acc)
-    }
+    if (i == 0) return(acc);
     
     ## this is our strategy: 
     ## only when we're behind taking risk makes a difference
     x = ifelse(acc < 0, flip_coin("B"), flip_coin("A"))
     
-    which_coin(acc + x, i - 1)
+    run_game(acc + x, i - 1)
 }
 
 set.seed(1212)
 trials = 3000
-res = replicate(trials, which_coin(0, 100))
-sum(res > 0) / trials
+res = replicate(trials, run_game(0, 100))
+sum(res > 0) / trials # win game if positive
 ```
 
-```{r, cache=TRUE}
+The answer is **64%**. If you play the game the optimal game, you are able to win 64% of the time. For further analysis, we can explore the winning chances at any point of in the game. For an instance, if you are left with 10 flips and are 5 points behind, what are the odds of you winning the game at the end?
+
+```{r, cache=TRUE, warning=FALSE}
 # create a data frame as grid for simulation
 df <- expand.grid(remaining = seq(10, 90, 10), acc = seq(-20, 20, 1))
 
+# prepare for parellel computation
+future::plan(multiprocess)
+
 # a point on grid represents a single possibility
 # loop thru our grid to calc expected chances
-res <- map2_dbl(df$acc, df$remaining, ~ {
-    sum(replicate(trials, which_coin(.x, .y)) > 0) / trials
+res <- future_map2_dbl(df$acc, df$remaining, ~ {
+    sum(replicate(trials, run_game(.x, .y)) > 0) / trials
 })
 ```
 
+We use a heat map to illustrate this. 
 
 ```{r}
 library(ggplot2)
 
-df %>% 
-    # attach winning chances
-    cbind(prob = res) %>%
-    ggplot(aes(100 - remaining, acc)) + 
-    geom_raster(aes(fill = prob), interpolate = TRUE) +
-    scale_x_continuous(breaks = seq(0, 100, 10)) +
-    scale_fill_viridis_c() +
-    theme_minimal(base_family = "Menlo") + 
-    theme(legend.position = "top", legend.key.width = unit(2, "cm"), 
-          legend.title = element_text(vjust = 1.0)) + 
-    labs(x = "Flip", y = "Cumulative Score", fill = "Probability of Winning")
+df %>%
+  # attach winning chances
+  cbind(prob = res) %>%
+  ggplot(aes(100 - remaining, acc)) +
+  # take note of interpolation here
+  geom_raster(aes(fill = prob), interpolate = TRUE) +
+  scale_x_continuous(breaks = seq(0, 100, 10)) +
+  scale_fill_viridis_c() +
+  theme_minimal(base_family = "Menlo") +
+  theme(
+    legend.position  = "top",
+    legend.key.width = unit(2, "cm"),
+    legend.title     = element_text(vjust = 1.0)
+  ) +
+  labs(x = "Flip", y = "Cumulative Score",
+       fill = "Probability of Winning")
 
 ```
 
