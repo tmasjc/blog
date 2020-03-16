@@ -29,29 +29,39 @@ flip_coin &lt;- function(coin) {
 }
 
 # acc = accumulative score; i = remaining flip;
-run_game &lt;- function(acc, i) {
+run_game &lt;- function(acc, i, threshold = 0) {
     
     # terminal condition
     if (i == 0) return(acc);
     
     ## this is our strategy: 
     ## only when we&#39;re behind taking risk makes a difference
-    x = ifelse(acc &lt; 0, flip_coin(&quot;B&quot;), flip_coin(&quot;A&quot;))
+    x = ifelse(acc &lt; threshold, flip_coin(&quot;B&quot;), flip_coin(&quot;A&quot;))
     
-    run_game(acc + x, i - 1)
+    run_game(acc + x, i - 1, threshold)
 }
 
-set.seed(1212)
+set.seed(1111)
 trials = 3000
 res = replicate(trials, run_game(0, 100))
 sum(res &gt; 0) / trials # win game if positive</code></pre>
-<pre><code>## [1] 0.6423333</code></pre>
-<p>The answer is <strong>64%</strong>. If you play the game the optimal game, you are able to win 64% of the time. For further analysis, we can explore the winning chances at any point of in the game. For an instance, if you are left with 10 flips and are 5 points behind, what are the odds of you winning the game at the end?</p>
+<pre><code>## [1] 0.6366667</code></pre>
+<p>The answer is <strong>64%</strong>. If you play the game the optimal way, you are able to win ~64% of the time. Here, we vary the threshold to adjust the strategy from conservative (-10) to aggresive mode (10). Also note that, if you choose your strategy to only play either coin A or coin B, your winning probability is only 46% instead of 50% (because zero is considered a loss).</p>
+<pre class="r"><code># prepare for parellel computation
+future::plan(multiprocess)
+
+thres &lt;- -10:10
+res &lt;- furrr::future_map_dbl(thres, ~ {
+  mean(replicate(trials, run_game(0, 100, threshold = .x)) &gt; 0)
+})
+
+plot(thres, res, type = &quot;l&quot;, lwd = 3, col = &quot;red&quot;,
+     xlab = &quot;Threshold&quot;, ylab = &quot;Winning %&quot;)
+abline(v = 0, lty = 2)</code></pre>
+<p><img src="/post/2020-03-13-coin-flipping-madness_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>For further analysis, we can explore the winning chances at any point of in the game. For an instance, if you are left with 10 flips and are 5 points behind, what are the odds of you winning the game at the end?</p>
 <pre class="r"><code># create a data frame as grid for simulation
 df &lt;- expand.grid(remaining = seq(10, 90, 10), acc = seq(-20, 20, 1))
-
-# prepare for parellel computation
-future::plan(multiprocess)
 
 # a point on grid represents a single possibility
 # loop thru our grid to calc expected chances
@@ -77,4 +87,4 @@ df %&gt;%
   ) +
   labs(x = &quot;Flip&quot;, y = &quot;Cumulative Score&quot;,
        fill = &quot;Probability of Winning&quot;)</code></pre>
-<p><img src="/post/2020-03-13-coin-flipping-madness_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p><img src="/post/2020-03-13-coin-flipping-madness_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
