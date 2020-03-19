@@ -1,0 +1,33 @@
+---
+title: 'Puzzle: The Riddler Mar 06 - Guess Who'
+author: tmasjc
+date: '2020-03-19'
+slug: puzzle-the-riddler-mar-06-guess-who
+categories: []
+tags: 
+    - monte-carlo
+publishdate: '2020-03-19'
+lastmod: '2020-03-19'
+draft: TRUE
+---
+
+From 538's [The Riddler](https://fivethirtyeight.com/features/how-good-are-you-at-guess-who/),
+
+> In the game of “Guess Who,” each player first randomly (and independently of their opponent) selects one of N character tiles. While it’s unlikely, both players can choose the same character. Each of the N characters is distinct in appearance — for example, characters have different skin tones, hair color, hair length and accessories like hats or glasses. </br></br>
+Each player also has access to a board with images of all N characters. The players alternate taking turns, and during each turn a player has two options:</br>
+Make a specific guess as to their opponent’s selected character. If correct, the player who made the guess immediately wins. Otherwise, that player immediately loses.</br></br>
+Ask a yes-or-no question about their opponent’s chosen character, in order to eliminate some of the candidates. Importantly, if only one possible character is left after the question, the player must still wait until their next turn to officially guess that character.</br></br>
+Assume both players are highly skilled at choosing yes-or-no questions, so that they can always craft a question to potentially rule out (or in) any desired number of candidates. Also, both are playing to maximize their own probability of winning.</br></br>
+Let’s keep things (relatively) simple, and suppose that N = 4. How likely is it that the player who goes first will win?
+
+```md
+## pseudo code ---- 
+
+1. The game has N characters and 2 players (A, B);
+2. You need 2 numeric variables to store A's & B's probability of winning (theta);
+3. At every round, 
+    3.1 check opponent's theta. If opp's theta is 1, makes a random guess, else do 3.2;
+    3.2 choose x over vector(1 to N), if x == 1, theta => 1, else nothing;
+4. Round done, N - 1;
+```
+
