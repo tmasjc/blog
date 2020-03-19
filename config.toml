@@ -1,6 +1,6 @@
 baseURL = "/"
 languageCode = "en-us"
-title = "Not So Formal"
+title = "Thomas's"
 theme = "minimal-bootstrap-hugo-theme"
 ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 
