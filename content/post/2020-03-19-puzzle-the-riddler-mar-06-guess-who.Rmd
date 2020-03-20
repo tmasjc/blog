@@ -31,3 +31,45 @@ Let’s keep things (relatively) simple, and suppose that N = 4. How likely is i
 4. Round done, N - 1;
 ```
 
+```{r}
+# random search out of N
+guess_who <- function(N) {
+    x = sample(LETTERS[1:N], 2)
+    return(c(x[1] == "A", x[2] == "B"))
+}
+
+play_game <- function(N) {
+    
+    # exhaust possibilities, A wins
+    if (N == 1) {
+        return("A")
+    }
+
+    AB = guess_who(N)
+    
+    # B's turn and A is going to win next round
+    # B is forced to make random guess
+    if (AB[1]) {
+        if (AB[2]) {
+            # correct guess, B wins
+            return("B")
+        } else {
+            # A wins on next round
+            return("A")
+        }
+    } else if (AB[2]) {
+        # A's turn and B is going to win next round
+        # A is forced to make random guess
+        return(ifelse(sample(LETTERS[1:N], 1) == "A", "A", "B"))
+    }
+    
+    # both did not get, continue
+    play_game(N - 1)
+
+}
+
+res = replicate(3000, play_game(4))
+table(res)
+```
+
+
