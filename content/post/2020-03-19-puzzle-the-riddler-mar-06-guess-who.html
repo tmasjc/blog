@@ -25,6 +25,7 @@ Let’s keep things (relatively) simple, and suppose that N = 4. How likely is i
 Extra credit: If N is instead 24 (the number of characters in the original “Guess Who” game), now how likely is it that the player who goes first will win?</br></br>
 Extra extra credit: If N is instead 14, now how likely is it that the player who goes first will win?</p>
 </blockquote>
+<p>For <code>N</code> = 4, the optimal strategy here is to ask a question which narrows the choices down to 1. If you get it, you force your opponent to make a wild guess in the next round. The purpose of this post is not to solve for N but provide an exploratory experiment into the general solution.</p>
 <pre class="md"><code>## pseudo code ---- 
 
 1. The game has N characters and 2 players (A, B);
@@ -96,7 +97,7 @@ run_game(init, init, split = NA, frac = 0.3)</code></pre>
 <pre class="r"><code># run simulation
 mean(replicate(100e3, run_game(init, init, split = 1L, frac = 1)) == &quot;A&quot;)</code></pre>
 <pre><code>## [1] 0.56246</code></pre>
-<p>The answer is <strong>56.25%</strong>. For small N, one can probably deduce the answer logically. 25% of the time A forces B to guess at first round which gives 75% of winning probability. 75% of the time both has equal chances. Thus,</p>
+<p><strong>The answer is 56.25% for <code>N</code> = 4</strong>. For small N, one can probably deduce the answer logically. 25% of the time A forces B to guess at first round which gives 75% of winning probability. 75% of the time both has equal chances. Thus,</p>
 <p><span class="math display">\[ (0.25 * 0.75) + (0.75 * 0.5) = 0.5625 \]</span></p>
 <p>For <code>N</code> = 14, 24, and etc., the logical deduction becomes almost impossible. To investigate optimal strategy to play the game for various <code>N</code>, we simulate multiple combinations. This is solely for exploratory purposes because it has a fundamental flaw. We assume both players always carry the same strategy and do not adjust for the characters remaining as the game progresses.</p>
 <pre class="r"><code>library(tidyverse)
