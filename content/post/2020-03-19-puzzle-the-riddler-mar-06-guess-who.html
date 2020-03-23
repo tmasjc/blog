@@ -8,7 +8,8 @@ tags:
     - monte-carlo
 publishdate: '2020-03-19'
 lastmod: '2020-03-19'
-draft: TRUE
+editor_options: 
+  chunk_output_type: console
 ---
 
 
@@ -20,13 +21,139 @@ Each player also has access to a board with images of all N characters. The play
 Make a specific guess as to their opponent’s selected character. If correct, the player who made the guess immediately wins. Otherwise, that player immediately loses.</br></br>
 Ask a yes-or-no question about their opponent’s chosen character, in order to eliminate some of the candidates. Importantly, if only one possible character is left after the question, the player must still wait until their next turn to officially guess that character.</br></br>
 Assume both players are highly skilled at choosing yes-or-no questions, so that they can always craft a question to potentially rule out (or in) any desired number of candidates. Also, both are playing to maximize their own probability of winning.</br></br>
-Let’s keep things (relatively) simple, and suppose that N = 4. How likely is it that the player who goes first will win?</p>
+Let’s keep things (relatively) simple, and suppose that N = 4. How likely is it that the player who goes first will win?</br></br>
+Extra credit: If N is instead 24 (the number of characters in the original “Guess Who” game), now how likely is it that the player who goes first will win?</br></br>
+Extra extra credit: If N is instead 14, now how likely is it that the player who goes first will win?</p>
 </blockquote>
 <pre class="md"><code>## pseudo code ---- 
 
 1. The game has N characters and 2 players (A, B);
-2. You need 2 numeric variables to store A&#39;s &amp; B&#39;s probability of winning (theta);
+2. Both players start with a winning chance (theta) of 1/N;
 3. At every round, 
-    3.1 check opponent&#39;s theta. If opp&#39;s theta is 1, makes a random guess, else do 3.2;
-    3.2 choose x over vector(1 to N), if x == 1, theta =&gt; 1, else nothing;
+    3.1 check opponent&#39;s theta. If opp&#39;s theta is 1, makes a random guess, else do,
+    3.2 choose x over vector(1 to N). If x == 2 (2 characters remaining), theta =&gt; 1, else nothing;
 4. Round done, N - 1;</code></pre>
+<pre class="r"><code># optimal strategy = asymmetry elimination
+optimal_guess &lt;- function(vec, target, split, frac = 1) {
+    
+    # toggle between mode: adjust split directly or fraction
+    if (is.integer(split)) {
+        pick = sample(vec, ceiling(split * frac))
+    } else if (frac &lt; 1) {
+        x = max(ceiling(length(vec) * frac), 1)
+        pick = sample(vec, x)
+    } else {
+        stop(&quot;Must specify split or fraction&quot;)
+    }
+    
+    # if range is right, pick this side
+    if (target %in% pick) return(pick);
+    
+    # else pick another side
+    setdiff(vec, pick)
+}
+
+# wrapper to check if player gets it
+correct_guess &lt;- function(vec, target) {
+    all(vec == target, na.rm = TRUE)
+}
+
+run_game &lt;- function(A, B, split, frac) {
+  
+    # A&#39;s turn knowing B will win next round
+    if (correct_guess(B, &quot;B&quot;)) {
+        return( ifelse(correct_guess(sample(A, 1), &quot;A&quot;), &quot;A&quot;, &quot;B&quot;) )
+    }
+    
+    # A&#39;s turn
+    A.guesses = optimal_guess(A, &quot;A&quot;, split, frac)
+    
+    # B&#39;s turn knowing A will win next round,
+    # make a random guess
+    if (correct_guess(A.guesses, &quot;A&quot;) | length(A) == 2) {
+        return( ifelse(correct_guess(sample(B, 1), &quot;B&quot;), &quot;B&quot;, &quot;A&quot;) )
+    }
+    
+    # B&#39;s turn 
+    B.guesses = optimal_guess(B, &quot;B&quot;, split, frac)
+    
+    # this round done, continue next
+    run_game(A.guesses, B.guesses, split, frac)
+}</code></pre>
+<p><code>run_game</code> simulates a single round game. I enable 2 modes here, using <code>split</code> for splitting with absolute number or <code>frac</code> for splitting with portion of remainings. The latter is for further investigation we will be doing later.</p>
+<pre class="r"><code># generate data
+set.seed(1212)
+N = 4
+init = sample(LETTERS[1:N], N)
+
+# mode 1: using absolute fixed split
+run_game(init, init, split = 1L, frac = 1)</code></pre>
+<pre><code>## [1] &quot;A&quot;</code></pre>
+<pre class="r"><code># mode 2: using fraction of remaining
+run_game(init, init, split = NA, frac = 0.3)</code></pre>
+<pre><code>## [1] &quot;A&quot;</code></pre>
+<p>The game works. Now, we are ready solve for <code>N</code> is 4 by running simulation.</p>
+<pre class="r"><code># run simulation
+mean(replicate(100e3, run_game(init, init, split = 1L, frac = 1)) == &quot;A&quot;)</code></pre>
+<pre><code>## [1] 0.56246</code></pre>
+<p>The answer is <strong>56.25%</strong>. For small N, one can probably deduce the answer logically. 25% of the time A forces B to guess at first round which gives 75% of winning probability. 75% of the time both has equal chances. Thus,</p>
+<p><span class="math display">\[ (0.25 * 0.75) + (0.75 * 0.5) = 0.5625 \]</span></p>
+<p>For <code>N</code> = 14, 24, and etc., the logical deduction becomes almost impossible. To investigate optimal strategy to play the game for various <code>N</code>, we simulate multiple combinations. This is solely for exploratory purposes because it has a fundamental flaw. We assume both players always carry the same strategy and do not adjust for the characters remaining as the game progresses.</p>
+<pre class="r"><code>library(tidyverse)
+library(furrr)
+
+set.seed(1212)
+# run in parallel
+future::plan(strategy = &quot;multiprocess&quot;)
+
+# random sample number of possible characters in the game
+nn = sort(sample(10:100, 30))
+# game strategy (fraction to split)
+fr = seq(0.1, 0.5, 0.02)
+
+# a wrapper to run combination of N and frac for `run game` 
+simulate_this &lt;- function(N, fracs, trials = 3000) {
+  future_map_dbl(fracs, ~ {
+    init = sample(LETTERS[1:N], N)
+    outs = replicate(trials, run_game(init, init, split = NA, frac = .x))
+    mean(outs == &quot;A&quot;)
+  })
+}</code></pre>
+<pre class="r"><code>res &lt;- purrr::map(nn, ~ simulate_this(N = .x, fr = fr, trials = 10e3))</code></pre>
+<pre class="r"><code>tidy_res &lt;- res %&gt;% 
+  as.data.frame() %&gt;% 
+  set_names(nn) %&gt;% 
+  bind_cols(fraction = fr) %&gt;% 
+  gather(N, prob, -fraction) %&gt;% 
+  mutate(N = as.numeric(N)) %&gt;% 
+  as_tibble()
+tidy_res</code></pre>
+<pre><code>## # A tibble: 630 x 3
+##    fraction     N  prob
+##       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1     0.1     12 0.535
+##  2     0.12    12 0.540
+##  3     0.14    12 0.554
+##  4     0.16    12 0.554
+##  5     0.18    12 0.551
+##  6     0.2     12 0.555
+##  7     0.22    12 0.567
+##  8     0.24    12 0.564
+##  9     0.26    12 0.572
+## 10     0.28    12 0.572
+## # … with 620 more rows</code></pre>
+<pre class="r"><code>tidy_res %&gt;% 
+  ggplot(aes(fraction, prob, alpha = N, group = N)) + 
+  geom_line(col = &quot;#00AFBB&quot;) + 
+  scale_y_continuous(limits = c(0.5, 0.6), labels = scales::percent) +
+  scale_color_brewer(type = &quot;seq&quot;) +
+  geom_vline(xintercept = 0.3, lty = 4, col = &quot;blue&quot;) +
+  geom_smooth(aes(group = 1), method = &quot;loess&quot;, se = FALSE,
+              col = &quot;navyblue&quot;, show.legend = FALSE) +
+  theme_minimal(base_family = &quot;Menlo&quot;) + 
+  labs(x        = &quot;Fraction to Split&quot;, 
+       y        = &quot;Winning Probability (%)&quot;, 
+       alpha    = &quot;# Characters&quot;,
+       title    = &quot;Guess Who - Optimal Strategy&quot;,
+       subtitle = &quot;where to split on the remainings&quot;)</code></pre>
+<p><img src="/post/2020-03-19-puzzle-the-riddler-mar-06-guess-who_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
