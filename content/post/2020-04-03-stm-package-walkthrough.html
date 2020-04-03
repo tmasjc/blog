@@ -1,0 +1,80 @@
+---
+title: STM Package Walkthrough Part One
+author: tmasjc
+date: '2020-04-03'
+slug: stm-package-walkthrough-part-one
+categories: []
+tags:  
+    - topic-modal
+    - stm
+publishdate: '2020-04-03'
+lastmod: '2020-04-03'
+---
+
+
+
+<pre class="r"><code>library(stm)
+library(igraph)
+library(stmCorrViz)</code></pre>
+<pre><code>## Observations: 13,246
+## Variables: 5
+## $ documents &lt;chr&gt; &quot;After a week of false statements, lies, and dismissiv…
+## $ docname   &lt;chr&gt; &quot;at0800300_1.text&quot;, &quot;at0800300_2.text&quot;, &quot;at0800300_3.t…
+## $ rating    &lt;chr&gt; &quot;Conservative&quot;, &quot;Conservative&quot;, &quot;Conservative&quot;, &quot;Conse…
+## $ day       &lt;int&gt; 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, …
+## $ blog      &lt;chr&gt; &quot;at&quot;, &quot;at&quot;, &quot;at&quot;, &quot;at&quot;, &quot;at&quot;, &quot;at&quot;, &quot;at&quot;, &quot;at&quot;, &quot;at&quot;, …</code></pre>
+<div id="ingest-reading-and-processing-text-data" class="section level3">
+<h3>3.1. Ingest: Reading and processing text data</h3>
+<pre class="r"><code># produce word indices and their associated counts
+processed &lt;- textProcessor(dat$documents, metadata = dat)</code></pre>
+<pre><code>## Building corpus... 
+## Converting to Lower Case... 
+## Removing punctuation... 
+## Removing stopwords... 
+## Removing numbers... 
+## Stemming... 
+## Creating Output...</code></pre>
+<pre class="r"><code>length(processed$documents) == nrow(dat)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code># plot documents, words and tokens removed at various word thresholds
+plotRemoved(processed$documents, lower.thresh = seq(1, 200, by = 100))</code></pre>
+<p><img src="/post/2020-04-03-stm-package-walkthrough_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+</div>
+<div id="prepare-associate-text-with-metadata" class="section level3">
+<h3>3.2 Prepare: Associate text with metadata</h3>
+<pre class="r"><code>out   &lt;- prepDocuments(processed$documents, processed$vocab, processed$meta, lower.thresh = 10)</code></pre>
+<pre><code>## Removing 111851 of 123990 terms (189793 of 2298953 tokens) due to frequency 
+## Your corpus now has 13246 documents, 12139 terms and 2109160 tokens.</code></pre>
+</div>
+<div id="estimate-estimating-the-structural-topic-model" class="section level3">
+<h3>3.3 Estimate: Estimating the structural topic model</h3>
+<pre class="r"><code>poliblogPrevFit &lt;-
+    stm(
+        documents = out$documents,
+        vocab = out$vocab,
+        K = 20,
+        prevalence =  ~ rating + s(day),
+        max.em.its = 75,
+        data = out$meta,
+        init.type = &quot;Spectral&quot;,
+        seed = 8458159
+    )</code></pre>
+</div>
+<div id="evaluate-model-selection-and-search" class="section level3">
+<h3>3.4 Evaluate: Model selection and search</h3>
+<p><em>not included here</em> (see part 2)</p>
+</div>
+<div id="visualize-presenting-stm-results" class="section level3">
+<h3>3.6. Visualize: Presenting STM results</h3>
+<pre class="r"><code>plot(poliblogPrevFit, type = &quot;summary&quot;, xlim = c(0, .4))</code></pre>
+<p><img src="/post/2020-04-03-stm-package-walkthrough_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<pre class="r"><code>plot(poliblogPrevFit, type = &quot;labels&quot;, topics = c(3, 7, 20))</code></pre>
+<p><img src="/post/2020-04-03-stm-package-walkthrough_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<pre class="r"><code># NOT RUN 
+stmCorrViz(
+    mod = poliblogPrevFit,
+    file_out = &quot;stm-interactive-correlation.html&quot;,
+    documents_raw = dat$documents,
+    documents_matrix = out$documents
+)</code></pre>
+</div>

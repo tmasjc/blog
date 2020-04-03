@@ -1,0 +1,84 @@
+---
+title: STM Package Walkthrough Part One
+author: tmasjc
+date: '2020-04-03'
+slug: stm-package-walkthrough-part-one
+categories: []
+tags:  
+    - topic-modal
+    - stm
+publishdate: '2020-04-03'
+lastmod: '2020-04-03'
+---
+
+```{r, message=FALSE}
+library(stm)
+library(igraph)
+library(stmCorrViz)
+```
+
+
+```{r, message=FALSE, echo=FALSE}
+dat <- read.csv("~/Downloads/poliblogs2008.csv", stringsAsFactors = FALSE)[-1]
+dplyr::glimpse(dat)
+```
+
+### 3.1. Ingest: Reading and processing text data
+
+```{r}
+# produce word indices and their associated counts
+processed <- textProcessor(dat$documents, metadata = dat)
+length(processed$documents) == nrow(dat)
+```
+
+```{r}
+# plot documents, words and tokens removed at various word thresholds
+plotRemoved(processed$documents, lower.thresh = seq(1, 200, by = 100))
+```
+
+### 3.2 Prepare: Associate text with metadata
+
+```{r}
+out   <- prepDocuments(processed$documents, processed$vocab, processed$meta, lower.thresh = 10)
+```
+
+### 3.3 Estimate: Estimating the structural topic model
+
+```{r, message=FALSE, cache=TRUE, results = 'hide'}
+poliblogPrevFit <-
+    stm(
+        documents = out$documents,
+        vocab = out$vocab,
+        K = 20,
+        prevalence =  ~ rating + s(day),
+        max.em.its = 75,
+        data = out$meta,
+        init.type = "Spectral",
+        seed = 8458159
+    )
+```
+
+### 3.4 Evaluate: Model selection and search
+
+*not included here* (see part 2)
+
+### 3.6. Visualize: Presenting STM results
+
+```{r}
+plot(poliblogPrevFit, type = "summary", xlim = c(0, .4))
+```
+
+```{r}
+plot(poliblogPrevFit, type = "labels", topics = c(3, 7, 20))
+```
+
+```{r, eval=FALSE}
+# NOT RUN 
+stmCorrViz(
+    mod = poliblogPrevFit,
+    file_out = "stm-interactive-correlation.html",
+    documents_raw = dat$documents,
+    documents_matrix = out$documents
+)
+```
+
