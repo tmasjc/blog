@@ -13,13 +13,16 @@ lastmod: '2020-04-03'
 
 ```{r, message=FALSE}
 library(stm)
-library(igraph)
 library(stmCorrViz)
 ```
 
+```{r, echo=FALSE}
+dat <- read.csv("~/Downloads/poliblogs2008.csv", stringsAsFactors = FALSE)[-1]
+```
+
+This is our working data.
 
 ```{r, message=FALSE, echo=FALSE}
-dat <- read.csv("~/Downloads/poliblogs2008.csv", stringsAsFactors = FALSE)[-1]
 dplyr::glimpse(dat)
 ```
 
@@ -71,6 +74,8 @@ plot(poliblogPrevFit, type = "summary", xlim = c(0, .4))
 ```{r}
 plot(poliblogPrevFit, type = "labels", topics = c(3, 7, 20))
 ```
+
+Interactive visual via `stmCorrViz` package.
 
 ```{r, eval=FALSE}
 # NOT RUN 

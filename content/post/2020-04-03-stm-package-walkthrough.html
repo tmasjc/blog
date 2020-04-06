@@ -14,8 +14,8 @@ lastmod: '2020-04-03'
 
 
 <pre class="r"><code>library(stm)
-library(igraph)
 library(stmCorrViz)</code></pre>
+<p>This is our working data.</p>
 <pre><code>## Observations: 13,246
 ## Variables: 5
 ## $ documents &lt;chr&gt; &quot;After a week of false statements, lies, and dismissiv…
@@ -38,7 +38,7 @@ processed &lt;- textProcessor(dat$documents, metadata = dat)</code></pre>
 <pre><code>## [1] TRUE</code></pre>
 <pre class="r"><code># plot documents, words and tokens removed at various word thresholds
 plotRemoved(processed$documents, lower.thresh = seq(1, 200, by = 100))</code></pre>
-<p><img src="/post/2020-04-03-stm-package-walkthrough_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><img src="/post/2020-04-03-stm-package-walkthrough_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 </div>
 <div id="prepare-associate-text-with-metadata" class="section level3">
 <h3>3.2 Prepare: Associate text with metadata</h3>
@@ -67,9 +67,10 @@ plotRemoved(processed$documents, lower.thresh = seq(1, 200, by = 100))</code></p
 <div id="visualize-presenting-stm-results" class="section level3">
 <h3>3.6. Visualize: Presenting STM results</h3>
 <pre class="r"><code>plot(poliblogPrevFit, type = &quot;summary&quot;, xlim = c(0, .4))</code></pre>
-<p><img src="/post/2020-04-03-stm-package-walkthrough_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
-<pre class="r"><code>plot(poliblogPrevFit, type = &quot;labels&quot;, topics = c(3, 7, 20))</code></pre>
 <p><img src="/post/2020-04-03-stm-package-walkthrough_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<pre class="r"><code>plot(poliblogPrevFit, type = &quot;labels&quot;, topics = c(3, 7, 20))</code></pre>
+<p><img src="/post/2020-04-03-stm-package-walkthrough_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>Interactive visual via <code>stmCorrViz</code> package.</p>
 <pre class="r"><code># NOT RUN 
 stmCorrViz(
     mod = poliblogPrevFit,
