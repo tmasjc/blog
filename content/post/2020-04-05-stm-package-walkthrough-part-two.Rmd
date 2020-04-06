@@ -1,0 +1,105 @@
+---
+title: STM Package Walkthrough Part Two
+author: tmasjc
+date: '2020-04-05'
+slug: stm-package-walkthrough-part-two
+categories: []
+tags: 
+    - topic-model
+    - stm
+publishdate: '2020-04-05'
+lastmod: '2020-04-05'
+---
+
+
+```{r, echo=FALSE}
+dat <- read.csv("~/Downloads/poliblogs2008.csv", stringsAsFactors = FALSE)[-1]
+```
+
+This is our working data.
+
+```{r}
+library(stm)
+dplyr::glimpse(dat)
+```
+
+First ingest and prepare documents.
+
+```{r, cache=TRUE}
+processed <- textProcessor(dat$documents, metadata = dat)
+out <-
+    prepDocuments(processed$documents,
+                  processed$vocab,
+                  processed$meta,
+                  lower.thresh = 10)
+```
+
+`stm` package has a built-in function `searchK` to assist in selecting the best `K` parameter for topic modeling. 
+
+```{r, eval=FALSE}
+storage <- searchK(
+    documents  = out$documents,
+    vocab      = out$vocab,
+    K          = c(15:25),
+    cores      = 8, ## parallel computing
+    prevalence =  ~ rating + s(day), 
+    data       = out$meta
+)
+```
+
+```{r, echo=FALSE}
+load("../etc/stm/storage.RData")
+```
+
+Measures:
+
+1. *Semantic Coherence* - related to pointwise mutual information (Mimno et al 2011). In models that are semantically coherent, words which are most probable under a topic should co-occur within the same document. 
+
+2. *Exclusivity* - based on FREX, weighted harmonic mean of the word's rank in terms of exclusivity and frequency.
+
+3. *Heldout Likelihood* - hold out some fraction of the words in training and use the document-level latent variables to evaluate the probability of the heldout portion.
+
+4. *Bound* - The change in the approximate variational lower bound to convergence.
+
+5. *Residuals* - multinomial dispersion of the STM residuals $\sigma^2 = 1$. If we calculate the sample dispersion and the value is greater than one, this implies that $K$ is set too low.
+
+```{r}
+storage$results
+```
+
+
+```{r, message=FALSE}
+library(dplyr)
+library(ggplot2)
+library(ggforce)
+
+old <-
+    theme_set(theme_minimal(base_family = "Menlo") + 
+                  theme(axis.text.x = element_text(angle = 90)))
+df  <- storage$results %>% mutate(K = as.factor(K))
+
+df %>% 
+    ggplot(aes(K, semcoh, group = 1)) +
+    geom_line() +
+    labs(x = "", y = "", title = "Semantic Coherence")
+
+df %>% 
+    ggplot(aes(K, heldout, group = 1)) + 
+    geom_line() + 
+    labs(x = "", y = "", title = "Heldout Prob.")
+
+df %>% 
+    ggplot(aes(K, residual, group = 1)) + 
+    geom_line() +
+    labs(x = "", y = "", title = "Residuals")
+
+df %>% 
+    ggplot(aes(semcoh, exclus, col = K)) +
+    geom_point(size = 3) +
+    geom_mark_circle(aes(filter = K %in% c(17, 19, 22)), 
+                     col = "red", description = "Potentials best candidates for K") +
+    labs(x = "Semantic Coherence", y = "Exclusivity") +
+    theme(legend.position = "bottom")
+```
+
+We have narrowed the range of $K$ and may proceed to do further inspection via other techniques.

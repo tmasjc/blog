@@ -1,0 +1,106 @@
+---
+title: STM Package Walkthrough Part Two
+author: tmasjc
+date: '2020-04-05'
+slug: stm-package-walkthrough-part-two
+categories: []
+tags: 
+    - topic-model
+    - stm
+publishdate: '2020-04-05'
+lastmod: '2020-04-05'
+---
+
+
+
+<p>This is our working data.</p>
+<pre class="r"><code>library(stm)</code></pre>
+<pre><code>## stm v1.3.5 successfully loaded. See ?stm for help. 
+##  Papers, resources, and other materials at structuraltopicmodel.com</code></pre>
+<pre class="r"><code>dplyr::glimpse(dat)</code></pre>
+<pre><code>## Observations: 13,246
+## Variables: 5
+## $ documents &lt;chr&gt; &quot;After a week of false statements, lies, and dismissiv…
+## $ docname   &lt;chr&gt; &quot;at0800300_1.text&quot;, &quot;at0800300_2.text&quot;, &quot;at0800300_3.t…
+## $ rating    &lt;chr&gt; &quot;Conservative&quot;, &quot;Conservative&quot;, &quot;Conservative&quot;, &quot;Conse…
+## $ day       &lt;int&gt; 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, …
+## $ blog      &lt;chr&gt; &quot;at&quot;, &quot;at&quot;, &quot;at&quot;, &quot;at&quot;, &quot;at&quot;, &quot;at&quot;, &quot;at&quot;, &quot;at&quot;, &quot;at&quot;, …</code></pre>
+<p>First ingest and prepare documents.</p>
+<pre class="r"><code>processed &lt;- textProcessor(dat$documents, metadata = dat)</code></pre>
+<pre><code>## Building corpus... 
+## Converting to Lower Case... 
+## Removing punctuation... 
+## Removing stopwords... 
+## Removing numbers... 
+## Stemming... 
+## Creating Output...</code></pre>
+<pre class="r"><code>out &lt;-
+    prepDocuments(processed$documents,
+                  processed$vocab,
+                  processed$meta,
+                  lower.thresh = 10)</code></pre>
+<pre><code>## Removing 111851 of 123990 terms (189793 of 2298953 tokens) due to frequency 
+## Your corpus now has 13246 documents, 12139 terms and 2109160 tokens.</code></pre>
+<p><code>stm</code> package has a built-in function <code>searchK</code> to assist in selecting the best <code>K</code> parameter for topic modeling.</p>
+<pre class="r"><code>storage &lt;- searchK(
+    documents  = out$documents,
+    vocab      = out$vocab,
+    K          = c(15:25),
+    cores      = 8, ## parallel computing
+    prevalence =  ~ rating + s(day), 
+    data       = out$meta
+)</code></pre>
+<p>Measures:</p>
+<ol style="list-style-type: decimal">
+<li><p><em>Semantic Coherence</em> - related to pointwise mutual information (Mimno et al 2011). In models that are semantically coherent, words which are most probable under a topic should co-occur within the same document.</p></li>
+<li><p><em>Exclusivity</em> - based on FREX, weighted harmonic mean of the word’s rank in terms of exclusivity and frequency.</p></li>
+<li><p><em>Heldout Likelihood</em> - hold out some fraction of the words in training and use the document-level latent variables to evaluate the probability of the heldout portion.</p></li>
+<li><p><em>Bound</em> - The change in the approximate variational lower bound to convergence.</p></li>
+<li><p><em>Residuals</em> - multinomial dispersion of the STM residuals <span class="math inline">\(\sigma^2 = 1\)</span>. If we calculate the sample dispersion and the value is greater than one, this implies that <span class="math inline">\(K\)</span> is set too low.</p></li>
+</ol>
+<pre class="r"><code>storage$results</code></pre>
+<pre><code>##     K   exclus    semcoh   heldout residual     bound    lbound em.its
+## 1  15 9.533329 -66.29118 -7.534990 4.197934 -21753405 -21753377     49
+## 2  16 9.533826 -67.45197 -7.521909 4.127972 -21720675 -21720644     58
+## 3  17 9.598133 -68.89567 -7.518219 4.071788 -21704477 -21704443     51
+## 4  18 9.578377 -68.37388 -7.511707 4.035990 -21690165 -21690129     33
+## 5  19 9.594316 -69.40491 -7.505795 3.989638 -21671165 -21671126     44
+## 6  20 9.573621 -71.09860 -7.501179 3.941228 -21651145 -21651103     31
+## 7  21 9.585543 -71.78739 -7.495623 3.891438 -21627507 -21627462     27
+## 8  22 9.602845 -71.27387 -7.487177 3.875203 -21609256 -21609207     42
+## 9  23 9.613775 -75.72488 -7.478085 3.853901 -21582873 -21582822     49
+## 10 24 9.626096 -74.62884 -7.475701 3.818413 -21569228 -21569173     46
+## 11 25 9.671310 -74.40441 -7.467765 3.815041 -21545405 -21545347     71</code></pre>
+<pre class="r"><code>library(dplyr)
+library(ggplot2)
+library(ggforce)
+
+old &lt;-
+    theme_set(theme_minimal(base_family = &quot;Menlo&quot;) + 
+                  theme(axis.text.x = element_text(angle = 90)))
+df  &lt;- storage$results %&gt;% mutate(K = as.factor(K))
+
+df %&gt;% 
+    ggplot(aes(K, semcoh, group = 1)) +
+    geom_line() +
+    labs(x = &quot;&quot;, y = &quot;&quot;, title = &quot;Semantic Coherence&quot;)</code></pre>
+<p><img src="/post/2020-04-05-stm-package-walkthrough-part-two_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<pre class="r"><code>df %&gt;% 
+    ggplot(aes(K, heldout, group = 1)) + 
+    geom_line() + 
+    labs(x = &quot;&quot;, y = &quot;&quot;, title = &quot;Heldout Prob.&quot;)</code></pre>
+<p><img src="/post/2020-04-05-stm-package-walkthrough-part-two_files/figure-html/unnamed-chunk-7-2.png" width="672" /></p>
+<pre class="r"><code>df %&gt;% 
+    ggplot(aes(K, residual, group = 1)) + 
+    geom_line() +
+    labs(x = &quot;&quot;, y = &quot;&quot;, title = &quot;Residuals&quot;)</code></pre>
+<p><img src="/post/2020-04-05-stm-package-walkthrough-part-two_files/figure-html/unnamed-chunk-7-3.png" width="672" /></p>
+<pre class="r"><code>df %&gt;% 
+    ggplot(aes(semcoh, exclus, col = K)) +
+    geom_point(size = 3) +
+    geom_mark_circle(aes(filter = K %in% c(17, 19, 22)), 
+                     col = &quot;red&quot;, description = &quot;Potentials best candidates for K&quot;) +
+    labs(x = &quot;Semantic Coherence&quot;, y = &quot;Exclusivity&quot;) +
+    theme(legend.position = &quot;bottom&quot;)</code></pre>
+<p><img src="/post/2020-04-05-stm-package-walkthrough-part-two_files/figure-html/unnamed-chunk-7-4.png" width="672" /></p>
+<p>We have narrowed the range of <span class="math inline">\(K\)</span> and may proceed to do further inspection via other techniques.</p>
