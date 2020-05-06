@@ -1,0 +1,73 @@
+---
+title: 'Spam Attack: A Yule Process Simulation'
+author: tmasjc
+date: '2020-05-06'
+slug: spam-attack-a-yule-process-simulation
+categories: []
+tags: 
+    - stochastic
+publishdate: '2020-05-06'
+lastmod: '2020-05-06'
+editor_options: 
+  chunk_output_type: console
+---
+
+
+
+<p>From 538’s The Riddler,</p>
+<blockquote>
+<p>Over the course of three days, suppose the probability of any spammer making a new comment on this week’s Riddler column over a very short time interval is proportional to the length of that time interval. (For those in the know, I’m saying that spammers follow a Poisson process.)<br>
+On average, the column gets one brand-new comment of spam per day that is not a reply to any previous comments. Each spam comment or reply also gets its own spam reply at an average rate of one per day.
+For example, after three days, I might have four comments that were not replies to any previous comments, and each of them might have a few replies (and their replies might have replies, which might have further replies, etc.).<br>
+After the three days are up, how many total spam posts (comments plus replies) can I expect to have?</p>
+</blockquote>
+<pre class="r"><code>library(tidyverse)
+library(furrr)
+library(ggforce)
+set.seed(1234)
+future::plan(strategy = &quot;multiprocess&quot;)
+
+N = 300
+trials = 1e5
+
+# this is our answer to question above
+x = replicate(trials, sum(cumsum(rexp(n = N, rate = 1:N)) &lt; 3))
+mean(x, na.rm = TRUE)</code></pre>
+<pre><code>## [1] 19.08135</code></pre>
+<p>We can further investigate the growth of spam comments to highlight the <em>fact</em> that using average in a compound distribution is <em>usually</em> NOT a good idea.</p>
+<pre class="r"><code># further simulate possible &#39;growth&#39; by every 3-minutes
+seqs = seq(0, 3, 0.05)
+res  = furrr::future_map_dbl(rep(seqs, trials), ~ sum(cumsum(rexp(n = N, rate = 1:N)) &lt; .x))
+
+res_df &lt;- tibble(
+    trial = rep(1:trials, each = length(seqs)),
+    t = rep(seqs, trials),
+    comments = res
+)
+
+# compute mean of trials
+res_df %&gt;% 
+    group_by(t) %&gt;% 
+    summarise(mu = mean(comments)) %&gt;% 
+    ggplot(aes(t, mu)) + 
+    geom_line(size = 1.2) + 
+    geom_mark_circle(aes(label = mu, filter = t == 3), 
+                     col = &quot;red&quot;, expand = unit(10, &quot;mm&quot;)) +
+    theme_minimal(base_family = &quot;Menlo&quot;) +
+    labs(x        = &quot;Time (t)&quot;, 
+         y        = &quot;Expected # of Comments (n)&quot;,
+         title    = &quot;A Stochastic Simulation to Spam Comments&quot;,
+         subtitle = &quot;Result shows a function of exp(t) - 1.&quot;)</code></pre>
+<p><img src="/post/2020-05-06-spam-attack-a-yule-process-simulation_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<pre class="r"><code># sample some data to display variance
+res_df %&gt;% 
+    filter(trial %in% sample(trials, 100)) %&gt;% 
+    ggplot(aes(t, comments)) + 
+    geom_point(position = position_jitter(0.1), alpha = 0.3) + 
+    geom_line(aes(y = exp(t) - 1), col = &quot;red&quot;, size = 1.1) +
+    theme_minimal(base_family = &quot;Menlo&quot;) + 
+    labs(x        = &quot;Time (t)&quot;, 
+         y        = &quot;# of Comments (n)&quot;,
+         title    = &quot;Samples from Simulation&quot;,
+         subtitle = &quot;Variance is wide given the nature of compound distribution.&quot;)</code></pre>
+<p><img src="/post/2020-05-06-spam-attack-a-yule-process-simulation_files/figure-html/unnamed-chunk-2-2.png" width="672" /></p>
