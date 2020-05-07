@@ -34,14 +34,14 @@ trials = 1e5
 x = replicate(trials, sum(cumsum(rexp(n = N, rate = 1:N)) &lt; 3))
 mean(x, na.rm = TRUE)</code></pre>
 <pre><code>## [1] 19.08135</code></pre>
-<p>We can further investigate the growth of spam comments to highlight the <em>fact</em> that using average in a compound distribution is <em>usually</em> NOT a good idea.</p>
+<p>We can further investigate the growth of spam comments to highlight the fact that using average (as expected value) in a compound distribution is usually not a good idea. The spread (variance) can be extremely large.</p>
 <pre class="r"><code># further simulate possible &#39;growth&#39; by every 3-minutes
 seqs = seq(0, 3, 0.05)
 res  = furrr::future_map_dbl(rep(seqs, trials), ~ sum(cumsum(rexp(n = N, rate = 1:N)) &lt; .x))
 
 res_df &lt;- tibble(
-    trial = rep(1:trials, each = length(seqs)),
-    t = rep(seqs, trials),
+    trial    = rep(1:trials, each = length(seqs)),
+    t        = rep(seqs, trials),
     comments = res
 )
 
