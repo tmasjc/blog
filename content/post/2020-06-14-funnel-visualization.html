@@ -1,0 +1,98 @@
+---
+title: Funnel Visualization w/ Waffle Chart
+author: tmasjc
+date: '2020-06-14'
+slug: funnel-visualization
+categories: []
+tags: 
+    - ggplot2
+    - datavis
+publishdate: '2020-06-14'
+lastmod: '2020-06-14'
+editor_options: 
+  chunk_output_type: console
+---
+
+
+
+<p>First lets make some dummy data. Imagine we are running a campaign that gives away coupons to newly registered customers.</p>
+<pre class="r"><code>library(tidyverse)
+old &lt;- theme_set(theme_minimal(base_family = &quot;Menlo&quot;) + 
+                     theme(legend.position = &quot;top&quot;, 
+                           legend.spacing  = unit(10, &quot;mm&quot;)))
+pal &lt;- c(&quot;Female&quot; = &quot;#fb4675&quot;, 
+         &quot;Male&quot;   = &quot;#51c5e5&quot;)</code></pre>
+<pre class="r"><code>set.seed(1212)
+
+prop_of_x &lt;- function(x) {
+    round(x * rnorm(1, mean = 0.5, sd = 0.05))
+}
+
+make_data_frame &lt;- function(n) {
+    N = n
+    A = prop_of_x(N)
+    B = prop_of_x(A)
+    C = prop_of_x(B)
+    D = prop_of_x(C)
+    
+    map(.x = c(A, B, C, D),
+        .f = ~ c(rep(1, times = .x), rep(0, times = N - .x))) %&gt;%
+        set_names(c(&quot;clicks&quot;, &quot;subscribes&quot;, &quot;confirms&quot;, &quot;redeems&quot;)) %&gt;%
+        as_tibble()
+}
+
+df &lt;- bind_rows(Male   = make_data_frame(100), 
+                Female = make_data_frame(100), 
+                .id    = &quot;gender&quot;)</code></pre>
+<div id="bar-chart" class="section level3">
+<h3>Bar Chart</h3>
+<p>The simplest and perhaps the most effective.</p>
+<pre class="r"><code>df %&gt;% 
+    group_by(gender) %&gt;% 
+    summarise(across(everything(), list(sum = sum)), n = n()) %&gt;% 
+    pivot_longer(-gender, names_to = &quot;funnel&quot;, values_to = &quot;val&quot;) %&gt;% 
+    ggplot(aes(reorder(funnel, val), val, fill = gender)) + 
+    geom_col(position = &quot;dodge&quot;, width = 0.3) +
+    scale_x_discrete(labels = function(x) str_to_title(str_remove(x, &quot;_sum$&quot;))) +
+    scale_fill_manual(values = pal) +
+    guides(fill = guide_legend(reverse = TRUE)) +
+    coord_flip() +
+    labs(x = &quot;&quot;, y = &quot;&quot;, fill = &quot;&quot;,
+         title = &quot;The Easiest Way - Bar Chart&quot;)</code></pre>
+<p><img src="/post/2020-06-14-funnel-visualization_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+</div>
+<div id="waffle-chart" class="section level3">
+<h3>Waffle Chart</h3>
+<p>An experiment…</p>
+<pre class="r"><code>library(waffle)
+
+df %&gt;% 
+    group_by(gender) %&gt;% 
+    summarise(across(everything(), list(sum = sum), .names = &quot;{col}&quot;), 
+              N = n(), 
+              .groups = &quot;keep&quot;) %&gt;% 
+    pivot_longer(
+        -gender,
+        names_to     = &quot;funnel&quot;,
+        values_to    = &quot;val&quot;,
+        names_ptypes = list(funnel = factor(
+            levels   = c(&quot;N&quot;, &quot;clicks&quot;, &quot;subscribes&quot;, &quot;confirms&quot;, &quot;redeems&quot;),
+            ordered  = TRUE
+        ))
+    ) %&gt;% 
+    arrange(gender, -val) %&gt;% 
+    mutate(waffle_sq = val - lead(val), 
+           waffle_sq = if_else(is.na(waffle_sq), val, waffle_sq)) %&gt;% 
+    ggplot(aes(fill = funnel, values = waffle_sq, col = gender)) +
+    geom_waffle(n_rows = 10, flip = TRUE) +
+    scale_color_discrete(guide = &quot;none&quot;) +
+    scale_fill_brewer(palette = &quot;Oranges&quot;, 
+                      labels = function(x) str_to_title(x)) +
+    coord_equal() +
+    facet_wrap(~ gender) +
+    theme(panel.grid = element_blank(), 
+          axis.ticks = element_blank(),
+          axis.text  = element_blank())</code></pre>
+<p><img src="/post/2020-06-14-funnel-visualization_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>Once again, simplicity prevails.</p>
+</div>
