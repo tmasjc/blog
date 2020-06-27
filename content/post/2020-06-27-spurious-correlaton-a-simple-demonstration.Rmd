@@ -43,7 +43,6 @@ df %>%
     coord_cartesian(ylim = c(-60, 60)) +
     scale_color_wsj() +
     theme_minimal(base_family = "Menlo") +
-    theme(title = element_text(size = 20)) +
     labs(x = "# Flips", y = "Score", col = "Coin", 
          title = "Tossing 4 Coins Randomly",
          subtitle = "an example of spurious correlation")
