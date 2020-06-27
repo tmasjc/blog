@@ -18,13 +18,16 @@ editor_options:
 <em>Dr Daqing Chen, Director: Public Analytics group.
 chend ‘@’ lsbu.ac.uk, School of Engineering,
 London South Bank University, London SE1 0AA, UK.</em></p>
-<pre class="r"><code>httr::GET(&quot;https://query.data.world/s/eibmlnrvn7hzil7adpfqceeity3im6&quot;, write_disk(tf &lt;- tempfile(fileext = &quot;.xlsx&quot;)))</code></pre>
+<pre class="r"><code>httr::GET(
+  &quot;https://query.data.world/s/eibmlnrvn7hzil7adpfqceeity3im6&quot;,
+  write_disk(tf &lt;- tempfile(fileext = &quot;.xlsx&quot;))
+)</code></pre>
 <pre><code>## Response [https://download.data.world/file_download/uci/online-retail/Onlinex?auth=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJwcm9kLXVzZXItY2xpZW50OnRtYXMtamMiLCJpc3MiOiJhZ2VudDp0bWFzLWpjOjoyZDJkOGFjYy0yMDAwLTQ0NWQtOWVlZS02YTZlNDQ5MzI4MzMiLCJpYXQiOjE1NTc5NzQ0NTksInJvbGUiOlsidXNlciIsInVzZXJfYXBpX2FkbWluIiwidXNlcl9hcGlfcmVhZCIsInVzZXJfYXBpX3dyaXRlIl0sImdlbmVyYWwtcHVycG9zZSI6ZmFsc2UsInVybCI6IjJlZWY3ZTEwMzllNmU5NjRiNTdlZDdhNTJiNzYyNmVkNzM0NjM4M2YifQ.TH1yJ7mMLNo8jDJs_EAiuwEh4JJlQELaMJ_aJVVEKgyYYdiy-h_N56sgGbm1p8y1BIBaI3iFNM7yFwiGLE9Qpg]
-##   Date: 2020-02-08 13:58
+##   Date: 2020-06-27 04:19
 ##   Status: 200
 ##   Content-Type: text/html
 ##   Size: 23.7 MB
-## &lt;ON DISK&gt;  /var/folders/xj/wctktk112yz7y6skyk6z40jr0000gp/T//RtmpWPTUw0/file7a177c67c6e2.xlsx</code></pre>
+## &lt;ON DISK&gt;  /var/folders/rb/681k99k555dc_b11rqpzf3100000gn/T//Rtmpki8di5/file1623c5687345b.xlsx</code></pre>
 <pre class="r"><code>raw &lt;- read_excel(tf) %&gt;% clean_names()</code></pre>
 <pre class="r"><code># select important features
 dat &lt;- raw %&gt;% 
@@ -43,10 +46,9 @@ dat &lt;- dat %&gt;%
               monet = sum(total_paid)) %&gt;% 
     mutate(rec = abs(rec), monet = monet / freq) %&gt;% 
     # only keep positive amount
-    filter(monet &gt;= 0)
-
-
-# EDA ------------------------------------------------------------
+    filter(monet &gt;= 0)</code></pre>
+<pre><code>## `summarise()` ungroup (override with `.groups` argument)</code></pre>
+<pre class="r"><code># EDA ------------------------------------------------------------
 
 dat %&gt;% 
     gather(var, val, -customer_id) %&gt;% 
@@ -61,8 +63,8 @@ dat %&gt;%
 <pre class="r"><code># binning
 df &lt;- dat %&gt;% 
     filter_at(.vars = c(&quot;rec&quot;, &quot;freq&quot;, &quot;monet&quot;), all_vars(. &lt;= quantile(., 0.99))) %&gt;% 
-    mutate(freq_bin = Hmisc::cut2(freq, g = 6),
-           rec_bin = Hmisc::cut2(rec, g = 3),
+    mutate(freq_bin  = Hmisc::cut2(freq, g = 6),
+           rec_bin   = Hmisc::cut2(rec, g = 3),
            monet_bin = Hmisc::cut2(monet, g = 9))
 
 # facet histogram
@@ -86,6 +88,7 @@ df %&gt;%
     #scale_fill_brewer(type = &quot;seq&quot;) + 
     scale_fill_viridis_c() +
     labs(x = &#39;Frequency&#39;, y = &quot;Recency&quot;, fill = &quot;Monetary&quot;)</code></pre>
+<pre><code>## `summarise()` regrouping by &#39;freq_bin&#39; (override with `.groups` argument)</code></pre>
 <p><img src="/post/2019-05-19-rfm-model-timelapse_files/figure-html/unnamed-chunk-4-2.png" width="672" /></p>
 <p>The moving RFM model by week.</p>
 <pre class="r"><code># make series of time points

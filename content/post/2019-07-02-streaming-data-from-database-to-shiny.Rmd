@@ -22,12 +22,12 @@ db <- config::get(config = "some-mysql")
 
 # local Docker container
 conn <- dbConnect(
-    drv = RMySQL::MySQL(),
+    drv      = RMySQL::MySQL(),
     username = db$username,
     password = db$password,
-    host = db$host,
-    port = db$port,
-    dbname = db$dbname
+    host     = db$host,
+    port     = db$port,
+    dbname   = db$dbname
 )
 
 stopifnot(DBI::dbRemoveTable(conn, "int_stream"))
@@ -64,12 +64,12 @@ db <- config::get(config = "some-mysql")
 
 # pooling object 
 pool <- dbPool(
-    drv = RMySQL::MySQL(),
+    drv      = RMySQL::MySQL(),
     username = db$username,
     password = db$password,
-    host = db$host,
-    port = db$port,
-    dbname = db$dbname
+    host     = db$host,
+    port     = db$port,
+    dbname   = db$dbname
 )
 
 # close connection upon shutting down app

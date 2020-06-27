@@ -60,9 +60,9 @@ old <- theme_set(theme_tufte() + theme(text = element_text(family = "Menlo")))
 # modify function above
 new_game <- function(n = 1) {
   tosses = sample(c(1, -1),
-                   size = n,
-                   replace = TRUE,
-                   prob = c(.5, .5))
+                  size = n,
+                  replace = TRUE,
+                  prob = c(.5, .5))
   # return winnings
   sum(tosses)
 }
@@ -71,10 +71,10 @@ reps <- 10e3 %>% rerun(new_game(number_of_tosses)) %>% unlist()
 
 # bind into data frame
 reps %>%
-    as_data_frame() %>%
-    ggplot(aes(value)) +
-    geom_histogram(binwidth = 1) +
-    scale_x_discrete(limits = seq(-24, 24, 4))
+  as_data_frame() %>%
+  ggplot(aes(value)) +
+  geom_histogram(binwidth = 1) +
+  scale_x_discrete(limits = seq(-24, 24, 4))
 ```
 
 *Question: Why there isn't any odd number?*
@@ -97,15 +97,17 @@ library(tidyr)
 # modify function above
 new_game <- function(n = 1) {
   tosses = sample(c(1, -1),
-                   size = n,
-                   replace = TRUE,
-                   prob = c(.5, .5))
+                  size = n,
+                  replace = TRUE,
+                  prob = c(.5, .5))
   # track progress
   cum.win = cumsum(tosses)
   # return
-  list(final = sum(tosses), 
-    leads = sum(cum.win > 0), 
-    max = max(cum.win))
+  list(
+    final = sum(tosses),
+    leads = sum(cum.win > 0),
+    max = max(cum.win)
+  )
 }
 new_game(number_of_tosses)
 
@@ -114,18 +116,18 @@ set.seed(1234)
 reps <- 10e3 %>% rerun(new_game(number_of_tosses))
 
 reps %>%
-    bind_rows() %>%
-    # collapse columns into one
-    gather(var, val) %>%
-    ggplot(aes(val)) +
-    geom_histogram(binwidth = 1) +
-    facet_wrap(~ var, ncol = 1,
-               labeller = labeller(
-                   var = c(final = "Final Winnings",
-                           leads = "# Leadings",
-                           max = "Max Fortunate")
-               )) +
-    labs(x = "", y  = "")
+  bind_rows() %>%
+  # collapse columns into one
+  gather(var, val) %>%
+  ggplot(aes(val)) +
+  geom_histogram(binwidth = 1) +
+  facet_wrap( ~ var, ncol = 1,
+              labeller = labeller(
+                var = c(final = "Final Winnings",
+                        leads = "# Leadings",
+                        max = "Max Fortunate")
+              )) +
+  labs(x = "", y  = "")
 ```
 
 

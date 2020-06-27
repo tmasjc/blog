@@ -94,16 +94,25 @@ daily <- tibble(ind = 1:nn, profit = replicate(nn, forecast_profit()))
 
 ```{r plot_outcome_hist}
 # view outcome distribution
-daily %>% 
-    ggplot(aes(profit)) +
-    geom_histogram(aes(y = ..density..), 
-                   col = "black", fill = "salmon", alpha = .7, bins = 45) + 
-    geom_density(col = "red", size = 1.5) +
-    geom_vline(xintercept = quantile(daily$profit, c(0.025, 0.5, 0.975)), 
-               lty = 4, col = "navyblue", size = 1.2) + 
-    scale_x_continuous(labels = scales::dollar) +
-    theme(axis.text.y = element_blank(), axis.ticks.y = element_blank()) +
-    labs(x = "Profit", y = "Density")
+daily %>%
+  ggplot(aes(profit)) +
+  geom_histogram(
+    aes(y = ..density..),
+    col = "black",
+    fill = "salmon",
+    alpha = .7,
+    bins = 45
+  ) +
+  geom_density(col = "red", size = 1.5) +
+  geom_vline(
+    xintercept = quantile(daily$profit, c(0.025, 0.5, 0.975)),
+    lty = 4,
+    col = "navyblue",
+    size = 1.2
+  ) +
+  scale_x_continuous(labels = scales::dollar) +
+  theme(axis.text.y = element_blank(), axis.ticks.y = element_blank()) +
+  labs(x = "Profit", y = "Density")
 ```
 
 If we set a profitability goal of **`r scales::dollar(100e3)` a month**, what is the probability that we achieve that? How about the probability that we lose money?
@@ -148,16 +157,28 @@ We can also plot the cumulative probability for clearer visualization.
 # plot cumulative probability
 plot_cumulative <- function(daily, ...) {
   monthly <- forecast_monthly(daily, ...)
-  monthly$df %>% 
-    ggplot(aes(profit)) + 
-    stat_ecdf() + 
-    geom_vline(xintercept = c(0, monthly$goal), lty = 4, col = "lightgray") +
-    geom_hline(yintercept = c(1 - monthly$profit_prob, monthly$loss_prob), lty = 4, col = "lightgray") +
-    annotate(x = c(monthly$goal, 0), 
-             y = c(1 - monthly$profit_prob, monthly$loss_prob), 
-             geom = "point", col = "red", size = 2) +
+  monthly$df %>%
+    ggplot(aes(profit)) +
+    stat_ecdf() +
+    geom_vline(
+      xintercept = c(0, monthly$goal),
+      lty = 4,
+      col = "lightgray"
+    ) +
+    geom_hline(
+      yintercept = c(1 - monthly$profit_prob, monthly$loss_prob),
+      lty = 4,
+      col = "lightgray"
+    ) +
+    annotate(
+      x = c(monthly$goal, 0),
+      y = c(1 - monthly$profit_prob, monthly$loss_prob),
+      geom = "point",
+      col = "red",
+      size = 2
+    ) +
     scale_x_continuous(labels = scales::dollar) +
-    scale_y_continuous(labels = scales::percent) + 
+    scale_y_continuous(labels = scales::percent) +
     labs(x = "Profit", y = "Cumulative Probability")
 }
 plot_cumulative(daily)

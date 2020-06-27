@@ -33,7 +33,10 @@ chend '@' lsbu.ac.uk, School of Engineering,
 London South Bank University, London SE1 0AA, UK.*
 
 ```{r, cache=TRUE, message=FALSE}
-httr::GET("https://query.data.world/s/eibmlnrvn7hzil7adpfqceeity3im6", write_disk(tf <- tempfile(fileext = ".xlsx")))
+httr::GET(
+  "https://query.data.world/s/eibmlnrvn7hzil7adpfqceeity3im6",
+  write_disk(tf <- tempfile(fileext = ".xlsx"))
+)
 raw <- read_excel(tf) %>% clean_names()
 ```
 
@@ -77,8 +80,8 @@ dat %>%
 # binning
 df <- dat %>% 
     filter_at(.vars = c("rec", "freq", "monet"), all_vars(. <= quantile(., 0.99))) %>% 
-    mutate(freq_bin = Hmisc::cut2(freq, g = 6),
-           rec_bin = Hmisc::cut2(rec, g = 3),
+    mutate(freq_bin  = Hmisc::cut2(freq, g = 6),
+           rec_bin   = Hmisc::cut2(rec, g = 3),
            monet_bin = Hmisc::cut2(monet, g = 9))
 
 # facet histogram

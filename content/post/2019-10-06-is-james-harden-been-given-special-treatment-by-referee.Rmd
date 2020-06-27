@@ -38,11 +38,11 @@ dat <- map(tbls, ~ which(nchar(names(.)) >= 1)) %>%
     as_tibble() %>% 
     clean_names() 
 
-df <- dat %>% 
-    filter(player != "Player", tm != "TOT") %>% 
-    # these are the useful columns to us 
+df <- dat %>%
+    filter(player != "Player", tm != "TOT") %>%
+    # these are the useful columns to us
     # for data glossary, refer to basketball-reference.com
-    select(year, player, tm, pos, g, fta) %>% 
+    select(year, player, tm, pos, g, fta) %>%
     mutate(pos = str_extract(pos, "\\w*"),
            g   = as.integer(g),
            fta = as.double(fta))

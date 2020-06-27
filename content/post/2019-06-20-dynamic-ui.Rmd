@@ -57,6 +57,7 @@ shinyApp(
             
             # render input according to n
             rn <- map_chr(1:n, ~ str_glue("verbatimTextOutput(outputId = 'id{.x}', placeholder = TRUE)"))
+            
             map(rn, ~ eval(parse(text = .x)))
             
         })
@@ -70,6 +71,7 @@ shinyApp(
             
             # render color to respective id 
             rb <- map2(1:n, m, ~ paste0("tags$head(tags$style(HTML (' #id", .x, "{ color: ", .y, "}')))"))
+            
             map(rb, ~ eval(parse(text = .x)))
             
         })
@@ -81,6 +83,7 @@ shinyApp(
             
             # render output according to n
             res <- map2(1:length(txt), txt, ~ paste0("output$id", .x,  "<- renderText({ 'hello ", .y, "' })"))
+            
             map(res, ~ eval(parse(text = .x)))
         })
       

@@ -54,9 +54,9 @@ old &lt;- theme_set(theme_tufte() + theme(text = element_text(family = &quot;Men
 # modify function above
 new_game &lt;- function(n = 1) {
   tosses = sample(c(1, -1),
-                   size = n,
-                   replace = TRUE,
-                   prob = c(.5, .5))
+                  size = n,
+                  replace = TRUE,
+                  prob = c(.5, .5))
   # return winnings
   sum(tosses)
 }
@@ -65,12 +65,15 @@ reps &lt;- 10e3 %&gt;% rerun(new_game(number_of_tosses)) %&gt;% unlist()
 
 # bind into data frame
 reps %&gt;%
-    as_data_frame() %&gt;%
-    ggplot(aes(value)) +
-    geom_histogram(binwidth = 1) +
-    scale_x_discrete(limits = seq(-24, 24, 4))</code></pre>
-<pre><code>## Warning: `as_data_frame()` is deprecated, use `as_tibble()` (but mind the new semantics).
-## This warning is displayed once per session.</code></pre>
+  as_data_frame() %&gt;%
+  ggplot(aes(value)) +
+  geom_histogram(binwidth = 1) +
+  scale_x_discrete(limits = seq(-24, 24, 4))</code></pre>
+<pre><code>## Warning: `as_data_frame()` is deprecated as of tibble 2.0.0.
+## Please use `as_tibble()` instead.
+## The signature and semantics have changed, see `?as_tibble`.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_warnings()` to see where this warning was generated.</code></pre>
 <p><img src="/post/2019-02-24-tossing-coin_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
 <p><em>Question: Why there isn’t any odd number?</em></p>
 <p>We can also calculate the chances where Tom break even, either from simulation result above, or using binomial distribution. They are pretty close.</p>
@@ -86,15 +89,17 @@ dbinom(25, size = 50, prob = 0.5) </code></pre>
 # modify function above
 new_game &lt;- function(n = 1) {
   tosses = sample(c(1, -1),
-                   size = n,
-                   replace = TRUE,
-                   prob = c(.5, .5))
+                  size = n,
+                  replace = TRUE,
+                  prob = c(.5, .5))
   # track progress
   cum.win = cumsum(tosses)
   # return
-  list(final = sum(tosses), 
-    leads = sum(cum.win &gt; 0), 
-    max = max(cum.win))
+  list(
+    final = sum(tosses),
+    leads = sum(cum.win &gt; 0),
+    max = max(cum.win)
+  )
 }
 new_game(number_of_tosses)</code></pre>
 <pre><code>## $final
@@ -110,17 +115,17 @@ set.seed(1234)
 reps &lt;- 10e3 %&gt;% rerun(new_game(number_of_tosses))
 
 reps %&gt;%
-    bind_rows() %&gt;%
-    # collapse columns into one
-    gather(var, val) %&gt;%
-    ggplot(aes(val)) +
-    geom_histogram(binwidth = 1) +
-    facet_wrap(~ var, ncol = 1,
-               labeller = labeller(
-                   var = c(final = &quot;Final Winnings&quot;,
-                           leads = &quot;# Leadings&quot;,
-                           max = &quot;Max Fortunate&quot;)
-               )) +
-    labs(x = &quot;&quot;, y  = &quot;&quot;)</code></pre>
+  bind_rows() %&gt;%
+  # collapse columns into one
+  gather(var, val) %&gt;%
+  ggplot(aes(val)) +
+  geom_histogram(binwidth = 1) +
+  facet_wrap( ~ var, ncol = 1,
+              labeller = labeller(
+                var = c(final = &quot;Final Winnings&quot;,
+                        leads = &quot;# Leadings&quot;,
+                        max = &quot;Max Fortunate&quot;)
+              )) +
+  labs(x = &quot;&quot;, y  = &quot;&quot;)</code></pre>
 <p><img src="/post/2019-02-24-tossing-coin_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 </div>
