@@ -1,0 +1,50 @@
+---
+title: 'Spurious Correlaton: A Simple Demonstration'
+author: tmasjc
+date: '2020-06-27'
+slug: spurious-correlaton-a-simple-demonstration
+categories: []
+tags: []
+publishdate: '2020-06-27'
+lastmod: '2020-06-27'
+---
+
+
+
+<p>Very often, some business analyst tries to put some sequences on a line graph and determine if there is some correlation. This can be dangerously misleading.
+Let’s demonstrate this, we flip <span class="math inline">\(n\)</span> coins, with head gives 1 point and tail minuses 1 point. Logically, there should not (and do not) be any correlation between them. However, merely looking at the graph may tell otherwise.</p>
+<pre class="r"><code>library(tidyverse)
+library(ggthemes)
+set.seed(1234)
+
+coins = 4L
+flips = 1e3
+
+calc_score &lt;- function(vec) { 
+    map_dbl(1:length(vec), 
+            ~ sum(vec[1:.x] == 1) - sum(vec[1:.x] == 0))
+}
+
+f   &lt;- expression(rbinom(flips, 1, 0.5))
+
+res &lt;- rerun(coins, calc_score(eval(f))) %&gt;% 
+    set_names(paste(&quot;coin&quot;, 1:coins)) %&gt;% 
+    bind_rows() %&gt;% 
+    mutate(flip = row_number())
+
+df &lt;- res %&gt;%
+    pivot_longer(cols = -flip,
+                 names_to = &quot;coin&quot;,
+                 values_to = &quot;score&quot;)
+
+df %&gt;% 
+    ggplot(aes(flip, score, col = coin)) +
+    geom_line(aes(group = coin), size = 1.1) +
+    coord_cartesian(ylim = c(-60, 60)) +
+    scale_color_wsj() +
+    theme_minimal(base_family = &quot;Menlo&quot;) +
+    theme(title = element_text(size = 20)) +
+    labs(x = &quot;# Flips&quot;, y = &quot;Score&quot;, col = &quot;Coin&quot;, 
+         title = &quot;Tossing 4 Coins Randomly&quot;,
+         subtitle = &quot;an example of spurious correlation&quot;)</code></pre>
+<p><img src="/post/2020-06-27-spurious-correlaton-a-simple-demonstration_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
