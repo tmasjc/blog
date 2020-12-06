@@ -10,36 +10,38 @@ editor_options:
   chunk_output_type: console
 ---
 
-```{r, message=FALSE}
+```{r, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(ggthemes)
-
-# set plot theme
 old <- theme_set(theme_tufte() + theme(text = element_text(family = "Menlo")))
 
+# parameters: 
 # number of ads shown
+# number of visitors & proportional clicks
 n_ads_shown <- 100
-
-# parameters: number of visitors & proportional clicks
-n_visitors <- seq(0, 100, 1)
+n_visitors  <- seq(0, 100, 1)
 prop_clicks <- seq(0, 1, 0.01)
-pars <- expand.grid(prop_clicks = prop_clicks, 
-                    n_visitors = n_visitors) %>% 
-  sample_frac(1L) %>% 
+
+params <-
+  expand.grid(prop_clicks = prop_clicks, n_visitors = n_visitors) %>%
   as_tibble()
 
 # setup joint probability distribution
-pars <- pars %>% 
-  # assume an uniform distribution
-  mutate(prior = dunif(prop_clicks, min = 0, max = .2),
-         # calc the likelihood of getting x number of visitors given props click
-         likelihood = dbinom(n_visitors, size = n_ads_shown, prob = prop_clicks),
-         # probability is thus prior * likelihood
-         probs = prior * likelihood, probs = probs / sum(probs))
-pars
+jpdf <- params %>% 
+  mutate(
+    # assume prior uniform from 0 to 20%
+    prior      = dunif(prop_clicks, min = 0, max = .2), 
+    # generative model goes here
+    likelihood = dbinom(n_visitors, size = n_ads_shown, prob = prop_clicks), 
+    # on Bayes theorem
+    probs      = prior * likelihood,
+    probs      = probs / sum(probs)
+  )
+jpdf
 
 # update prior based on posterior
-pars %>% 
+# conditioned on x visitors
+jpdf %>% 
     filter(n_visitors == 6) %>% 
     ggplot(aes(prop_clicks, probs)) + 
     geom_bar(stat = "identity", width = 0.005) + 

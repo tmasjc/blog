@@ -27,7 +27,8 @@ old <- theme_set(theme_tufte() + theme(text = element_text(family = 'Menlo')))
 
 ```{r, cache=TRUE}
 # limit range from 50 to 200 flips
-trials <- 50:200
+flips  = 50:200
+trials = 3000
 
 # Method One --------------------------------------------------------------
 
@@ -35,34 +36,35 @@ trials <- 50:200
 # actually simulate the action of tossing 2 coins
 method_one <- function(x) {
     regular = rbinom(x, 1, .5)
-    biased = rbinom(x, 1, .6)
+    biased  = rbinom(x, 1, .6)
     # return
     sum(biased) - sum(regular)
 }
 
 # repeat action and bind into a data frame
-res.one <- map_dbl(trials, ~ {
-    sum(replicate(3000, method_one(.x)) > 0) / 3000
-}) %>% bind_cols(ind = trials, prob = .)
+res_method_one <-
+    map_dbl(flips, ~ {
+        sum(replicate(trials, method_one(.x)) > 0) / trials
+    }) %>%
+    bind_cols(flip = flips, prob = .)
 
 # first occurance
-(min.flip.one <- filter(res.one, prob >= 0.95)[1, ])
+min_flip_of_method_one <-
+    res_method_one %>%
+    filter(prob >= 0.95) %>%
+    slice(1)
 
-# vis result
-res.one %>%
-    ggplot(aes(ind, prob)) +
+# visualize result
+res_method_one %>%
+    ggplot(aes(flip, prob)) +
     geom_line() +
-    geom_vline(xintercept = min.flip.one$ind,
-               lty = 4,
-               col = "red") +
-    geom_hline(yintercept = min.flip.one$prob,
-               lty = 4,
-               col = "red") +
+    geom_vline(xintercept = min_flip_of_method_one$flip, lty = 4, col = "red") +
+    geom_hline(yintercept = min_flip_of_method_one$prob, lty = 4, col = "red") +
     annotate(
         "text",
-        x = min.flip.one$ind,
+        x = min_flip_of_method_one$flip,
         y = .5,
-        label = as.character(min.flip.one$ind)
+        label = as.character(min_flip_of_method_one$flip)
     ) +
     scale_y_continuous(breaks = seq(.5, 1, .1), labels = scales::percent)
 
@@ -70,53 +72,54 @@ res.one %>%
 # Method Two --------------------------------------------------------------
 
 
-# we will reuse this function repeatedly to test different diff trials
+# we will reuse this function repeatedly to test different diff flips
 method_two <- function(x) {
+    
     # how many tosses?
-    regular <- RV(1:x, dbinom(1:x, size = x, prob = .5))
-    biased <- RV(1:x, dbinom(1:x, size = x, prob = .6))
+    regular = RV(1:x, dbinom(1:x, size = x, prob = .5))
+    biased  = RV(1:x, dbinom(1:x, size = x, prob = .6))
     
     # joint pmf
-    j2 <- joint(regular, biased)
+    jpmf <- joint(regular, biased)
     
-    # probability here can be understood as proportion of combination of possible outcomes
-    tibble(prob = probs(j2), comb = outcomes(j2)) %>%
-        separate(comb, c("fair", "biased"), ",", convert = TRUE) %>% 
+    # probability = proportion of combination of possible outcomes
+    tibble(prob = probs(jpmf), comb = outcomes(jpmf)) %>%
+        separate(comb, c("fair", "biased"), ",", convert = TRUE) %>%
         # if biased lands more than unbiased coin, choose correctly
         # if both lands the same, choose randomly
-        mutate(correct = case_when(
-            biased > fair ~ 1,
-            biased == fair ~ 0.5,
-            biased < fair ~ 0
-        )) %>% 
+        mutate(correct = case_when(biased >  fair ~ 1.0,
+                                   biased == fair ~ 0.5,
+                                   biased <  fair ~ 0.0)) %>%
         # the likelihood that guessing correctly happens
-        mutate(likelihood = prob * correct) %>% 
+        mutate(likelihood = prob * correct) %>%
         filter(correct > 0) %>%
-        summarise(conf = sum(likelihood)) %>% 
+        summarise(conf = sum(likelihood)) %>%
         pull(conf)
+
 }
 
-# loop thru trials
-res.two <- map_dbl(trials, ~ method_two(.x)) %>% bind_cols(ind = trials, prob = .)
+# loop thru flips
+res_method_two <- 
+    flips %>% 
+    map_dbl( ~ method_two(.x) ) %>% 
+    bind_cols(flip = flips, prob = .)
 
 # minimum flip to obtain 95% confidence
-(min.flip.two <- filter(res.two, prob >= 0.95)[1, ])
+min_flip_of_method_two <- 
+    res_method_two %>%
+    filter(prob >= 0.95) %>%
+    slice(1)
 
-# vis result
-res.two %>%
-    ggplot(aes(ind, prob)) +
+res_method_two %>%
+    ggplot(aes(flip, prob)) +
     geom_line() +
-    geom_vline(xintercept = min.flip.two$ind,
-               lty = 4,
-               col = "red") +
-    geom_hline(yintercept = min.flip.two$prob,
-               lty = 4,
-               col = "red") +
+    geom_vline(xintercept = min_flip_of_method_two$flip, lty = 4, col = "red") +
+    geom_hline(yintercept = min_flip_of_method_two$prob, lty = 4, col = "red") +
     annotate(
         "text",
-        x = min.flip.two$ind,
+        x = min_flip_of_method_two$flip,
         y = .5,
-        label = as.character(min.flip.two$ind)
+        label = as.character(min_flip_of_method_two$flip)
     ) +
     scale_y_continuous(breaks = seq(.5, 1, .1), labels = scales::percent)
 ```

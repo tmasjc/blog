@@ -10,50 +10,53 @@ editor_options:
   chunk_output_type: console
 ---
 
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 
 <pre class="r"><code>library(tidyverse)
 library(ggthemes)
-
-# set plot theme
 old &lt;- theme_set(theme_tufte() + theme(text = element_text(family = &quot;Menlo&quot;)))
 
+# parameters: 
 # number of ads shown
+# number of visitors &amp; proportional clicks
 n_ads_shown &lt;- 100
-
-# parameters: number of visitors &amp; proportional clicks
-n_visitors &lt;- seq(0, 100, 1)
+n_visitors  &lt;- seq(0, 100, 1)
 prop_clicks &lt;- seq(0, 1, 0.01)
-pars &lt;- expand.grid(prop_clicks = prop_clicks, 
-                    n_visitors = n_visitors) %&gt;% 
-  sample_frac(1L) %&gt;% 
+
+params &lt;-
+  expand.grid(prop_clicks = prop_clicks, n_visitors = n_visitors) %&gt;%
   as_tibble()
 
 # setup joint probability distribution
-pars &lt;- pars %&gt;% 
-  # assume an uniform distribution
-  mutate(prior = dunif(prop_clicks, min = 0, max = .2),
-         # calc the likelihood of getting x number of visitors given props click
-         likelihood = dbinom(n_visitors, size = n_ads_shown, prob = prop_clicks),
-         # probability is thus prior * likelihood
-         probs = prior * likelihood, probs = probs / sum(probs))
-pars</code></pre>
+jpdf &lt;- params %&gt;% 
+  mutate(
+    # assume prior uniform from 0 to 20%
+    prior      = dunif(prop_clicks, min = 0, max = .2), 
+    # generative model goes here
+    likelihood = dbinom(n_visitors, size = n_ads_shown, prob = prop_clicks), 
+    # on Bayes theorem
+    probs      = prior * likelihood,
+    probs      = probs / sum(probs)
+  )
+jpdf</code></pre>
 <pre><code>## # A tibble: 10,201 x 5
-##    prop_clicks n_visitors prior likelihood probs
-##          &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt;
-##  1        0.35         52     0   1.91e- 4     0
-##  2        0.22         13     0   8.23e- 3     0
-##  3        0.62         28     0   4.27e-12     0
-##  4        0.31         45     0   1.09e- 3     0
-##  5        0.26         73     0   1.11e-22     0
-##  6        0.47         89     0   8.61e-19     0
-##  7        0.91         49     0   4.51e-27     0
-##  8        0.71         33     0   3.48e-15     0
-##  9        0.55         87     0   5.69e-12     0
-## 10        0.52         35     0   2.40e- 4     0
+##    prop_clicks n_visitors prior likelihood      probs
+##          &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;
+##  1        0             0     5  1         0.0476    
+##  2        0.01          0     5  0.366     0.0174    
+##  3        0.02          0     5  0.133     0.00632   
+##  4        0.03          0     5  0.0476    0.00226   
+##  5        0.04          0     5  0.0169    0.000803  
+##  6        0.05          0     5  0.00592   0.000282  
+##  7        0.06          0     5  0.00205   0.0000979 
+##  8        0.07          0     5  0.000705  0.0000336 
+##  9        0.08          0     5  0.000239  0.0000114 
+## 10        0.09          0     5  0.0000802 0.00000382
 ## # … with 10,191 more rows</code></pre>
 <pre class="r"><code># update prior based on posterior
-pars %&gt;% 
+# conditioned on x visitors
+jpdf %&gt;% 
     filter(n_visitors == 6) %&gt;% 
     ggplot(aes(prop_clicks, probs)) + 
     geom_bar(stat = &quot;identity&quot;, width = 0.005) + 
