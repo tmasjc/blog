@@ -1,0 +1,72 @@
+---
+title: Higher Order Function in Js
+author: tmasjc
+date: '2021-02-15'
+slug: higher-order-function-in-js
+categories: []
+tags: 
+    - fp
+    - js
+publishdate: '2021-02-15'
+lastmod: '2021-02-15'
+---
+
+A bare mininum demonstration.
+
+```javascript
+const studentGrades = [ 
+  {name: 'Joe', grade: 88},
+  {name: 'Jen', grade: 94},
+  {name: 'Steph', grade: 77},
+  {name: 'Allen', grade: 60},
+  {name: 'Gina', grade: 54}, 
+];
+
+const messages = {
+  a: 'Excellent Job',
+  b: 'Nice Job',
+  c: 'Well done',
+  d: 'What happened',
+  f: 'Not good',
+};
+
+function letterGrade(points){
+  if (points >= 90){
+    return 'a';
+  } else if (points >= 80){
+    return 'b'; 
+  } else if (points >= 70){
+    return 'c'; 
+  } else if (points >= 60){
+    return 'd'; 
+  } else {
+    return 'f'; 
+  }
+}
+
+function feedBack(student){
+    const grade = letterGrade(student.grade);
+    const message = messages[grade];
+    return `${message} ${student.name}, you got an ${grade}`;
+}
+
+const gradeFeedback = studentGrades.map(x => feedBack(x));
+console.log(gradeFeedback);
+```
+
+```javascript
+// the rest above remains the same
+
+function feedBack(feedbackRules){
+    return function(student) {
+        const grade = letterGrade(student.grade);
+        const message = feedbackRules[grade];
+        return `${message} ${student.name}, you got an ${grade}`;
+    }
+}
+
+const gradeFeedback = studentGrades.map(feedBack(messages));
+console.log(gradeFeedback);
+
+```
+
