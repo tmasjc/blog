@@ -1,0 +1,45 @@
+---
+title: Safe Function Using Base R
+author: Thomas Jc
+date: '2021-05-21'
+slug: safe-function-using-base-r
+categories: []
+tags: []
+publishdate: '2021-05-21'
+lastmod: '2021-05-21'
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<pre class="r"><code>f &lt;- function(i){
+    if (i &lt; 10) warning(&quot;A warning&quot;)
+    if (!is.numeric(i)) stop(&quot;Not a number!&quot;)
+    return(i)
+}
+
+custom_f &lt;- function(x) {
+    tryCatch(
+        f(x),
+        error = function(e)
+            return(list(&quot;&quot;, e)),
+        warning = function(w)
+            return(list(f(x), w))
+    )
+}
+
+custom_f(15) </code></pre>
+<pre><code>## [1] 15</code></pre>
+<pre class="r"><code>custom_f(9) </code></pre>
+<pre><code>## Warning in f(x): A warning</code></pre>
+<pre><code>## [[1]]
+## [1] 9
+## 
+## [[2]]
+## &lt;simpleWarning in f(x): A warning&gt;</code></pre>
+<pre class="r"><code>custom_f(&quot;a&quot;) </code></pre>
+<pre><code>## [[1]]
+## [1] &quot;&quot;
+## 
+## [[2]]
+## &lt;simpleError in f(x): Not a number!&gt;</code></pre>
