@@ -11,23 +11,27 @@ lastmod: '2021-05-21'
 
 ```{r}
 f <- function(i){
-    if (i < 10) warning("A warning")
     if (!is.numeric(i)) stop("Not a number!")
+    if (i > 10) warning("Number is bigger than 10.")
     return(i)
 }
 
+
 custom_f <- function(x) {
+    
+    # this is so that we can encode a long function into a symbol for cleaner code
+    r <- substitute(f(x))
+    
     tryCatch(
-        f(x),
-        error = function(e)
-            return(list("", e)),
-        warning = function(w)
-            return(list(f(x), w))
+        list(eval(r), ""),
+        error = function(e) return(list("", e)),
+        warning = function(w) return(list(eval(r), w))
     )
 }
 
-custom_f(15) 
-custom_f(9) 
-custom_f("a") 
+custom_f(9)
+custom_f(20)
+custom_f("20")
+
 ```
 
