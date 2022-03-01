@@ -1,0 +1,60 @@
+---
+title: Metaprogramming Example
+author: Thomas Jc
+date: '2021-06-02'
+slug: metaprogramming-example
+categories: []
+tags: 
+    - metaprogramming
+publishdate: '2021-06-02'
+lastmod: '2022-02-28'
+---
+
+```{r}
+# without metaprogramming
+c_type <- function(action, type, x) {
+    
+    if (action == "is") {
+        if (type == "numeric") {
+            return(is.numeric(x))
+        } else if (type == "character") {
+            return(is.character(x))
+        } else {
+            return("type not found.")
+        }
+    } 
+    
+    if (action == "as") {
+        if (type == "numeric") {
+            return(as.numeric(x))
+        } else if (type == "character") {
+            return(as.character(x))
+        } else {
+            return("type not found.")
+        }
+    } 
+    
+    # catch
+    return("action not found.")
+    
+}
+
+# c_type("is", "numeric", 2)
+# c_type("is", "numeric", "zzz")
+# c_type("is", "character", "zzz")
+# c_type("as", "character", "2")
+# c_type("as", "numeric", "2e3")
+
+# metaprogramming way
+c_type_new <- function(action, type, x) {
+    get(paste0(action, ".", type))(x)
+}
+
+# c_type_new("is", "numeric", 2)
+# c_type_new("is", "numeric", "zzz")
+# c_type_new("is", "character", "zzz")
+# c_type_new("as", "character", "2")
+# c_type_new("as", "numeric", "2e3")
+
+```
+

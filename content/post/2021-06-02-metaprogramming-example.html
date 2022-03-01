@@ -1,0 +1,59 @@
+---
+title: Metaprogramming Example
+author: Thomas Jc
+date: '2021-06-02'
+slug: metaprogramming-example
+categories: []
+tags: 
+    - metaprogramming
+publishdate: '2021-06-02'
+lastmod: '2022-02-28'
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<pre class="r"><code># without metaprogramming
+c_type &lt;- function(action, type, x) {
+    
+    if (action == &quot;is&quot;) {
+        if (type == &quot;numeric&quot;) {
+            return(is.numeric(x))
+        } else if (type == &quot;character&quot;) {
+            return(is.character(x))
+        } else {
+            return(&quot;type not found.&quot;)
+        }
+    } 
+    
+    if (action == &quot;as&quot;) {
+        if (type == &quot;numeric&quot;) {
+            return(as.numeric(x))
+        } else if (type == &quot;character&quot;) {
+            return(as.character(x))
+        } else {
+            return(&quot;type not found.&quot;)
+        }
+    } 
+    
+    # catch
+    return(&quot;action not found.&quot;)
+    
+}
+
+# c_type(&quot;is&quot;, &quot;numeric&quot;, 2)
+# c_type(&quot;is&quot;, &quot;numeric&quot;, &quot;zzz&quot;)
+# c_type(&quot;is&quot;, &quot;character&quot;, &quot;zzz&quot;)
+# c_type(&quot;as&quot;, &quot;character&quot;, &quot;2&quot;)
+# c_type(&quot;as&quot;, &quot;numeric&quot;, &quot;2e3&quot;)
+
+# metaprogramming way
+c_type_new &lt;- function(action, type, x) {
+    get(paste0(action, &quot;.&quot;, type))(x)
+}
+
+# c_type_new(&quot;is&quot;, &quot;numeric&quot;, 2)
+# c_type_new(&quot;is&quot;, &quot;numeric&quot;, &quot;zzz&quot;)
+# c_type_new(&quot;is&quot;, &quot;character&quot;, &quot;zzz&quot;)
+# c_type_new(&quot;as&quot;, &quot;character&quot;, &quot;2&quot;)
+# c_type_new(&quot;as&quot;, &quot;numeric&quot;, &quot;2e3&quot;)</code></pre>
