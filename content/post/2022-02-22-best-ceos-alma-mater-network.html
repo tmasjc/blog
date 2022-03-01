@@ -1,0 +1,81 @@
+---
+title: Best CEOs Alma Mater Network
+author: Thomas Jc
+date: '2022-02-22'
+slug: best-ceos-alma-mater-network
+categories: []
+tags: 
+    - network
+publishdate: '2022-02-22'
+lastmod: '2022-02-22'
+editor_options: 
+  chunk_output_type: console
+draft: true
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<pre class="r"><code>library(tidyverse)
+library(rvest)</code></pre>
+<pre class="r"><code>url &lt;- &quot;https://hbr.org/2019/11/the-best-performing-ceos-in-the-world-2019&quot;
+
+tbl_raw &lt;- url |&gt; read_html() |&gt; html_table() 
+
+tbl &lt;- tbl_raw |&gt; 
+    pluck(1) |&gt; 
+    set_names(c(&quot;index&quot;, &quot;pic&quot;, &quot;name_company&quot;, &quot;info&quot;)) |&gt; 
+    filter(row_number() != n()) |&gt; 
+    separate(
+        name_company,
+        into = c(&quot;first&quot;, &quot;last&quot;, &quot;company&quot;),
+        sep = &quot;\\s&quot;,
+        extra = &quot;merge&quot;
+    ) |&gt; 
+    separate(
+        info,
+        into = c(
+            &quot;industry&quot;,
+            &quot;country&quot;,
+            &quot;start_year&quot;,
+            &quot;insider&quot;,
+            &quot;mba&quot;,
+            &quot;financial_rank&quot;,
+            &quot;sustainalytics&quot;,
+            &quot;csrhub&quot;
+        ),
+        sep = &quot;\\|&quot;
+    ) |&gt; 
+    mutate(across(
+        industry:csrhub,
+        ~ str_remove(.x, pattern = &quot;^[\\s]?[A-Za-z]*[\\s]?[A-Za-z]*[:]&quot;)
+    )) |&gt; 
+    mutate(across(industry:csrhub, str_trim)) |&gt; 
+    select(-pic)
+tbl</code></pre>
+<pre><code>## # A tibble: 100 × 12
+##    index first          last      company           industry              
+##    &lt;chr&gt; &lt;chr&gt;          &lt;chr&gt;     &lt;chr&gt;             &lt;chr&gt;                 
+##  1 1.    Jensen         Huang     NVIDIA            Information Technology
+##  2 2.    Marc           Benioff*  Salesforce.com    Information Technology
+##  3 3.    François-Henri Pinault   Kering            Consumer Goods        
+##  4 4.    Richard        Templeton Texas Instruments Information Technology
+##  5 5.    Ignacio        Galán     Iberdrola         Utilities             
+##  6 6.    Shantanu       Narayen   Adobe             Information Technology
+##  7 7.    Ajay           Banga     Mastercard        Information Technology
+##  8 8.    Johan          Thijs     KBC               Financial Services    
+##  9 9.    Satya          Nadella   Microsoft         Information Technology
+## 10 10.   Bernard        Arnault   LVMH              Consumer Goods        
+##    country       start_year insider mba   financial_rank sustainalytics csrhub
+##    &lt;chr&gt;         &lt;chr&gt;      &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;          &lt;chr&gt;          &lt;chr&gt; 
+##  1 United States 1993       YES     NO    4              101            179   
+##  2 United States 2001       YES     NO    6              122            229   
+##  3 France        2005       YES     YES   30             137            118   
+##  4 United States 2004       YES     NO    56             59             135   
+##  5 Spain         2001       NO      YES   87             26             43    
+##  6 United States 2007       YES     YES   43             204            82    
+##  7 United States 2010       YES     YES   13             166            284   
+##  8 Belgium       2012       YES     NO    78             36             111   
+##  9 United States 2014       YES     YES   86             99             13    
+## 10 France        1989       NO      NO    7              337            154   
+## # … with 90 more rows</code></pre>

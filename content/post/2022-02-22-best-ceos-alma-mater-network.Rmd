@@ -1,0 +1,63 @@
+---
+title: Best CEOs Alma Mater Network
+author: Thomas Jc
+date: '2022-02-22'
+slug: best-ceos-alma-mater-network
+categories: []
+tags: 
+    - network
+publishdate: '2022-02-22'
+lastmod: '2022-02-22'
+editor_options: 
+  chunk_output_type: console
+draft: true
+---
+
+```{r, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(rvest)
+```
+
+
+```{r, warning=FALSE, message=FALSE}
+url <- "https://hbr.org/2019/11/the-best-performing-ceos-in-the-world-2019"
+
+tbl_raw <- url |> read_html() |> html_table() 
+
+tbl <- tbl_raw |> 
+    pluck(1) |> 
+    set_names(c("index", "pic", "name_company", "info")) |> 
+    filter(row_number() != n()) |> 
+    separate(
+        name_company,
+        into = c("first", "last", "company"),
+        sep = "\\s",
+        extra = "merge"
+    ) |> 
+    separate(
+        info,
+        into = c(
+            "industry",
+            "country",
+            "start_year",
+            "insider",
+            "mba",
+            "financial_rank",
+            "sustainalytics",
+            "csrhub"
+        ),
+        sep = "\\|"
+    ) |> 
+    mutate(across(
+        industry:csrhub,
+        ~ str_remove(.x, pattern = "^[\\s]?[A-Za-z]*[\\s]?[A-Za-z]*[:]")
+    )) |> 
+    mutate(across(industry:csrhub, str_trim)) |> 
+    select(-pic)
+tbl
+```
+
+```{r}
+
+```
+
