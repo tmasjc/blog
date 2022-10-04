@@ -1,0 +1,200 @@
+---
+title: Introduction to Bayesian Analysis
+author: Thomas Jc
+date: '2022-10-02'
+slug: introduction-to-bayesian-analysis
+categories: []
+tags: []
+editor_options: 
+  chunk_output_type: console
+---
+
+
+
+<pre class="r"><code>library(tidyverse)
+library(ggside)
+library(hrbrthemes)
+theme_set(theme_ipsum_rc())
+set.seed(123)</code></pre>
+<p>Given that you expect a landing page’s CVR to be 10%, what are the odds of getting 13/100?</p>
+<pre class="r"><code>ads_shown   = 100
+conversion  = ads_shown * 0.13
+n_samples   = 100e3</code></pre>
+<div id="frequentist-approach" class="section level2">
+<h2>Frequentist Approach</h2>
+<pre class="r"><code># generate null distribution
+n_converts &lt;-
+    rbinom(n = n_samples, size = ads_shown, prob = 0.10)
+
+n_converts |&gt; 
+    data.frame() |&gt; 
+    ggplot(aes(x = n_converts)) +
+    geom_histogram(col = &quot;darkblue&quot;, fill = &quot;lightblue&quot;, bins = 10) +
+    geom_vline(xintercept = conversion, col = &quot;red&quot;, lty = 4) +
+    scale_y_comma() + 
+    labs(x = &quot;# Visitors&quot;, title = &quot;Binom. Distribution&quot;)</code></pre>
+<p><img src="/post/2022-10-02-introduction-to-bayesian-analysis_files/figure-html/freq-1.png" width="672" /></p>
+<pre class="r"><code># calc prob
+freq_prob &lt;- sum(n_converts &gt;= conversion) / length(n_converts)
+freq_prob</code></pre>
+<pre><code>## [1] 0.19748</code></pre>
+<pre class="r"><code># shortcut
+1 - pbinom(conversion-1, size = ads_shown, prob = 0.10)</code></pre>
+<pre><code>## [1] 0.1981789</code></pre>
+</div>
+<div id="bayesian-approach" class="section level2">
+<h2>Bayesian Approach</h2>
+<pre class="r"><code># given Bayesian way of doing, we expect a prior distribution
+# assume expected CVR as a beta distribution
+
+# params for beta distribution
+ab = list(a = 11.3, b = 93.5)
+
+prior_prop_clicks &lt;- rbeta(n = n_samples, shape1 = ab$a, shape2 = ab$b)
+
+prior_prop_clicks |&gt;
+    density() |&gt;
+    plot(
+        type = &quot;h&quot;,
+        col  = &quot;light blue&quot;,
+        main = &quot;Beta Distribution (Prior)&quot;
+    )
+
+abline(v = 0.1, col = &quot;red&quot;)</code></pre>
+<p><img src="/post/2022-10-02-introduction-to-bayesian-analysis_files/figure-html/bayes-1.png" width="672" /></p>
+<pre class="r"><code>n_converts  &lt;- rbinom(n = n_samples, size = ads_shown, prob = prior_prop_clicks)
+prior       &lt;- tibble(rate = prior_prop_clicks, visits = n_converts)
+
+# visualize a joint probability distribution
+prior |&gt;
+    ggplot(aes(visits, rate)) +
+    geom_jitter(col = &quot;lightblue&quot;, alpha = 0.05, width = 0.05) +
+    geom_xsidehistogram(
+        aes(y = stat(density)), 
+        bins = 15, 
+        col  = &quot;darkblue&quot;,
+        fill = &quot;lightblue&quot;
+    ) +
+    geom_ysidehistogram(
+        aes(x = stat(density)), 
+        bins = 15, 
+        col  = &quot;darkblue&quot;,
+        fill = &quot;lightblue&quot;
+    ) +
+    labs(title = &quot;Joint Distribution&quot;)</code></pre>
+<p><img src="/post/2022-10-02-introduction-to-bayesian-analysis_files/figure-html/bayes-2.png" width="672" /></p>
+<pre class="r"><code># calc prob
+bayes_prob &lt;- sum(n_converts &gt;= conversion) / length(n_converts)
+bayes_prob</code></pre>
+<pre><code>## [1] 0.31883</code></pre>
+<pre class="r"><code>prior |&gt;
+    filter(visits == conversion) |&gt;
+    ggplot(aes(rate)) +
+    geom_histogram(aes(y = ..density..),
+        col  = &quot;white&quot;,
+        fill = &quot;lightblue&quot;,
+        bins = 30
+    ) +
+    geom_density(col = &quot;darkblue&quot;, size = 2) +
+    coord_cartesian(xlim = c(0, .5)) +
+    labs(title = &quot;Posterior Distribution (New Prior)&quot;)</code></pre>
+<p><img src="/post/2022-10-02-introduction-to-bayesian-analysis_files/figure-html/bayes-3.png" width="672" /></p>
+<pre class="r"><code># posterior distribution can be used as a new prior 
+posterior &lt;- prior |&gt; filter(visits == conversion) |&gt; pull(rate)
+mean(posterior)</code></pre>
+<pre><code>## [1] 0.1186554</code></pre>
+<p>Given its prior, Bayesian &gt; Frequentist.</p>
+<pre class="r"><code># to compare
+list(
+    frequentist = freq_prob,
+    bayesian    = bayes_prob
+)</code></pre>
+<pre><code>## $frequentist
+## [1] 0.19748
+## 
+## $bayesian
+## [1] 0.31883</code></pre>
+</div>
+<div id="decision-analysis" class="section level2">
+<h2>Decision Analysis</h2>
+<p>Compare cost-benefit to SEM getting 7/80. Assume SEM’s average conversion is 8% with sigma 1%. Cost for ads is $500, cost for SEM is $400.</p>
+<pre class="r"><code>sem_impressions = 80
+sem_converts    = 7
+
+# assume prior
+sem_prior_prob &lt;- rnorm(n = n_samples, mean = 0.08, sd = 0.01)
+
+sem_prior_prob |&gt; 
+    density() |&gt; 
+    plot(
+        type = &quot;h&quot;,
+        col  = &quot;orange&quot;,
+        main = &quot;Normal Distribution (Prior)&quot;
+    )
+
+abline(v = 0.08, col = &quot;red&quot;)</code></pre>
+<p><img src="/post/2022-10-02-introduction-to-bayesian-analysis_files/figure-html/sem-1.png" width="672" /></p>
+<pre class="r"><code>sem_prior &lt;- rbinom(n = n_samples, size = sem_impressions, prob = sem_prior_prob)
+sem_prior &lt;- tibble(rate = sem_prior_prob, convert = sem_prior)
+
+sem_prior |&gt;
+    filter(convert == sem_converts) |&gt;
+    ggplot(aes(rate)) +
+    geom_histogram(aes(y = ..density..),
+        col   = &quot;white&quot;,
+        fill  = &quot;orange&quot;,
+        bins  = 30,
+        alpha = 0.3
+    ) +
+    geom_density(col = &quot;darkorange&quot;, size = 2) +
+    coord_cartesian(xlim = c(0, .5)) +
+    labs(title = &quot;Posterior for SEM&quot;)</code></pre>
+<p><img src="/post/2022-10-02-introduction-to-bayesian-analysis_files/figure-html/sem-2.png" width="672" /></p>
+<pre class="r"><code>sem_posterior &lt;- 
+    sem_prior |&gt; 
+    filter(convert == sem_converts) |&gt; 
+    pull(rate)
+mean(sem_posterior)</code></pre>
+<pre><code>## [1] 0.08076218</code></pre>
+<pre class="r"><code>df &lt;- tibble(
+    ad_converts  = rbinom(n = n_samples, size = ads_shown, prob = posterior),
+    sem_converts = rbinom(n = n_samples, size = sem_impressions, prob = sem_posterior),
+    ad_cost      = ad_converts  * 500,
+    sem_cost     = sem_converts * 400,
+    cost_diff    = ad_cost - sem_cost
+)
+
+df |&gt; 
+    ggplot(aes(cost_diff)) + 
+    geom_histogram(bins = 30, fill = &quot;cyan&quot;, col = &quot;black&quot;, alpha = 0.3) +
+    geom_vline(xintercept = 0, lty = 4, col = &quot;red&quot;) +
+    scale_x_continuous(labels = scales::dollar) +
+    scale_y_comma() + 
+    labs(x = &quot;Cost Diff. (Ads - SEM)&quot;, title = &quot;Compare Ads to SEM&quot;)</code></pre>
+<p><img src="/post/2022-10-02-introduction-to-bayesian-analysis_files/figure-html/decision-1.png" width="672" /></p>
+<pre class="r"><code># prob of ads is better
+df |&gt; summarise(prob = sum(cost_diff &lt; 0) / n())</code></pre>
+<pre><code>## # A tibble: 1 × 1
+##     prob
+##    &lt;dbl&gt;
+## 1 0.0551</code></pre>
+</div>
+<div id="shortcut-to-bayesian-calculation" class="section level2">
+<h2>Shortcut to Bayesian Calculation</h2>
+<p>Use density <code>d</code> instead of drawing samples <code>r</code>.</p>
+<pre class="r"><code>calc &lt;- tibble(
+    prop_clicks  = seq(0, .3, by = 0.01),
+    prior        = dbeta(prop_clicks, shape1 = ab$a, shape2 = ab$b),
+    likelihood   = dbinom(conversion, size = ads_shown, prob = prop_clicks),
+    prob         = prior * likelihood
+) |&gt;
+    mutate(prob = prob / sum(prob))
+
+calc |&gt; 
+    ggplot(aes(prop_clicks, prob)) + 
+    geom_col(col = &quot;white&quot;, fill = &quot;cyan&quot;) + 
+    geom_line(col = &quot;dark blue&quot;, size = 1.1) + 
+    coord_cartesian(xlim = c(0, .5)) +
+    labs(title = &quot;Alternate Bayesian Calc.&quot;)</code></pre>
+<p><img src="/post/2022-10-02-introduction-to-bayesian-analysis_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+</div>
